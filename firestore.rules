@@ -1,0 +1,51 @@
+rules_version = '2';
+service cloud.firestore {
+  // COMMUNITY 2.0
+  match /databases/{database}/documents {
+
+    // Posts
+    match /posts/{postId} {
+      allow read: if true; // or request.auth != null for stricter access
+      allow create: if request.auth != null
+        && request.resource.data.createdBy == request.auth.uid;
+      allow update, delete: if request.auth != null
+        && resource.data.createdBy == request.auth.uid;
+    }
+
+    // Comments
+    match /comments/{commentId} {
+      allow read: if true;
+      allow create: if request.auth != null
+        && request.resource.data.createdBy == request.auth.uid;
+      allow update, delete: if request.auth != null
+        && resource.data.createdBy == request.auth.uid;
+    }
+
+    // Rooms
+    match /rooms/{roomId} {
+      allow read: if true;
+      allow create: if request.auth != null
+        && request.resource.data.createdBy == request.auth.uid;
+      allow update, delete: if request.auth != null
+        && resource.data.createdBy == request.auth.uid;
+    }
+
+    // Events
+    match /events/{eventId} {
+      allow read: if true;
+      allow create: if request.auth != null
+        && request.resource.data.createdBy == request.auth.uid;
+      allow update, delete: if request.auth != null
+        && resource.data.createdBy == request.auth.uid;
+    }
+
+    match /materials/{materialId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null
+        && request.resource.data.uploaderId == request.auth.uid
+        && request.resource.data.createdAt == request.time;
+      allow update, delete: if request.auth != null
+        && resource.data.uploaderId == request.auth.uid;
+    }
+  }
+}

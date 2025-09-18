@@ -1,0 +1,105 @@
+name: flutterquiz
+description: A new Flutter application.
+publish_to: "none"
+version: 2.3.5+58
+
+# Release Version: 2.3.5 (do not remove or edit this)
+environment:
+  sdk: ">=3.8.1 <4.0.0"
+
+dependencies:
+  cached_network_image: ^3.4.1
+  cloud_firestore: ^5.6.11
+  connectivity_plus: ^6.1.4
+  country_code_picker: ^3.3.0
+  dotted_border: ^3.1.0
+  encrypt: ^5.0.3
+  firebase_analytics: ^11.5.2
+  firebase_auth: ^5.6.2
+  firebase_core: ^3.15.1
+  # COMMUNITY INTEGRATION: for post image uploads
+  firebase_storage: ^12.4.10
+  firebase_messaging: ^15.2.9
+  flutter:
+    sdk: flutter
+  flutter_bloc: ^9.1.1
+  flutter_cached_pdfview: ^0.4.3
+  flutter_local_notifications: ^19.3.0
+  flutter_pdfview: ^1.4.1+1
+  flutter_svg: ^2.2.1
+  # COMMUNITY INTEGRATION: Riverpod for community feature state management
+  flutter_riverpod: ^2.5.1
+  flutter_tex: 4.0.9
+  flutter_timezone: ^4.1.1
+  flutter_widget_from_html: ^0.16.0
+  google_fonts: ^6.2.1
+  google_mobile_ads: ^6.0.0
+  google_sign_in: ^6.3.0
+  hive_flutter: ^1.1.0
+  http: ^1.3.0
+  iabtcf_consent_info: ^3.4.0
+  image_cropper: ^9.1.0
+  image_picker: ^1.1.2
+  in_app_purchase: 3.2.1
+  in_app_purchase_android: ^0.4.0
+  internet_connection_checker: ^3.0.1
+  intl: ^0.20.2
+  just_audio: ^0.9.46
+  lottie: ^2.7.0
+  package_info_plus: ^8.3.0
+  path_provider: ^2.1.5
+  permission_handler: ^12.0.1
+  pin_code_fields: ^8.0.1
+  scratcher: ^2.5.0
+  screenshot: ^3.0.0
+  share_plus: ^11.0.0
+  sign_in_with_apple: ^7.0.1
+  unity_ads_plugin: ^0.3.25
+  url_launcher: ^6.3.1
+  wakelock_plus: ^1.3.2
+  webview_flutter_plus: 0.4.7
+  youtube_player_flutter: ^9.1.1
+  flutter_animate: ^4.5.2
+  rive: ^0.13.20
+  file_picker: ^10.3.2
+  excel: ^2.1.0
+  curved_navigation_bar: ^1.0.6 #latest version
+  animated_custom_dropdown: ^3.1.1
+
+dev_dependencies:
+  change_app_package_name: ^1.5.0
+  dart_code_metrics_presets: ^2.24.0
+  flutter_launcher_icons: ^0.14.4
+  very_good_analysis: ^9.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/animations/
+    - assets/config/
+    - assets/config/emojis/
+    - assets/config/payment_methods/
+    - assets/config/profile/
+    - assets/config/sounds/
+    - assets/images/
+    - assets/images/materials/
+    - assets/images/materials/outline/
+    - assets/images/bottom_nav_icons/
+    - assets/images/rooms/ # COMMUNITY 3.0
+    - assets/loader/
+    - assets/rive/rally_logo.riv
+    - assets/animations/flashcard_flip.riv
+    - assets/onboarding/humani.svg
+    - assets/onboarding/zahni.svg
+    - assets/images/mainbilder/1v1.svg
+    - assets/images/mainbilder/multi.svg
+    - assets/images/mainbilder/prüfung.svg
+    - assets/images/mainbilder/self.svg
+    - assets/images/gamezone/all.svg
+    - assets/images/gamezone/audio.svg
+    - assets/images/gamezone/find.svg
+    - assets/images/gamezone/fun.svg
+    - assets/images/gamezone/truefalse.svg
+    - assets/images/gamezone/
+    - assets/icons/exams/

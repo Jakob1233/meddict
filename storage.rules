@@ -1,0 +1,23 @@
+rules_version = '2';
+service firebase.storage {
+  // COMMUNITY 2.0
+  match /b/{bucket}/o {
+    match /posts/{postId}/images/{file=**} {
+      allow read: if true;
+      allow write: if request.auth != null
+        && get(/databases/$(database)/documents/posts/$(postId)).data.createdBy == request.auth.uid;
+    }
+
+    match /events/{eventId}/images/{file=**} {
+      allow read: if true;
+      allow write: if request.auth != null
+        && get(/databases/$(database)/documents/events/$(eventId)).data.createdBy == request.auth.uid;
+    }
+
+    match /users/{uid}/images/{file=**} {
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.uid == uid;
+    }
+  }
+}
+

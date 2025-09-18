@@ -1,0 +1,26 @@
+<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<mask id="mask0_395_3823" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="48" height="48">
+<rect width="48" height="48" fill="url(#pattern0_395_3823)"/>
+<g clip-path="url(#clip0_395_3823)">
+<rect x="8" y="8" width="32" height="32" rx="12" fill="url(#pattern1_395_3823)"/>
+<path opacity="0.5" d="M38 24C38 22.1615 37.6379 20.341 36.9343 18.6424C36.2307 16.9439 35.1995 15.4005 33.8995 14.1005C32.5995 12.8005 31.0561 11.7693 29.3576 11.0657C27.659 10.3621 25.8385 10 24 10C22.1615 10 20.341 10.3621 18.6424 11.0657C16.9439 11.7693 15.4005 12.8005 14.1005 14.1005C12.8005 15.4005 11.7693 16.9439 11.0657 18.6424C10.3621 20.341 10 22.1615 10 24C10 25.8385 10.3621 27.659 11.0657 29.3576C11.7693 31.0561 12.8005 32.5995 14.1005 33.8995C15.4005 35.1995 16.9439 36.2307 18.6424 36.9343C20.341 37.6379 22.1615 38 24 38C25.8385 38 27.659 37.6379 29.3576 36.9343C31.0561 36.2307 32.5995 35.1995 33.8995 33.8995C35.1995 32.5995 36.2307 31.0561 36.9343 29.3576C37.6379 27.659 38 25.8385 38 24L38 24Z" stroke="#141414" stroke-linecap="round" stroke-dasharray="1 4"/>
+<circle cx="2" cy="2" r="2" transform="matrix(1 0 0 -1 22 26)" fill="#141414"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M31.9381 23C31.979 23.3276 32 23.6613 32 24C32 24.3387 31.979 24.6724 31.9381 25H39C39.5523 25 40 24.5523 40 24C40 23.4477 39.5523 23 39 23H31.9381ZM16.0619 23C16.021 23.3276 16 23.6613 16 24C16 24.3387 16.021 24.6724 16.0619 25H9C8.44772 25 8 24.5523 8 24C8 23.4477 8.44772 23 9 23H16.0619Z" fill="#141414"/>
+</g>
+</mask>
+<g mask="url(#mask0_395_3823)">
+<rect x="0.00195312" width="48" height="48" fill="#141414"/>
+</g>
+<defs>
+<pattern id="pattern0_395_3823" patternContentUnits="objectBoundingBox" width="1" height="1">
+<use xlink:href="#image0_395_3823"/>
+</pattern>
+<pattern id="pattern1_395_3823" patternContentUnits="objectBoundingBox" width="1" height="1">
+<use xlink:href="#image0_395_3823"/>
+</pattern>
+<clipPath id="clip0_395_3823">
+<rect x="8" y="8" width="32" height="32" rx="12" fill="white"/>
+</clipPath>
+<image id="image0_395_3823" width="1" height="1" preserveAspectRatio="none" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAQSURBVHgBAQUA+v8AAAAAAAAFAAFkeJU4AAAAAElFTkSuQmCC"/>
+</defs>
+</svg>

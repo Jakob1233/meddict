@@ -1,0 +1,63 @@
+{
+  "project_info": {
+    "project_number": "1083082948224",
+    "firebase_url": "https://meddict-191cc-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "meddict-191cc",
+    "storage_bucket": "meddict-191cc.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1083082948224:android:300652e689c82a09d17065",
+        "android_client_info": {
+          "package_name": "pleiner.jakob.meddictapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1083082948224-hv1lf6l3cpqjhueemmmfhnd0lpsp2mtu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "pleiner.jakob.meddictapp",
+            "certificate_hash": "05d4272026dc12c7144e426a0cf777ded27cc547"
+          }
+        },
+        {
+          "client_id": "1083082948224-mmtjbgsdn84c5d50nn1n659mtg1mfmgi.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "pleiner.jakob.meddictapp",
+            "certificate_hash": "e83507f9675a4e453db502aee75f9de8b04acb04"
+          }
+        },
+        {
+          "client_id": "1083082948224-f00fq5piun4fup4clovdqbgvqo76gkk7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDdkcz7wAHV8LURCEETdaqzfgWeOCYfDc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1083082948224-f00fq5piun4fup4clovdqbgvqo76gkk7.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1083082948224-btimpk4gmbi83tjf2jojva5166b7l8vc.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "pleiner.jakob.meddict"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
