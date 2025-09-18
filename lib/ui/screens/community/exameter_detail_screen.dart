@@ -42,26 +42,10 @@ class ExameterDetailScreenState extends ConsumerState<ExameterDetailScreen> {
   @override
   void initState() {
     super.initState();
-    ref.listen<AsyncValue<ExamRating?>>(
-      examUserRatingProvider(widget.examId),
-      (previous, next) {
-        next.whenOrNull(data: (rating) {
-          if (!mounted || rating == null) return;
-          setState(() {
-            _massValue = rating.mass.clamp(1, 5);
-            _difficultyValue = rating.difficulty.clamp(1, 5);
-            _pastQValue = rating.pastQ.clamp(1, 5);
-          });
-        });
-      },
-    );
-
     final initialRating = ref.read(examUserRatingProvider(widget.examId));
     initialRating.whenOrNull(data: (rating) {
       if (rating == null) return;
-      _massValue = rating.mass.clamp(1, 5);
-      _difficultyValue = rating.difficulty.clamp(1, 5);
-      _pastQValue = rating.pastQ.clamp(1, 5);
+      _syncRatingValues(rating);
     });
   }
 
@@ -73,6 +57,16 @@ class ExameterDetailScreenState extends ConsumerState<ExameterDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ref.listen<AsyncValue<ExamRating?>>(
+      examUserRatingProvider(widget.examId),
+      (previous, next) {
+        next.whenOrNull(data: (rating) {
+          if (rating == null) return;
+          _syncRatingValues(rating, notifyListeners: true);
+        });
+      },
+    );
+
     final examAsync = ref.watch(examProvider(widget.examId));
     final notesAsync = ref.watch(
       examNotesProvider(ExamNotesArgs(examId: widget.examId, type: _currentTab)),
@@ -113,6 +107,31 @@ class ExameterDetailScreenState extends ConsumerState<ExameterDetailScreen> {
             )
           : null,
     );
+  }
+
+  void _syncRatingValues(ExamRating rating, {bool notifyListeners = false}) {
+    final mass = rating.mass.clamp(1, 5);
+    final difficulty = rating.difficulty.clamp(1, 5);
+    final pastQ = rating.pastQ.clamp(1, 5);
+
+    final hasChanged =
+        _massValue != mass || _difficultyValue != difficulty || _pastQValue != pastQ;
+    if (!hasChanged) {
+      return;
+    }
+
+    if (notifyListeners) {
+      if (!mounted) return;
+      setState(() {
+        _massValue = mass;
+        _difficultyValue = difficulty;
+        _pastQValue = pastQ;
+      });
+    } else {
+      _massValue = mass;
+      _difficultyValue = difficulty;
+      _pastQValue = pastQ;
+    }
   }
 
   Widget _buildContent(

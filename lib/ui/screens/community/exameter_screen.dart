@@ -10,7 +10,7 @@ import 'package:flutterquiz/core/routes/routes.dart';
 import 'package:flutterquiz/data/repositories/exams_repository.dart';
 import 'package:flutterquiz/features/community/providers.dart';
 import 'package:flutterquiz/models/exam.dart';
-import 'package:flutterquiz/ui/widgets/charts/ring_triplet_chart.dart';
+import 'package:flutterquiz/ui/community/exameter/widgets/exam_icon.dart';
 
 typedef AnimatedCustomDropdown<T> = CustomDropdown<T>;
 
@@ -303,6 +303,9 @@ class _ExamListItem extends StatelessWidget {
         ? 'Noch keine Bewertungen'
         : '${exam.ratingsCount} ${exam.ratingsCount == 1 ? 'Bewertung' : 'Bewertungen'}';
 
+    final track = exam.track.toLowerCase();
+    final isDent = track.contains('zahn') || track.contains('dent');
+
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -324,12 +327,7 @@ class _ExamListItem extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              RingTripletChart(
-                size: 68,
-                mass: exam.ratingsAvgMass,
-                difficulty: exam.ratingsAvgDifficulty,
-                pastQ: exam.ratingsAvgPastQ,
-              ),
+              buildExamIcon(context, exam.title, isDent: isDent),
               const SizedBox(width: 18),
               Expanded(
                 child: Column(

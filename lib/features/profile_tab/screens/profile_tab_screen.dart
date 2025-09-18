@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterquiz/commons/commons.dart';
@@ -14,7 +15,7 @@ import 'package:flutterquiz/ui/screens/menu/widgets/logout_dialog.dart';
 import 'package:flutterquiz/ui/screens/menu/widgets/quiz_language_selector_sheet.dart';
 import 'package:flutterquiz/ui/screens/menu/widgets/theme_selector_sheet.dart';
 import 'package:flutterquiz/ui/screens/profile/create_or_edit_profile_screen.dart';
-import 'package:flutterquiz/ui/dev/admin_portal_gate.dart';
+import 'package:flutterquiz/ui/dev/exam_admin_import_screen.dart';
 import 'package:flutterquiz/ui/widgets/all.dart';
 import 'package:flutterquiz/utils/extensions.dart';
 import 'package:flutterquiz/utils/gdpr_helper.dart';
@@ -31,6 +32,7 @@ class ProfileTabScreen extends StatefulWidget {
 class ProfileTabScreenState extends State<ProfileTabScreen>
     with AutomaticKeepAliveClientMixin {
   final _scrollController = ScrollController();
+  bool _isExamImportOpen = false;
 
   bool get _isGuest => context.read<AuthCubit>().isGuest;
 
@@ -204,6 +206,26 @@ class ProfileTabScreenState extends State<ProfileTabScreen>
     }
   }
 
+  Future<void> _openExamImport() async {
+    if (_isExamImportOpen) {
+      return;
+    }
+
+    final navigator = Navigator.of(context, rootNavigator: true);
+    _isExamImportOpen = true;
+
+    try {
+      await navigator.push<void>(
+        CupertinoPageRoute<void>(
+          fullscreenDialog: true,
+          builder: (_) => const ExamAdminImportScreen(),
+        ),
+      );
+    } finally {
+      _isExamImportOpen = false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -236,7 +258,7 @@ class ProfileTabScreenState extends State<ProfileTabScreen>
                             ?.toLowerCase() ==
                         'j.pleiner.1@gmail.com') ...[
                   OutlinedButton.icon(
-                    onPressed: AdminPortalGate.open,
+                    onPressed: _openExamImport,
                     icon: const Icon(Icons.build),
                     label: const Text('Exameter-Import öffnen'),
                   ),

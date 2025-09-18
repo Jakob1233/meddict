@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 
 import 'package:flutterquiz/data/repositories/exams_repository.dart';
 import 'package:flutterquiz/data/seed/exams_seed_sfu.dart';
-import 'package:flutterquiz/ui/dev/admin_portal_gate.dart';
 
 class ExamAdminImportScreen extends StatefulWidget {
   const ExamAdminImportScreen({super.key});
@@ -61,7 +60,7 @@ class _ExamAdminImportScreenState extends State<ExamAdminImportScreen> {
               ),
               const SizedBox(height: 24),
               CupertinoButton(
-                onPressed: AdminPortalGate.close,
+                onPressed: () => Navigator.of(context).maybePop(),
                 child: const Text('Zur App wechseln'),
               ),
             ],
