@@ -8,13 +8,11 @@ class GaugeEffortChart extends StatelessWidget {
     required this.score,
     this.size = 240,
     this.label = 'gemittelter Aufwand',
-    this.updatedAt,
   });
 
   final double score;
   final double size;
   final String label;
-  final DateTime? updatedAt;
 
   @override
   Widget build(BuildContext context) {
@@ -34,14 +32,18 @@ class GaugeEffortChart extends StatelessWidget {
           child: Stack(
             alignment: Alignment.center,
             children: [
-              CustomPaint(
-                size: Size.square(size),
-                painter: _GaugePainter(
-                  progress: progress,
-                  segments: palette.segments,
-                  trackColor: palette.track,
-                  pointerColor: palette.pointer,
-                  shadowColor: palette.shadow,
+              Transform.scale(
+                scaleX: -1,
+                alignment: Alignment.center,
+                child: CustomPaint(
+                  size: Size.square(size),
+                  painter: _GaugePainter(
+                    progress: progress,
+                    segments: palette.segments,
+                    trackColor: palette.track,
+                    pointerColor: palette.pointer,
+                    shadowColor: palette.shadow,
+                  ),
                 ),
               ),
               Column(
@@ -63,16 +65,6 @@ class GaugeEffortChart extends StatelessWidget {
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  if (updatedAt != null) ...[
-                    const SizedBox(height: 4),
-                    Text(
-                      'Aktualisiert ${_formatDate(updatedAt!)}',
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.textTheme.bodySmall?.color?.withOpacity(0.65),
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
                 ],
               ),
             ],
@@ -88,13 +80,10 @@ class GaugeEffortChart extends StatelessWidget {
     if (value > 100) return 1;
     return value / 100;
   }
+<<<<<<< ours
 
-  static String _formatDate(DateTime date) {
-    final day = date.day.toString().padLeft(2, '0');
-    final month = date.month.toString().padLeft(2, '0');
-    final year = date.year.toString();
-    return '$day.$month.$year';
-  }
+=======
+>>>>>>> theirs
 }
 
 class _GaugeSegment {
@@ -159,7 +148,7 @@ class _GaugePainter extends CustomPainter {
   static const double _strokeWidth = 16;
   static const double _pointerWidth = 6;
   static const double _startAngle = math.pi;
-  static const double _sweepAngle = -math.pi;
+  static const double _sweepAngle = math.pi;
 
   @override
   void paint(Canvas canvas, Size size) {

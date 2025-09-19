@@ -2,6 +2,10 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+const Color _summerBlue = Color(0xFF26547C);
+const Color _summerPink = Color(0xFFEF476F);
+const Color _summerYellow = Color(0xFFFFD166);
+
 class RingTripletChart extends StatelessWidget {
   const RingTripletChart({
     super.key,
@@ -20,15 +24,14 @@ class RingTripletChart extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final bool isDark = theme.brightness == Brightness.dark;
-    final surface = theme.colorScheme.surface;
     final ringBackground = isDark
         ? theme.colorScheme.onSurface.withOpacity(0.18)
         : theme.colorScheme.outlineVariant.withOpacity(0.25);
 
     final specs = [
-      _RingSpec(progress: _clamp01(mass / 100), color: theme.colorScheme.primary, strokeWidth: 10),
-      _RingSpec(progress: _clamp01(difficulty / 100), color: theme.colorScheme.secondary, strokeWidth: 9),
-      _RingSpec(progress: _clamp01(pastQ / 100), color: theme.colorScheme.tertiary, strokeWidth: 8),
+      _RingSpec(progress: _clamp01(mass / 100), color: _summerBlue, strokeWidth: 10),
+      _RingSpec(progress: _clamp01(difficulty / 100), color: _summerPink, strokeWidth: 9),
+      _RingSpec(progress: _clamp01(pastQ / 100), color: _summerYellow, strokeWidth: 8),
     ];
 
     return TweenAnimationBuilder<double>(
@@ -36,20 +39,9 @@ class RingTripletChart extends StatelessWidget {
       duration: const Duration(milliseconds: 620),
       curve: Curves.easeOutCubic,
       builder: (context, animation, _) {
-        return Container(
+        return SizedBox(
           width: size,
           height: size,
-          decoration: BoxDecoration(
-            color: surface,
-            borderRadius: BorderRadius.circular(size * 0.32),
-            boxShadow: [
-              BoxShadow(
-                color: theme.shadowColor.withOpacity(isDark ? 0.12 : 0.18),
-                blurRadius: 16,
-                offset: const Offset(0, 6),
-              ),
-            ],
-          ),
           child: CustomPaint(
             painter: _RingTripletPainter(
               specs: specs

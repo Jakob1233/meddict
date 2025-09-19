@@ -328,7 +328,15 @@ class ExamsRepository {
     required double difficulty,
     required double pastQ,
   }) {
-    final score = 0.34 * mass + 0.33 * difficulty + 0.33 * pastQ;
-    return score.round().clamp(0, 100);
+    const double effortWeight = 0.4;
+    const double contentWeight = 0.4;
+    const double pastExamsWeight = 0.2;
+
+    final adjustedPast = 100 - pastQ.clamp(0, 100);
+    final raw = (effortWeight * mass.clamp(0, 100)) +
+        (contentWeight * difficulty.clamp(0, 100)) +
+        (pastExamsWeight * adjustedPast);
+    final normalized = raw / (effortWeight + contentWeight + pastExamsWeight);
+    return normalized.round().clamp(0, 100);
   }
 }

@@ -419,94 +419,136 @@ class _RatingSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Container(
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: theme.shadowColor.withOpacity(theme.brightness == Brightness.dark ? 0.18 : 0.08),
-            blurRadius: 18,
-            offset: const Offset(0, 8),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Deine Bewertung', style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
+        const SizedBox(height: 16),
+        _RatingSelector(
+          label: 'Stoffmenge',
+          value: massValue,
+          onChanged: onMassChanged,
+          color: _summerBlue,
+        ),
+        const SizedBox(height: 18),
+        _RatingSelector(
+          label: 'Stoffschwierigkeit',
+          value: difficultyValue,
+          onChanged: onDifficultyChanged,
+          color: _summerPink,
+        ),
+        const SizedBox(height: 18),
+        _RatingSelector(
+          label: 'Altfragenlastigkeit',
+          value: pastQValue,
+          onChanged: onPastQChanged,
+          color: _summerYellow,
+        ),
+        const SizedBox(height: 22),
+        SizedBox(
+          width: double.infinity,
+          child: CupertinoButton.filled(
+            onPressed: isSaving ? null : onSave,
+            child: isSaving
+                ? const CupertinoActivityIndicator()
+                : const Text('Bewertung speichern'),
           ),
-        ],
-      ),
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('Deine Bewertung', style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
-          const SizedBox(height: 16),
-          _RatingSelector(
-            label: 'Stoffmenge',
-            value: massValue,
-            onChanged: onMassChanged,
-          ),
-          const SizedBox(height: 18),
-          _RatingSelector(
-            label: 'Stoffschwierigkeit',
-            value: difficultyValue,
-            onChanged: onDifficultyChanged,
-          ),
-          const SizedBox(height: 18),
-          _RatingSelector(
-            label: 'Altfragenlastigkeit',
-            value: pastQValue,
-            onChanged: onPastQChanged,
-          ),
-          const SizedBox(height: 22),
-          SizedBox(
-            width: double.infinity,
-            child: CupertinoButton.filled(
-              onPressed: isSaving ? null : onSave,
-              child: isSaving
-                  ? const CupertinoActivityIndicator()
-                  : const Text('Bewertung speichern'),
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
 
 class _RatingSelector extends StatelessWidget {
-  const _RatingSelector({required this.label, required this.value, required this.onChanged});
+  const _RatingSelector({
+    required this.label,
+    required this.value,
+    required this.onChanged,
+    required this.color,
+  });
 
   final String label;
   final int value;
   final ValueChanged<int> onChanged;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final segments = <int, Widget>{
-      for (var i = 1; i <= 5; i++) i: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-        child: Text('$i', style: theme.textTheme.labelLarge),
-      ),
-    };
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        Text(label, style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600)),
+        const SizedBox(height: 12),
+        Wrap(
+          spacing: 12,
+          runSpacing: 12,
           children: [
-            Text(label, style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600)),
-            Text('$value', style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600)),
+            for (var i = 1; i <= 5; i++)
+              _RatingChip(
+                label: '$i',
+                isSelected: value == i,
+                color: color,
+                onTap: () => onChanged(i),
+              ),
           ],
         ),
-        const SizedBox(height: 10),
-        CupertinoSlidingSegmentedControl<int>(
-          groupValue: value,
-          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-          children: segments,
-          onValueChanged: (val) {
-            if (val != null) onChanged(val);
-          },
-        ),
       ],
+    );
+  }
+}
+
+class _RatingChip extends StatelessWidget {
+  const _RatingChip({
+    required this.label,
+    required this.isSelected,
+    required this.color,
+    required this.onTap,
+  });
+
+  final String label;
+  final bool isSelected;
+  final Color color;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final baseTextColor = theme.textTheme.bodyMedium?.color?.withOpacity(0.75) ??
+        (theme.brightness == Brightness.dark ? Colors.white70 : Colors.black87);
+    final borderFallback = theme.dividerColor.withOpacity(theme.brightness == Brightness.dark ? 0.35 : 0.28);
+
+    return Semantics(
+      button: true,
+      selected: isSelected,
+      label: '$label von 5',
+      value: isSelected ? 'Ausgewählt' : 'Nicht ausgewählt',
+      child: Material(
+        color: Colors.transparent,
+        shape: const CircleBorder(),
+        child: InkWell(
+          customBorder: const CircleBorder(),
+          onTap: onTap,
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 180),
+            width: 44,
+            height: 44,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: isSelected ? color.withOpacity(0.14) : Colors.transparent,
+              border: Border.all(color: isSelected ? color : borderFallback, width: 1.5),
+            ),
+            child: Text(
+              label,
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w600,
+                color: isSelected ? color : baseTextColor,
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
