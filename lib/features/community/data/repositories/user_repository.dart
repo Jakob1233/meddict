@@ -32,7 +32,9 @@ class UserRepository {
 
     final controllers = <Stream<QuerySnapshot<Map<String, dynamic>>>>[];
     for (final chunk in chunks) {
-      controllers.add(_col.where(FieldPath.documentId, whereIn: chunk).snapshots());
+      controllers.add(
+        _col.where(FieldPath.documentId, whereIn: chunk).snapshots(),
+      );
     }
 
     await for (final combined in StreamZip(controllers)) {
@@ -54,8 +56,12 @@ class StreamZip<T> extends Stream<List<T>> {
   final List<Stream<T>> _streams;
 
   @override
-  StreamSubscription<List<T>> listen(void Function(List<T>)? onData,
-      {Function? onError, void Function()? onDone, bool? cancelOnError}) {
+  StreamSubscription<List<T>> listen(
+    void Function(List<T>)? onData, {
+    Function? onError,
+    void Function()? onDone,
+    bool? cancelOnError,
+  }) {
     final controller = StreamController<List<T>>();
     final latest = List<T?>.filled(_streams.length, null);
     final received = List<bool>.filled(_streams.length, false);
@@ -68,13 +74,18 @@ class StreamZip<T> extends Stream<List<T>> {
     }
 
     subs = List.generate(_streams.length, (i) {
-      return _streams[i].listen((event) {
-        latest[i] = event;
-        received[i] = true;
-        emitIfReady();
-      }, onError: controller.addError, onDone: () {
-        // no-op
-      }, cancelOnError: cancelOnError);
+      return _streams[i].listen(
+        (event) {
+          latest[i] = event;
+          received[i] = true;
+          emitIfReady();
+        },
+        onError: controller.addError,
+        onDone: () {
+          // no-op
+        },
+        cancelOnError: cancelOnError,
+      );
     });
 
     controller.onCancel = () {
@@ -83,8 +94,11 @@ class StreamZip<T> extends Stream<List<T>> {
       }
     };
 
-    return controller.stream
-        .listen(onData, onError: onError, onDone: onDone, cancelOnError: cancelOnError);
+    return controller.stream.listen(
+      onData,
+      onError: onError,
+      onDone: onDone,
+      cancelOnError: cancelOnError,
+    );
   }
 }
-

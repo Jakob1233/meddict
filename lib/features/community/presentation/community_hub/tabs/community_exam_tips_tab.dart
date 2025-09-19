@@ -46,10 +46,10 @@ class CommunityExamTipsTabState extends ConsumerState<CommunityExamTipsTab> {
   Timer? _debounce;
 
   PagedPostsArgs get _args => PagedPostsArgs(
-        category: _category == 'Alle' ? null : _category,
-        type: 'exam_tip',
-        limit: 20,
-      );
+    category: _category == 'Alle' ? null : _category,
+    type: 'exam_tip',
+    limit: 20,
+  );
 
   @override
   void initState() {
@@ -108,41 +108,49 @@ class CommunityExamTipsTabState extends ConsumerState<CommunityExamTipsTab> {
             decoration: InputDecoration(
               hintText: 'Tipps durchsuchen…',
               prefixIcon: const Icon(Icons.search),
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(18)),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(18),
+              ),
             ),
           ),
         ),
         const SizedBox(height: 12),
         Expanded(
           child: RefreshIndicator(
-            onRefresh: () => ref.read(pagedPostsProvider(_args).notifier).refresh(),
+            onRefresh: () =>
+                ref.read(pagedPostsProvider(_args).notifier).refresh(),
             child: state.isLoadingInitial
                 ? const Center(child: CircularProgressIndicator())
                 : posts.isEmpty
-                    ? const _EmptyExamTips()
-                    : ListView.separated(
-                        controller: _scrollCtrl,
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                        itemBuilder: (context, index) {
-                          if (index >= posts.length) {
-                            if (state.isLoadingMore) {
-                              return const Padding(
-                                padding: EdgeInsets.symmetric(vertical: 16),
-                                child: Center(child: CircularProgressIndicator()),
-                              );
-                            }
-                            return const SizedBox.shrink();
-                          }
-                          final post = posts[index];
-                          return CommunityPostCard(
-                            post: post,
-                            onTap: () => Navigator.of(context)
-                                .pushNamed(Routes.postDetail, arguments: {'postId': post.id}),
+                ? const _EmptyExamTips()
+                : ListView.separated(
+                    controller: _scrollCtrl,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 8,
+                    ),
+                    itemBuilder: (context, index) {
+                      if (index >= posts.length) {
+                        if (state.isLoadingMore) {
+                          return const Padding(
+                            padding: EdgeInsets.symmetric(vertical: 16),
+                            child: Center(child: CircularProgressIndicator()),
                           );
-                        },
-                        separatorBuilder: (_, __) => const SizedBox(height: 8),
-                        itemCount: posts.length + (state.isLoadingMore ? 1 : 0),
-                      ),
+                        }
+                        return const SizedBox.shrink();
+                      }
+                      final post = posts[index];
+                      return CommunityPostCard(
+                        post: post,
+                        onTap: () => Navigator.of(context).pushNamed(
+                          Routes.postDetail,
+                          arguments: {'postId': post.id},
+                        ),
+                      );
+                    },
+                    separatorBuilder: (_, __) => const SizedBox(height: 8),
+                    itemCount: posts.length + (state.isLoadingMore ? 1 : 0),
+                  ),
           ),
         ),
       ],
@@ -154,7 +162,8 @@ class CommunityExamTipsTabState extends ConsumerState<CommunityExamTipsTab> {
     final q = _query.toLowerCase();
     return list.where((post) {
       final text = '${post.title} ${post.body}'.toLowerCase();
-      final bullets = (post.meta?['bullets'] as List?)?.cast<String>() ?? const [];
+      final bullets =
+          (post.meta?['bullets'] as List?)?.cast<String>() ?? const [];
       final matchBullets = bullets.any((b) => b.toLowerCase().contains(q));
       return text.contains(q) || matchBullets;
     }).toList();

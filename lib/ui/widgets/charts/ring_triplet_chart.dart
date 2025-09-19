@@ -29,9 +29,21 @@ class RingTripletChart extends StatelessWidget {
         : theme.colorScheme.outlineVariant.withOpacity(0.25);
 
     final specs = [
-      _RingSpec(progress: _clamp01(mass / 100), color: _summerBlue, strokeWidth: 10),
-      _RingSpec(progress: _clamp01(difficulty / 100), color: _summerPink, strokeWidth: 9),
-      _RingSpec(progress: _clamp01(pastQ / 100), color: _summerYellow, strokeWidth: 8),
+      _RingSpec(
+        progress: _clamp01(mass / 100),
+        color: _summerBlue,
+        strokeWidth: 10,
+      ),
+      _RingSpec(
+        progress: _clamp01(difficulty / 100),
+        color: _summerPink,
+        strokeWidth: 9,
+      ),
+      _RingSpec(
+        progress: _clamp01(pastQ / 100),
+        color: _summerYellow,
+        strokeWidth: 8,
+      ),
     ];
 
     return TweenAnimationBuilder<double>(
@@ -45,7 +57,10 @@ class RingTripletChart extends StatelessWidget {
           child: CustomPaint(
             painter: _RingTripletPainter(
               specs: specs
-                  .map((spec) => spec.copyWith(progress: spec.progress * animation))
+                  .map(
+                    (spec) =>
+                        spec.copyWith(progress: spec.progress * animation),
+                  )
                   .toList(),
               backgroundColor: ringBackground,
             ),
@@ -64,7 +79,11 @@ class RingTripletChart extends StatelessWidget {
 }
 
 class _RingSpec {
-  const _RingSpec({required this.progress, required this.color, required this.strokeWidth});
+  const _RingSpec({
+    required this.progress,
+    required this.color,
+    required this.strokeWidth,
+  });
 
   final double progress;
   final Color color;
@@ -128,7 +147,8 @@ class _RingTripletPainter extends CustomPainter {
     for (var i = 0; i < specs.length; i++) {
       final current = specs[i];
       final previous = oldDelegate.specs[i];
-      if (current.progress != previous.progress || current.color != previous.color) {
+      if (current.progress != previous.progress ||
+          current.color != previous.color) {
         return true;
       }
     }

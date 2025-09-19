@@ -16,7 +16,10 @@ class AppDropdown<T> extends StatelessWidget {
     this.enabled = true,
     this.searchable = true,
     this.borderRadius = 16,
-    this.contentPadding = const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+    this.contentPadding = const EdgeInsets.symmetric(
+      horizontal: 12,
+      vertical: 12,
+    ),
   });
 
   final String? label;
@@ -48,20 +51,44 @@ class AppDropdown<T> extends StatelessWidget {
       expandedBorder: Border.all(color: borderColor, width: 1),
       closedBorderRadius: BorderRadius.circular(borderRadius),
       expandedBorderRadius: BorderRadius.circular(borderRadius),
-      closedSuffixIcon: const Icon(Icons.keyboard_arrow_down_rounded, color: textColor),
-      expandedSuffixIcon: const Icon(Icons.keyboard_arrow_up_rounded, color: textColor),
-      hintStyle: TextStyle(color: textColor.withOpacity(0.7), fontWeight: FontWeight.w500),
-      headerStyle: const TextStyle(color: textColor, fontWeight: FontWeight.w600),
-      listItemStyle: const TextStyle(color: textColor, fontWeight: FontWeight.w500),
+      closedSuffixIcon: const Icon(
+        Icons.keyboard_arrow_down_rounded,
+        color: textColor,
+      ),
+      expandedSuffixIcon: const Icon(
+        Icons.keyboard_arrow_up_rounded,
+        color: textColor,
+      ),
+      hintStyle: TextStyle(
+        color: textColor.withOpacity(0.7),
+        fontWeight: FontWeight.w500,
+      ),
+      headerStyle: const TextStyle(
+        color: textColor,
+        fontWeight: FontWeight.w600,
+      ),
+      listItemStyle: const TextStyle(
+        color: textColor,
+        fontWeight: FontWeight.w500,
+      ),
     );
 
     final disabledDecoration = CustomDropdownDisabledDecoration(
       fillColor: baseFill.withOpacity(0.5),
       border: Border.all(color: borderColor.withOpacity(0.4), width: 1),
       borderRadius: BorderRadius.circular(borderRadius),
-      suffixIcon: Icon(Icons.keyboard_arrow_down_rounded, color: textColor.withOpacity(0.5)),
-      headerStyle: TextStyle(color: textColor.withOpacity(0.5), fontWeight: FontWeight.w600),
-      hintStyle: TextStyle(color: textColor.withOpacity(0.4), fontWeight: FontWeight.w500),
+      suffixIcon: Icon(
+        Icons.keyboard_arrow_down_rounded,
+        color: textColor.withOpacity(0.5),
+      ),
+      headerStyle: TextStyle(
+        color: textColor.withOpacity(0.5),
+        fontWeight: FontWeight.w600,
+      ),
+      hintStyle: TextStyle(
+        color: textColor.withOpacity(0.4),
+        fontWeight: FontWeight.w500,
+      ),
     );
 
     Widget header() {
@@ -70,7 +97,8 @@ class AppDropdown<T> extends StatelessWidget {
         padding: const EdgeInsets.only(bottom: 6),
         child: Text(
           label!,
-          style: theme.textTheme.labelMedium?.copyWith(color: textColor) ??
+          style:
+              theme.textTheme.labelMedium?.copyWith(color: textColor) ??
               const TextStyle(color: textColor, fontWeight: FontWeight.w600),
         ),
       );
@@ -103,7 +131,10 @@ class AppDropdown<T> extends StatelessWidget {
     }
 
     Widget buildDropdown() {
-      final listItemPadding = const EdgeInsets.symmetric(horizontal: 12, vertical: 12);
+      final listItemPadding = const EdgeInsets.symmetric(
+        horizontal: 12,
+        vertical: 12,
+      );
       final padding = contentPadding;
 
       if (searchable) {

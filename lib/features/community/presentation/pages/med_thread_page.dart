@@ -35,7 +35,11 @@ class MedThreadPageState extends ConsumerState<MedThreadPage> {
 
   void onTapTab() {
     if (_controller.hasClients) {
-      _controller.animateTo(0, duration: const Duration(milliseconds: 250), curve: Curves.easeOut);
+      _controller.animateTo(
+        0,
+        duration: const Duration(milliseconds: 250),
+        curve: Curves.easeOut,
+      );
     }
   }
 
@@ -62,7 +66,9 @@ class MedThreadPageState extends ConsumerState<MedThreadPage> {
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 6),
             child: Row(
               children: [
-                Expanded(child: Text('MedThread', style: theme.textTheme.titleLarge)), // COMMUNITY UI
+                Expanded(
+                  child: Text('MedThread', style: theme.textTheme.titleLarge),
+                ), // COMMUNITY UI
                 // Sort dropdown (top-right)
                 _SortMenu(
                   value: _sort,
@@ -70,7 +76,11 @@ class MedThreadPageState extends ConsumerState<MedThreadPage> {
                     setState(() => _sort = v);
                     // Scroll to top on sort change
                     if (_controller.hasClients) {
-                      _controller.animateTo(0, duration: const Duration(milliseconds: 200), curve: Curves.easeOut);
+                      _controller.animateTo(
+                        0,
+                        duration: const Duration(milliseconds: 200),
+                        curve: Curves.easeOut,
+                      );
                     }
                   },
                 ),
@@ -80,7 +90,9 @@ class MedThreadPageState extends ConsumerState<MedThreadPage> {
                   onPressed: userId == null
                       ? null
                       : () async {
-                          await Navigator.of(context).push(CreatePostPage.route());
+                          await Navigator.of(
+                            context,
+                          ).push(CreatePostPage.route());
                         },
                 ),
               ],
@@ -110,13 +122,19 @@ class MedThreadPageState extends ConsumerState<MedThreadPage> {
                           _searchCtrl.clear();
                           setState(() => _searchText = '');
                           if (_controller.hasClients) {
-                            _controller.animateTo(0, duration: const Duration(milliseconds: 150), curve: Curves.easeOut);
+                            _controller.animateTo(
+                              0,
+                              duration: const Duration(milliseconds: 150),
+                              curve: Curves.easeOut,
+                            );
                           }
                         },
                         icon: const Icon(Icons.close),
                         tooltip: 'Clear',
                       ),
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
             ),
           ),
@@ -133,7 +151,10 @@ class MedThreadPageState extends ConsumerState<MedThreadPage> {
                   });
                 } else {
                   // Ensure newest first as safety
-                  sorted.sort((a, b) => b.createdAt.toDate().compareTo(a.createdAt.toDate()));
+                  sorted.sort(
+                    (a, b) =>
+                        b.createdAt.toDate().compareTo(a.createdAt.toDate()),
+                  );
                 }
 
                 // Then filter in-memory if search active
@@ -148,28 +169,40 @@ class MedThreadPageState extends ConsumerState<MedThreadPage> {
 
                 if (filtered.isEmpty) {
                   return Center(
-                    child: Text('No posts yet', style: theme.textTheme.bodyMedium),
+                    child: Text(
+                      'No posts yet',
+                      style: theme.textTheme.bodyMedium,
+                    ),
                   );
                 }
                 return RefreshIndicator(
                   color: Theme.of(context).primaryColor,
                   onRefresh: () async {
-                    await Future<void>.delayed(const Duration(milliseconds: 300));
+                    await Future<void>.delayed(
+                      const Duration(milliseconds: 300),
+                    );
                   },
                   child: ListView.separated(
                     controller: _controller,
                     itemCount: filtered.length,
-                    padding: const EdgeInsets.only(bottom: 96, left: 12, right: 12),
+                    padding: const EdgeInsets.only(
+                      bottom: 96,
+                      left: 12,
+                      right: 12,
+                    ),
                     separatorBuilder: (_, __) => const SizedBox(height: 16),
                     itemBuilder: (_, i) => PostCard(
                       post: filtered[i],
-                      onTap: () => Navigator.of(context).push(PostDetailPage.route(postId: filtered[i].id)),
+                      onTap: () => Navigator.of(
+                        context,
+                      ).push(PostDetailPage.route(postId: filtered[i].id)),
                     ),
                   ),
                 );
               },
               loading: () => const AppLoader(), // COMMUNITY UI
-              error: (e, st) => AppError(message: 'Failed to load feed.\n$e'), // COMMUNITY UI
+              error: (e, st) =>
+                  AppError(message: 'Failed to load feed.\n$e'), // COMMUNITY UI
             ),
           ),
         ],
@@ -193,14 +226,18 @@ class _SortMenu extends StatelessWidget {
         child: AppDropdown<SortOption>(
           hintText: 'Sortieren…',
           items: const [SortOption.newest, SortOption.upvotes],
-          itemLabel: (option) => option == SortOption.newest ? 'Neueste' : 'Upvotes',
+          itemLabel: (option) =>
+              option == SortOption.newest ? 'Neueste' : 'Upvotes',
           value: value,
           onChanged: (selected) {
             if (selected != null) onChanged(selected);
           },
           searchable: false,
           borderRadius: 16,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 12,
+            vertical: 10,
+          ),
         ),
       ),
     );

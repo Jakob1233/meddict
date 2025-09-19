@@ -20,10 +20,12 @@ class LearningMaterialsListScreen extends ConsumerStatefulWidget {
   final LearningMaterialTypeData type;
 
   @override
-  LearningMaterialsListScreenState createState() => LearningMaterialsListScreenState();
+  LearningMaterialsListScreenState createState() =>
+      LearningMaterialsListScreenState();
 }
 
-class LearningMaterialsListScreenState extends ConsumerState<LearningMaterialsListScreen> {
+class LearningMaterialsListScreenState
+    extends ConsumerState<LearningMaterialsListScreen> {
   static const _pageSize = 20;
   static const _searchDebounce = Duration(milliseconds: 250);
   static const _recentDuration = Duration(days: 30);
@@ -58,12 +60,15 @@ class LearningMaterialsListScreenState extends ConsumerState<LearningMaterialsLi
   String _searchTerm = '';
   String? _errorMessage;
 
-  late final CommunityUserContext _userContext = ref.read(communityUserContextProvider);
+  late final CommunityUserContext _userContext = ref.read(
+    communityUserContextProvider,
+  );
 
   @override
   void initState() {
     super.initState();
-    if (_userContext.semester.isNotEmpty && _semesterItems.contains(_userContext.semester)) {
+    if (_userContext.semester.isNotEmpty &&
+        _semesterItems.contains(_userContext.semester)) {
       _selectedSemester = _userContext.semester;
     }
     _searchCtrl.addListener(_handleSearchTextChange);
@@ -87,7 +92,8 @@ class LearningMaterialsListScreenState extends ConsumerState<LearningMaterialsLi
 
   void _onScroll() {
     if (!_hasMore || _isLoadingMore) return;
-    if (_scrollCtrl.position.pixels >= _scrollCtrl.position.maxScrollExtent - 200) {
+    if (_scrollCtrl.position.pixels >=
+        _scrollCtrl.position.maxScrollExtent - 200) {
       _loadMore();
     }
   }
@@ -96,7 +102,11 @@ class LearningMaterialsListScreenState extends ConsumerState<LearningMaterialsLi
     if (_isLoading) return;
     _debounce?.cancel();
     if (resetScroll && _scrollCtrl.hasClients) {
-      await _scrollCtrl.animateTo(0, duration: const Duration(milliseconds: 250), curve: Curves.easeOut);
+      await _scrollCtrl.animateTo(
+        0,
+        duration: const Duration(milliseconds: 250),
+        curve: Curves.easeOut,
+      );
     }
 
     setState(() {
@@ -118,10 +128,15 @@ class LearningMaterialsListScreenState extends ConsumerState<LearningMaterialsLi
       });
     } on FirebaseException catch (err) {
       if (!mounted) return;
-      setState(() => _errorMessage = err.message ?? 'Materialien konnten nicht geladen werden.');
+      setState(
+        () => _errorMessage =
+            err.message ?? 'Materialien konnten nicht geladen werden.',
+      );
     } catch (_) {
       if (!mounted) return;
-      setState(() => _errorMessage = 'Materialien konnten nicht geladen werden.');
+      setState(
+        () => _errorMessage = 'Materialien konnten nicht geladen werden.',
+      );
     } finally {
       if (mounted) {
         setState(() => _isLoading = false);
@@ -138,7 +153,10 @@ class LearningMaterialsListScreenState extends ConsumerState<LearningMaterialsLi
     });
 
     try {
-      final snapshot = await _buildQuery().limit(_pageSize).startAfterDocument(_lastDoc!).get();
+      final snapshot = await _buildQuery()
+          .limit(_pageSize)
+          .startAfterDocument(_lastDoc!)
+          .get();
       final docs = snapshot.docs.map(LearningMaterial.fromDoc).toList();
       if (!mounted) return;
       setState(() {
@@ -148,10 +166,16 @@ class LearningMaterialsListScreenState extends ConsumerState<LearningMaterialsLi
       });
     } on FirebaseException catch (err) {
       if (!mounted) return;
-      setState(() => _errorMessage = err.message ?? 'Weitere Materialien konnten nicht geladen werden.');
+      setState(
+        () => _errorMessage =
+            err.message ?? 'Weitere Materialien konnten nicht geladen werden.',
+      );
     } catch (_) {
       if (!mounted) return;
-      setState(() => _errorMessage = 'Weitere Materialien konnten nicht geladen werden.');
+      setState(
+        () =>
+            _errorMessage = 'Weitere Materialien konnten nicht geladen werden.',
+      );
     } finally {
       if (mounted) {
         setState(() => _isLoadingMore = false);
@@ -173,7 +197,10 @@ class LearningMaterialsListScreenState extends ConsumerState<LearningMaterialsLi
 
     if (_newOnly) {
       final cutoff = DateTime.now().subtract(_recentDuration);
-      query = query.where('createdAt', isGreaterThanOrEqualTo: Timestamp.fromDate(cutoff));
+      query = query.where(
+        'createdAt',
+        isGreaterThanOrEqualTo: Timestamp.fromDate(cutoff),
+      );
     }
 
     return query;
@@ -196,12 +223,16 @@ class LearningMaterialsListScreenState extends ConsumerState<LearningMaterialsLi
   }
 
   List<LearningMaterial> get _visibleMaterials {
-    if (_searchTerm.isEmpty) return List<LearningMaterial>.unmodifiable(_materials);
-    return _materials.where((material) {
-      final title = material.title.toLowerCase();
-      final description = material.description.toLowerCase();
-      return title.contains(_searchTerm) || description.contains(_searchTerm);
-    }).toList(growable: false);
+    if (_searchTerm.isEmpty)
+      return List<LearningMaterial>.unmodifiable(_materials);
+    return _materials
+        .where((material) {
+          final title = material.title.toLowerCase();
+          final description = material.description.toLowerCase();
+          return title.contains(_searchTerm) ||
+              description.contains(_searchTerm);
+        })
+        .toList(growable: false);
   }
 
   void _selectSemester(String? semester) {
@@ -241,7 +272,9 @@ class LearningMaterialsListScreenState extends ConsumerState<LearningMaterialsLi
       ),
     );
     if (updated != null && mounted) {
-      final originalIndex = _materials.indexWhere((item) => item.id == updated.id);
+      final originalIndex = _materials.indexWhere(
+        (item) => item.id == updated.id,
+      );
       if (originalIndex != -1) {
         setState(() {
           _materials[originalIndex] = updated;
@@ -293,7 +326,9 @@ class LearningMaterialsListScreenState extends ConsumerState<LearningMaterialsLi
                                     _onSearchChanged('');
                                   },
                                 ),
-                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -311,13 +346,19 @@ class LearningMaterialsListScreenState extends ConsumerState<LearningMaterialsLi
               if (_errorMessage != null)
                 SliverToBoxAdapter(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
                     child: Material(
                       color: theme.colorScheme.errorContainer.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(16),
                       child: Padding(
                         padding: const EdgeInsets.all(12),
-                        child: Text(_errorMessage!, style: theme.textTheme.bodyMedium),
+                        child: Text(
+                          _errorMessage!,
+                          style: theme.textTheme.bodyMedium,
+                        ),
                       ),
                     ),
                   ),
@@ -341,10 +382,17 @@ class LearningMaterialsListScreenState extends ConsumerState<LearningMaterialsLi
                       }
                       final material = items[index];
                       return Padding(
-                        padding: EdgeInsets.fromLTRB(16, index == 0 ? 0 : 8, 16, 8),
+                        padding: EdgeInsets.fromLTRB(
+                          16,
+                          index == 0 ? 0 : 8,
+                          16,
+                          8,
+                        ),
                         child: Card(
                           elevation: 2,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18),
+                          ),
                           child: ListTile(
                             onTap: () => _openDetail(material),
                             leading: _MaterialAvatar(material: material),
@@ -352,7 +400,9 @@ class LearningMaterialsListScreenState extends ConsumerState<LearningMaterialsLi
                               material.title,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+                              style: theme.textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                             subtitle: Text(
                               '${material.uploaderOrFallback} | ${material.views} Aufrufe',
@@ -418,7 +468,10 @@ class _FilterRow extends StatelessWidget {
             decoration: CustomDropdownDecoration(
               closedFillColor: theme.colorScheme.surface,
               closedBorder: Border.all(color: theme.dividerColor),
-              expandedBorder: Border.all(color: theme.colorScheme.primary.withOpacity(0.4), width: 1.5),
+              expandedBorder: Border.all(
+                color: theme.colorScheme.primary.withOpacity(0.4),
+                width: 1.5,
+              ),
               closedBorderRadius: BorderRadius.circular(16),
               expandedBorderRadius: BorderRadius.circular(16),
               closedSuffixIcon: const Icon(Icons.keyboard_arrow_down_rounded),
@@ -458,7 +511,11 @@ class _EmptyMaterialsState extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.folder_open_rounded, size: 96, color: theme.colorScheme.primary.withOpacity(0.4)),
+          Icon(
+            Icons.folder_open_rounded,
+            size: 96,
+            color: theme.colorScheme.primary.withOpacity(0.4),
+          ),
           const SizedBox(height: 16),
           Text(
             'Noch keine Materialien vorhanden.',
@@ -469,7 +526,9 @@ class _EmptyMaterialsState extends StatelessWidget {
           Text(
             'Starte mit dem ersten Upload für deine Kommiliton:innen.',
             textAlign: TextAlign.center,
-            style: theme.textTheme.bodyMedium?.copyWith(color: theme.textTheme.bodyMedium?.color?.withOpacity(0.7)),
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.textTheme.bodyMedium?.color?.withOpacity(0.7),
+            ),
           ),
           const SizedBox(height: 24),
           ElevatedButton.icon(
@@ -506,7 +565,10 @@ class _MaterialAvatar extends StatelessWidget {
       backgroundColor: color,
       child: Text(
         material.initials,
-        style: theme.textTheme.titleSmall?.copyWith(color: textColor, fontWeight: FontWeight.w700),
+        style: theme.textTheme.titleSmall?.copyWith(
+          color: textColor,
+          fontWeight: FontWeight.w700,
+        ),
       ),
     );
   }

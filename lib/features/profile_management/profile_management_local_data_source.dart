@@ -33,8 +33,7 @@ class ProfileManagementLocalDataSource {
   String getSpecialization() =>
       _box.get(specializationBoxKey, defaultValue: '') as String;
 
-  String getSemester() =>
-      _box.get(semesterBoxKey, defaultValue: '') as String;
+  String getSemester() => _box.get(semesterBoxKey, defaultValue: '') as String;
 
   String getUniversityName() =>
       _box.get(universityNameBoxKey, defaultValue: '') as String;

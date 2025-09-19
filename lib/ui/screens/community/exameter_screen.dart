@@ -55,12 +55,15 @@ class ExameterScreenState extends ConsumerState<ExameterScreen> {
   String? _errorMessage;
   String? _selectedSemester;
 
-  late final CommunityUserContext _userContext = ref.read(communityUserContextProvider);
+  late final CommunityUserContext _userContext = ref.read(
+    communityUserContextProvider,
+  );
 
   @override
   void initState() {
     super.initState();
-    if (_userContext.semester.isNotEmpty && _semesterOptions.contains(_userContext.semester)) {
+    if (_userContext.semester.isNotEmpty &&
+        _semesterOptions.contains(_userContext.semester)) {
       _selectedSemester = _userContext.semester;
     }
     _scrollController.addListener(_handleScroll);
@@ -113,7 +116,9 @@ class ExameterScreenState extends ConsumerState<ExameterScreen> {
       color: Theme.of(context).colorScheme.primary,
       child: ListView.separated(
         controller: _scrollController,
-        physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+        physics: const AlwaysScrollableScrollPhysics(
+          parent: BouncingScrollPhysics(),
+        ),
         padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
         itemCount: _exams.length + (_isLoadingMore ? 1 : 0),
         separatorBuilder: (_, __) => const SizedBox(height: 14),
@@ -255,7 +260,10 @@ class _FilterBar extends StatelessWidget {
         decoration: CustomDropdownDecoration(
           closedFillColor: theme.colorScheme.surface,
           closedBorder: Border.all(color: theme.dividerColor.withOpacity(0.4)),
-          expandedBorder: Border.all(color: theme.colorScheme.primary.withOpacity(0.3), width: 1.5),
+          expandedBorder: Border.all(
+            color: theme.colorScheme.primary.withOpacity(0.3),
+            width: 1.5,
+          ),
           closedBorderRadius: BorderRadius.circular(18),
           expandedBorderRadius: BorderRadius.circular(18),
           closedSuffixIcon: const Icon(CupertinoIcons.chevron_down),
@@ -274,7 +282,9 @@ class _FilterBar extends StatelessWidget {
             Expanded(
               child: Text(
                 'Exameter',
-                style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
+                style: theme.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ),
             dropdown,
@@ -298,7 +308,9 @@ class _ExamListItem extends StatelessWidget {
     final cardColor = theme.colorScheme.surface;
     final shadowColor = theme.shadowColor.withOpacity(isDark ? 0.22 : 0.12);
 
-    final semesterLabel = exam.semester.isEmpty ? 'Semester unbekannt' : exam.semester;
+    final semesterLabel = exam.semester.isEmpty
+        ? 'Semester unbekannt'
+        : exam.semester;
     final ratingsLabel = exam.ratingsCount == 0
         ? 'Noch keine Bewertungen'
         : '${exam.ratingsCount} ${exam.ratingsCount == 1 ? 'Bewertung' : 'Bewertungen'}';
@@ -337,13 +349,17 @@ class _ExamListItem extends StatelessWidget {
                       exam.title.isEmpty ? 'Unbenannte Prüfung' : exam.title,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                      style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                     const SizedBox(height: 6),
                     Text(
                       '$semesterLabel · $ratingsLabel',
                       style: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.textTheme.bodyMedium?.color?.withOpacity(0.7),
+                        color: theme.textTheme.bodyMedium?.color?.withOpacity(
+                          0.7,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 10),
@@ -355,12 +371,17 @@ class _ExamListItem extends StatelessWidget {
                           textColor: theme.colorScheme.primary,
                         ),
                         const SizedBox(width: 10),
-                        Icon(CupertinoIcons.chat_bubble_text, size: 16, color: theme.iconTheme.color?.withOpacity(0.6)),
+                        Icon(
+                          CupertinoIcons.chat_bubble_text,
+                          size: 16,
+                          color: theme.iconTheme.color?.withOpacity(0.6),
+                        ),
                         const SizedBox(width: 4),
                         Text(
                           '${exam.notesCount}',
                           style: theme.textTheme.bodyMedium?.copyWith(
-                            color: theme.textTheme.bodyMedium?.color?.withOpacity(0.7),
+                            color: theme.textTheme.bodyMedium?.color
+                                ?.withOpacity(0.7),
                           ),
                         ),
                       ],
@@ -382,7 +403,11 @@ class _ExamListItem extends StatelessWidget {
 }
 
 class _Pill extends StatelessWidget {
-  const _Pill({required this.label, required this.color, required this.textColor});
+  const _Pill({
+    required this.label,
+    required this.color,
+    required this.textColor,
+  });
 
   final String label;
   final Color color;
@@ -398,7 +423,8 @@ class _Pill extends StatelessWidget {
       ),
       child: Text(
         label,
-        style: Theme.of(context).textTheme.labelLarge?.copyWith(
+        style:
+            Theme.of(context).textTheme.labelLarge?.copyWith(
               color: textColor,
               fontWeight: FontWeight.w600,
             ) ??
@@ -417,15 +443,23 @@ class _EmptyState extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return ListView(
-      physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+      physics: const AlwaysScrollableScrollPhysics(
+        parent: BouncingScrollPhysics(),
+      ),
       padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 96),
       children: [
-        Icon(CupertinoIcons.search, size: 64, color: theme.iconTheme.color?.withOpacity(0.35)),
+        Icon(
+          CupertinoIcons.search,
+          size: 64,
+          color: theme.iconTheme.color?.withOpacity(0.35),
+        ),
         const SizedBox(height: 20),
         Text(
           'Noch keine Prüfungen in diesem Semester.',
           textAlign: TextAlign.center,
-          style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+          style: theme.textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.w600,
+          ),
         ),
         const SizedBox(height: 8),
         Text(
@@ -460,18 +494,26 @@ class _ErrorState extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(CupertinoIcons.exclamationmark_triangle, size: 56, color: theme.colorScheme.error.withOpacity(0.8)),
+            Icon(
+              CupertinoIcons.exclamationmark_triangle,
+              size: 56,
+              color: theme.colorScheme.error.withOpacity(0.8),
+            ),
             const SizedBox(height: 16),
             Text(
               'Exameter konnte nicht geladen werden.',
               textAlign: TextAlign.center,
-              style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
             ),
             const SizedBox(height: 8),
             Text(
               message,
               textAlign: TextAlign.center,
-              style: theme.textTheme.bodySmall?.copyWith(color: theme.textTheme.bodySmall?.color?.withOpacity(0.7)),
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.textTheme.bodySmall?.color?.withOpacity(0.7),
+              ),
             ),
             const SizedBox(height: 20),
             CupertinoButton.filled(
@@ -498,11 +540,17 @@ class _MissingProfileState extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(CupertinoIcons.person_crop_circle_badge_exclam, size: 72, color: theme.iconTheme.color?.withOpacity(0.45)),
+            Icon(
+              CupertinoIcons.person_crop_circle_badge_exclam,
+              size: 72,
+              color: theme.iconTheme.color?.withOpacity(0.45),
+            ),
             const SizedBox(height: 18),
             Text(
               'Profil unvollständig',
-              style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w700,
+              ),
             ),
             const SizedBox(height: 8),
             Text(

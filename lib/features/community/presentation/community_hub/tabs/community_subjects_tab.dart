@@ -76,7 +76,11 @@ class _SubjectTile extends StatelessWidget {
           ),
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
-            BoxShadow(color: cs.primary.withOpacity(0.25), blurRadius: 16, offset: const Offset(0, 10)),
+            BoxShadow(
+              color: cs.primary.withOpacity(0.25),
+              blurRadius: 16,
+              offset: const Offset(0, 10),
+            ),
           ],
         ),
         padding: const EdgeInsets.all(16),
@@ -86,12 +90,17 @@ class _SubjectTile extends StatelessWidget {
           children: [
             Text(
               label,
-              style: theme.textTheme.titleMedium?.copyWith(color: cs.onPrimary, fontWeight: FontWeight.w700),
+              style: theme.textTheme.titleMedium?.copyWith(
+                color: cs.onPrimary,
+                fontWeight: FontWeight.w700,
+              ),
             ),
             const SizedBox(height: 8),
             Text(
               'Öffne Fach-Threads & Tipps',
-              style: theme.textTheme.bodySmall?.copyWith(color: cs.onPrimary.withOpacity(0.9)),
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: cs.onPrimary.withOpacity(0.9),
+              ),
             ),
           ],
         ),

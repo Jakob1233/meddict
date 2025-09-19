@@ -171,7 +171,8 @@ class UserDetailsCubit extends Cubit<UserDetailsState> {
 
       emit(UserDetailsFetchSuccess(userDetails));
 
-      final local = _profileManagementRepository.profileManagementLocalDataSource;
+      final local =
+          _profileManagementRepository.profileManagementLocalDataSource;
       if (profileUrl != null) {
         unawaited(local.serProfileUrl(profileUrl));
       }

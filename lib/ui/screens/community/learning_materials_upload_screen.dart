@@ -19,10 +19,12 @@ class LearningMaterialUploadScreen extends ConsumerStatefulWidget {
   final LearningMaterialTypeData defaultType;
 
   @override
-  LearningMaterialUploadScreenState createState() => LearningMaterialUploadScreenState();
+  LearningMaterialUploadScreenState createState() =>
+      LearningMaterialUploadScreenState();
 }
 
-class LearningMaterialUploadScreenState extends ConsumerState<LearningMaterialUploadScreen> {
+class LearningMaterialUploadScreenState
+    extends ConsumerState<LearningMaterialUploadScreen> {
   final _formKey = GlobalKey<FormState>();
   final _titleCtrl = TextEditingController();
   final _descriptionCtrl = TextEditingController();
@@ -36,9 +38,12 @@ class LearningMaterialUploadScreenState extends ConsumerState<LearningMaterialUp
   String? _fileError;
   String? _submissionError;
 
-  late final CommunityUserContext _userContext = ref.read(communityUserContextProvider);
+  late final CommunityUserContext _userContext = ref.read(
+    communityUserContextProvider,
+  );
   late final FirebaseAuth _auth = ref.read(authProvider);
-  final ProfileManagementLocalDataSource _local = ProfileManagementLocalDataSource();
+  final ProfileManagementLocalDataSource _local =
+      ProfileManagementLocalDataSource();
 
   static const List<String> _semesters = <String>[
     'S1',
@@ -59,7 +64,8 @@ class LearningMaterialUploadScreenState extends ConsumerState<LearningMaterialUp
   void initState() {
     super.initState();
     _selectedType = widget.defaultType;
-    if (_userContext.semester.isNotEmpty && _semesters.contains(_userContext.semester)) {
+    if (_userContext.semester.isNotEmpty &&
+        _semesters.contains(_userContext.semester)) {
       _selectedSemester = _userContext.semester;
     }
   }
@@ -81,7 +87,16 @@ class LearningMaterialUploadScreenState extends ConsumerState<LearningMaterialUp
       withData: kIsWeb,
       withReadStream: !kIsWeb,
       type: FileType.custom,
-      allowedExtensions: const ['pdf', 'doc', 'docx', 'ppt', 'pptx', 'jpg', 'jpeg', 'png'],
+      allowedExtensions: const [
+        'pdf',
+        'doc',
+        'docx',
+        'ppt',
+        'pptx',
+        'jpg',
+        'jpeg',
+        'png',
+      ],
     );
 
     if (result == null || result.files.isEmpty) {
@@ -113,13 +128,19 @@ class LearningMaterialUploadScreenState extends ConsumerState<LearningMaterialUp
 
     final user = _auth.currentUser;
     if (user == null) {
-      setState(() => _submissionError = 'Bitte melde dich an, um Materialien hochzuladen.');
+      setState(
+        () => _submissionError =
+            'Bitte melde dich an, um Materialien hochzuladen.',
+      );
       return;
     }
 
     final universityCode = _userContext.universityCode;
     if (universityCode.isEmpty) {
-      setState(() => _submissionError = 'Kein Uni-Kontext vorhanden. Prüfe deine Profilangaben.');
+      setState(
+        () => _submissionError =
+            'Kein Uni-Kontext vorhanden. Prüfe deine Profilangaben.',
+      );
       return;
     }
 
@@ -127,7 +148,9 @@ class LearningMaterialUploadScreenState extends ConsumerState<LearningMaterialUp
     final title = _titleCtrl.text.trim();
     final description = _descriptionCtrl.text.trim();
     final semester = _selectedSemester;
-    final uploaderName = _local.getName().trim().isEmpty ? user.displayName ?? '' : _local.getName().trim();
+    final uploaderName = _local.getName().trim().isEmpty
+        ? user.displayName ?? ''
+        : _local.getName().trim();
 
     setState(() => _isPublishing = true);
 
@@ -154,9 +177,15 @@ class LearningMaterialUploadScreenState extends ConsumerState<LearningMaterialUp
       if (!mounted) return;
       Navigator.of(context).pop(true);
     } on FirebaseException catch (err) {
-      setState(() => _submissionError = err.message ?? 'Der Upload ist fehlgeschlagen.');
+      setState(
+        () =>
+            _submissionError = err.message ?? 'Der Upload ist fehlgeschlagen.',
+      );
     } catch (err) {
-      setState(() => _submissionError = 'Der Upload ist fehlgeschlagen.(${err.toString()})');
+      setState(
+        () => _submissionError =
+            'Der Upload ist fehlgeschlagen.(${err.toString()})',
+      );
     } finally {
       if (mounted) {
         setState(() => _isPublishing = false);
@@ -167,9 +196,12 @@ class LearningMaterialUploadScreenState extends ConsumerState<LearningMaterialUp
   Future<String> _uploadToStorage(String uid, PlatformFile file) async {
     final storage = FirebaseStorage.instance;
     final sanitizedName = file.name.replaceAll(RegExp('[\\s]+'), '_');
-    final path = 'materials/$uid/${DateTime.now().millisecondsSinceEpoch}_$sanitizedName';
+    final path =
+        'materials/$uid/${DateTime.now().millisecondsSinceEpoch}_$sanitizedName';
     final ref = storage.ref().child(path);
-    final metadata = SettableMetadata(contentType: _contentTypeFor(file.extension));
+    final metadata = SettableMetadata(
+      contentType: _contentTypeFor(file.extension),
+    );
 
     final bytes = await _resolveBytes(file);
     final task = ref.putData(bytes, metadata);
@@ -251,7 +283,9 @@ class LearningMaterialUploadScreenState extends ConsumerState<LearningMaterialUp
                   children: [
                     ElevatedButton(
                       onPressed: _isPublishing ? null : _pickFile,
-                      style: ElevatedButton.styleFrom(shape: const StadiumBorder()),
+                      style: ElevatedButton.styleFrom(
+                        shape: const StadiumBorder(),
+                      ),
                       child: const Text('Hochladen'),
                     ),
                     const SizedBox(width: 12),
@@ -273,7 +307,9 @@ class LearningMaterialUploadScreenState extends ConsumerState<LearningMaterialUp
                     padding: const EdgeInsets.only(top: 8),
                     child: Text(
                       _fileError!,
-                      style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.error),
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.error,
+                      ),
                     ),
                   ),
                 const SizedBox(height: 24),
@@ -304,7 +340,10 @@ class LearningMaterialUploadScreenState extends ConsumerState<LearningMaterialUp
                 DropdownButtonFormField<String?>(
                   value: _selectedSemester,
                   items: [
-                    const DropdownMenuItem<String?>(value: null, child: Text('Kein Semester')),
+                    const DropdownMenuItem<String?>(
+                      value: null,
+                      child: Text('Kein Semester'),
+                    ),
                     for (final semester in _semesters)
                       DropdownMenuItem<String?>(
                         value: semester,
@@ -343,7 +382,9 @@ class LearningMaterialUploadScreenState extends ConsumerState<LearningMaterialUp
                     padding: const EdgeInsets.only(bottom: 12),
                     child: Text(
                       _submissionError!,
-                      style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.error),
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: theme.colorScheme.error,
+                      ),
                     ),
                   ),
                 Row(
@@ -355,7 +396,9 @@ class LearningMaterialUploadScreenState extends ConsumerState<LearningMaterialUp
                             ? const SizedBox(
                                 height: 22,
                                 width: 22,
-                                child: CircularProgressIndicator(strokeWidth: 2),
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
                               )
                             : const Text('Veröffentlichen'),
                       ),
@@ -363,7 +406,9 @@ class LearningMaterialUploadScreenState extends ConsumerState<LearningMaterialUp
                     const SizedBox(width: 12),
                     Expanded(
                       child: OutlinedButton(
-                        onPressed: _isPublishing ? null : () => Navigator.of(context).maybePop(),
+                        onPressed: _isPublishing
+                            ? null
+                            : () => Navigator.of(context).maybePop(),
                         child: const Text('Abbrechen'),
                       ),
                     ),
@@ -413,12 +458,18 @@ class _UploadBox extends StatelessWidget {
                 padding: const EdgeInsets.only(bottom: 16),
                 child: LinearProgressIndicator(value: progress),
               ),
-            Icon(Icons.cloud_upload_outlined, size: 48, color: theme.colorScheme.primary),
+            Icon(
+              Icons.cloud_upload_outlined,
+              size: 48,
+              color: theme.colorScheme.primary,
+            ),
             const SizedBox(height: 12),
             Text(
               file == null ? 'Datei wählen oder hier ablegen' : file!.name,
               textAlign: TextAlign.center,
-              style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
             ),
             if (file != null)
               Padding(

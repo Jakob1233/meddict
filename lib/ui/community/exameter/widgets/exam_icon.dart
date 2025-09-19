@@ -26,13 +26,19 @@ String _iconForExamTitle(String title, {bool isDent = false}) {
       t.contains('stoffwechsel')) {
     return 'assets/icons/exams/stomach.svg';
   }
-  if (t.contains('mikro') || t.contains('infekt') || t.contains('bakter') || t.contains('virolog')) {
+  if (t.contains('mikro') ||
+      t.contains('infekt') ||
+      t.contains('bakter') ||
+      t.contains('virolog')) {
     return 'assets/icons/exams/bacteria.svg';
   }
   if (t.contains('pharma') || t.contains('toxik') || t.contains('medikament')) {
     return 'assets/icons/exams/capsules.svg';
   }
-  if (t.contains('genetik') || t.contains('genom') || t.contains('bio') || t.contains('molek')) {
+  if (t.contains('genetik') ||
+      t.contains('genom') ||
+      t.contains('bio') ||
+      t.contains('molek')) {
     return 'assets/icons/exams/dna.svg';
   }
   if (isDent ||
@@ -47,7 +53,11 @@ String _iconForExamTitle(String title, {bool isDent = false}) {
   return 'assets/icons/exams/book.svg';
 }
 
-Widget buildExamIcon(BuildContext context, String title, {bool isDent = false}) {
+Widget buildExamIcon(
+  BuildContext context,
+  String title, {
+  bool isDent = false,
+}) {
   final theme = Theme.of(context);
   final iconPath = _iconForExamTitle(title, isDent: isDent);
   final backgroundColor = theme.brightness == Brightness.dark

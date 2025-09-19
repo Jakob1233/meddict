@@ -71,7 +71,10 @@ class _CreateRoomPageState extends ConsumerState<CreateRoomPage> {
     final cs = theme.colorScheme;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Create Room', style: theme.textTheme.titleLarge), // COMMUNITY 3.0
+        title: Text(
+          'Create Room',
+          style: theme.textTheme.titleLarge,
+        ), // COMMUNITY 3.0
       ),
       body: Form(
         key: _formKey,
@@ -81,7 +84,8 @@ class _CreateRoomPageState extends ConsumerState<CreateRoomPage> {
             TextFormField(
               controller: _nameCtrl,
               decoration: const InputDecoration(labelText: 'Name*'),
-              validator: (v) => (v == null || v.trim().isEmpty) ? 'Name erforderlich' : null,
+              validator: (v) =>
+                  (v == null || v.trim().isEmpty) ? 'Name erforderlich' : null,
             ),
             const SizedBox(height: 12),
             TextFormField(
@@ -113,8 +117,14 @@ class _CreateRoomPageState extends ConsumerState<CreateRoomPage> {
                       Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(12),
-                          image: DecorationImage(image: AssetImage(asset), fit: BoxFit.cover),
-                          border: Border.all(color: selected ? cs.primary : cs.outlineVariant, width: selected ? 2 : 1),
+                          image: DecorationImage(
+                            image: AssetImage(asset),
+                            fit: BoxFit.cover,
+                          ),
+                          border: Border.all(
+                            color: selected ? cs.primary : cs.outlineVariant,
+                            width: selected ? 2 : 1,
+                          ),
                         ),
                       ),
                       if (selected)
@@ -136,7 +146,8 @@ class _CreateRoomPageState extends ConsumerState<CreateRoomPage> {
               itemLabel: (s) => s,
               value: _semester,
               onChanged: (v) => setState(() => _semester = v),
-              validator: (v) => (v == null || v.isEmpty) ? 'Bitte wählen' : null,
+              validator: (v) =>
+                  (v == null || v.isEmpty) ? 'Bitte wählen' : null,
               borderRadius: 16,
             ),
             const SizedBox(height: 12),
@@ -144,18 +155,24 @@ class _CreateRoomPageState extends ConsumerState<CreateRoomPage> {
               label: 'Topic*',
               hintText: 'Topic wählen…',
               items: kTopics.map((t) => t.$1).toList(),
-              itemLabel: (value) =>
-                  kTopics.firstWhere((t) => t.$1 == value, orElse: () => kTopics.first).$2,
+              itemLabel: (value) => kTopics
+                  .firstWhere((t) => t.$1 == value, orElse: () => kTopics.first)
+                  .$2,
               value: _topic,
               onChanged: (v) => setState(() => _topic = v),
-              validator: (v) => (v == null || v.isEmpty) ? 'Bitte wählen' : null,
+              validator: (v) =>
+                  (v == null || v.isEmpty) ? 'Bitte wählen' : null,
               borderRadius: 16,
             ),
             const SizedBox(height: 24),
             FilledButton(
               onPressed: _saving ? null : _save,
               child: _saving
-                  ? const SizedBox(height: 18, width: 18, child: CircularProgressContainer(size: 18))
+                  ? const SizedBox(
+                      height: 18,
+                      width: 18,
+                      child: CircularProgressContainer(size: 18),
+                    )
                   : const Text('Speichern'),
             ),
           ],
@@ -166,16 +183,22 @@ class _CreateRoomPageState extends ConsumerState<CreateRoomPage> {
 
   Future<void> _save() async {
     if (!_formKey.currentState!.validate() || _imageAsset == null) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Bitte Pflichtfelder ausfüllen')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Bitte Pflichtfelder ausfüllen')),
+      );
       return;
     }
     setState(() => _saving = true);
     try {
       final uid = ref.read(currentUserIdProvider);
       if (uid == null) return;
-      final id = await ref.read(roomRepositoryProvider).createRoom(
+      final id = await ref
+          .read(roomRepositoryProvider)
+          .createRoom(
             name: _nameCtrl.text.trim(),
-            description: _descCtrl.text.trim().isEmpty ? null : _descCtrl.text.trim(),
+            description: _descCtrl.text.trim().isEmpty
+                ? null
+                : _descCtrl.text.trim(),
             createdBy: uid,
             imageAsset: _imageAsset!,
             semester: _semester!,
@@ -183,7 +206,9 @@ class _CreateRoomPageState extends ConsumerState<CreateRoomPage> {
           );
       if (!mounted) return;
       Navigator.pop(context);
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Room erstellt')));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Room erstellt')));
     } finally {
       if (mounted) setState(() => _saving = false);
     }

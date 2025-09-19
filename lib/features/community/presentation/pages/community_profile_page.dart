@@ -12,7 +12,9 @@ class CommunityProfilePage extends ConsumerWidget {
   static Route<CommunityProfilePage> route(RouteSettings rs) {
     final args = rs.arguments as Map<String, dynamic>?;
     final id = args?['communityId'] as String?;
-    return MaterialPageRoute(builder: (_) => CommunityProfilePage(communityId: id ?? ''));
+    return MaterialPageRoute(
+      builder: (_) => CommunityProfilePage(communityId: id ?? ''),
+    );
   }
 
   @override
@@ -23,7 +25,9 @@ class CommunityProfilePage extends ConsumerWidget {
     final postList = ref.watch(communityPostsProvider(communityId));
 
     return Scaffold(
-      appBar: AppBar(title: Text('Community', style: theme.textTheme.titleLarge)),
+      appBar: AppBar(
+        title: Text('Community', style: theme.textTheme.titleLarge),
+      ),
       body: Column(
         children: [
           // Header (basic)
@@ -31,9 +35,16 @@ class CommunityProfilePage extends ConsumerWidget {
             padding: const EdgeInsets.all(16),
             child: Row(
               children: [
-                CircleAvatar(radius: 24, child: Text(communityId.isNotEmpty ? communityId[0].toUpperCase() : '?')),
+                CircleAvatar(
+                  radius: 24,
+                  child: Text(
+                    communityId.isNotEmpty ? communityId[0].toUpperCase() : '?',
+                  ),
+                ),
                 const SizedBox(width: 12),
-                Expanded(child: Text(communityId, style: theme.textTheme.titleMedium)),
+                Expanded(
+                  child: Text(communityId, style: theme.textTheme.titleMedium),
+                ),
                 const SizedBox(width: 12),
                 OutlinedButton(
                   onPressed: userId == null
@@ -41,7 +52,9 @@ class CommunityProfilePage extends ConsumerWidget {
                       : () async {
                           // toggle membership (simple)
                           // Fetch current community membership once
-                          final sub = repo.communityStream(communityId).listen((c) async {
+                          final sub = repo.communityStream(communityId).listen((
+                            c,
+                          ) async {
                             if (c == null || userId == null) return;
                             final isMember = c.members.contains(userId);
                             if (isMember) {
@@ -50,7 +63,9 @@ class CommunityProfilePage extends ConsumerWidget {
                               await repo.join(communityId, userId);
                             }
                           });
-                          await Future<void>.delayed(const Duration(milliseconds: 100));
+                          await Future<void>.delayed(
+                            const Duration(milliseconds: 100),
+                          );
                           await sub.cancel();
                         },
                   child: const Text('Join/Leave'),
@@ -69,12 +84,18 @@ class CommunityProfilePage extends ConsumerWidget {
                   itemCount: items.length,
                   itemBuilder: (_, i) => ListTile(
                     title: Text(items[i].title),
-                    subtitle: Text(items[i].body, maxLines: 2, overflow: TextOverflow.ellipsis),
+                    subtitle: Text(
+                      items[i].body,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                 );
               },
               loading: () => const Center(child: CircularProgressContainer()),
-              error: (e, st) => Center(child: Text('Error: $e', style: theme.textTheme.bodyMedium)),
+              error: (e, st) => Center(
+                child: Text('Error: $e', style: theme.textTheme.bodyMedium),
+              ),
             ),
           ),
         ],

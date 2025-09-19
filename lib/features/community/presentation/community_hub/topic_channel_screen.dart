@@ -21,7 +21,10 @@ class TopicChannelScreen extends ConsumerStatefulWidget {
 
 class TopicChannelScreenState extends ConsumerState<TopicChannelScreen>
     with SingleTickerProviderStateMixin {
-  late final TabController _tabController = TabController(length: 2, vsync: this);
+  late final TabController _tabController = TabController(
+    length: 2,
+    vsync: this,
+  );
 
   @override
   void dispose() {
@@ -94,11 +97,11 @@ class _TopicPostsListState extends ConsumerState<_TopicPostsList> {
   }
 
   PagedPostsArgs get _args => PagedPostsArgs(
-        category: widget.category,
-        type: widget.type,
-        sort: _sort,
-        limit: 20,
-      );
+    category: widget.category,
+    type: widget.type,
+    sort: _sort,
+    limit: 20,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -120,7 +123,9 @@ class _TopicPostsListState extends ConsumerState<_TopicPostsList> {
                   decoration: InputDecoration(
                     hintText: 'Suchen…',
                     prefixIcon: const Icon(Icons.search),
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(18)),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(18),
+                    ),
                   ),
                 ),
               ),
@@ -128,8 +133,14 @@ class _TopicPostsListState extends ConsumerState<_TopicPostsList> {
               DropdownButton<PostSort>(
                 value: _sort,
                 items: const [
-                  DropdownMenuItem(value: PostSort.newest, child: Text('Neueste')),
-                  DropdownMenuItem(value: PostSort.upvotes, child: Text('Upvotes')),
+                  DropdownMenuItem(
+                    value: PostSort.newest,
+                    child: Text('Neueste'),
+                  ),
+                  DropdownMenuItem(
+                    value: PostSort.upvotes,
+                    child: Text('Upvotes'),
+                  ),
                 ],
                 onChanged: (value) {
                   if (value == null) return;
@@ -142,34 +153,37 @@ class _TopicPostsListState extends ConsumerState<_TopicPostsList> {
         ),
         Expanded(
           child: RefreshIndicator(
-            onRefresh: () => ref.read(pagedPostsProvider(_args).notifier).refresh(),
+            onRefresh: () =>
+                ref.read(pagedPostsProvider(_args).notifier).refresh(),
             child: state.isLoadingInitial
                 ? const Center(child: CircularProgressIndicator())
                 : posts.isEmpty
-                    ? _EmptyState(type: widget.type)
-                    : ListView.separated(
-                        controller: _scrollCtrl,
-                        padding: const EdgeInsets.only(bottom: 120, top: 8),
-                        itemBuilder: (context, index) {
-                          if (index >= posts.length) {
-                            if (state.isLoadingMore) {
-                              return const Padding(
-                                padding: EdgeInsets.symmetric(vertical: 16),
-                                child: Center(child: CircularProgressIndicator()),
-                              );
-                            }
-                            return const SizedBox.shrink();
-                          }
-                          final post = posts[index];
-                          return CommunityPostCard(
-                            post: post,
-                            onTap: () => Navigator.of(context)
-                                .pushNamed(Routes.postDetail, arguments: {'postId': post.id}),
+                ? _EmptyState(type: widget.type)
+                : ListView.separated(
+                    controller: _scrollCtrl,
+                    padding: const EdgeInsets.only(bottom: 120, top: 8),
+                    itemBuilder: (context, index) {
+                      if (index >= posts.length) {
+                        if (state.isLoadingMore) {
+                          return const Padding(
+                            padding: EdgeInsets.symmetric(vertical: 16),
+                            child: Center(child: CircularProgressIndicator()),
                           );
-                        },
-                        separatorBuilder: (_, __) => const SizedBox(height: 4),
-                        itemCount: posts.length + (state.isLoadingMore ? 1 : 0),
-                      ),
+                        }
+                        return const SizedBox.shrink();
+                      }
+                      final post = posts[index];
+                      return CommunityPostCard(
+                        post: post,
+                        onTap: () => Navigator.of(context).pushNamed(
+                          Routes.postDetail,
+                          arguments: {'postId': post.id},
+                        ),
+                      );
+                    },
+                    separatorBuilder: (_, __) => const SizedBox(height: 4),
+                    itemCount: posts.length + (state.isLoadingMore ? 1 : 0),
+                  ),
           ),
         ),
       ],
@@ -180,7 +194,8 @@ class _TopicPostsListState extends ConsumerState<_TopicPostsList> {
     if (_query.isEmpty) return items;
     final lower = _query.toLowerCase();
     return items.where((post) {
-      return post.title.toLowerCase().contains(lower) || post.body.toLowerCase().contains(lower);
+      return post.title.toLowerCase().contains(lower) ||
+          post.body.toLowerCase().contains(lower);
     }).toList();
   }
 
@@ -207,7 +222,11 @@ class _EmptyState extends StatelessWidget {
     return Center(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 32),
-        child: Text(text, textAlign: TextAlign.center, style: theme.textTheme.titleMedium),
+        child: Text(
+          text,
+          textAlign: TextAlign.center,
+          style: theme.textTheme.titleMedium,
+        ),
       ),
     );
   }

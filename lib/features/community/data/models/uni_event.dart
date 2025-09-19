@@ -26,15 +26,15 @@ class UniEvent {
   final DateTime createdAt; // COMMUNITY 2.0
 
   Map<String, dynamic> toMap() => {
-        'title': title,
-        'description': description,
-        'startAt': Timestamp.fromDate(startAt),
-        'endAt': endAt != null ? Timestamp.fromDate(endAt!) : null,
-        'location': location,
-        'createdBy': createdBy,
-        'imageUrl': imageUrl,
-        'createdAt': Timestamp.fromDate(createdAt),
-      };
+    'title': title,
+    'description': description,
+    'startAt': Timestamp.fromDate(startAt),
+    'endAt': endAt != null ? Timestamp.fromDate(endAt!) : null,
+    'location': location,
+    'createdBy': createdBy,
+    'imageUrl': imageUrl,
+    'createdAt': Timestamp.fromDate(createdAt),
+  };
 
   factory UniEvent.fromDoc(DocumentSnapshot<Map<String, dynamic>> doc) {
     final d = doc.data() ?? <String, dynamic>{};
@@ -51,4 +51,3 @@ class UniEvent {
     );
   }
 }
-

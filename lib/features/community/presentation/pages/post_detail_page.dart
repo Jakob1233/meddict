@@ -25,7 +25,9 @@ class PostDetailPage extends ConsumerWidget {
       body: postAsync.when(
         data: (post) {
           if (post == null) {
-            return Center(child: Text('Post deleted', style: theme.textTheme.bodyMedium));
+            return Center(
+              child: Text('Post deleted', style: theme.textTheme.bodyMedium),
+            );
           }
 
           final isUp = post.upvoters.contains(userId);
@@ -34,7 +36,9 @@ class PostDetailPage extends ConsumerWidget {
           // Keep answersCount in sync (lazy create / update)
           commentsAsync.whenData((list) {
             if (list.length != post.answersCount) {
-              ref.read(postRepositoryProvider).updateAnswersCount(postId, list.length);
+              ref
+                  .read(postRepositoryProvider)
+                  .updateAnswersCount(postId, list.length);
             }
           });
 
@@ -53,28 +57,50 @@ class PostDetailPage extends ConsumerWidget {
               const SizedBox(height: 16),
               Wrap(
                 spacing: 8,
-                children: post.tags.map((t) => Chip(label: Text('#$t'))).toList(),
+                children: post.tags
+                    .map((t) => Chip(label: Text('#$t')))
+                    .toList(),
               ),
               const SizedBox(height: 16),
               Row(
                 children: [
                   IconButton(
-                    icon: Icon(Icons.arrow_upward, color: isUp ? theme.colorScheme.primary : null),
+                    icon: Icon(
+                      Icons.arrow_upward,
+                      color: isUp ? theme.colorScheme.primary : null,
+                    ),
                     onPressed: userId == null
                         ? null
-                        : () => ref.read(postRepositoryProvider).toggleVote(postId: post.id, userId: userId, isUpvote: true),
+                        : () => ref
+                              .read(postRepositoryProvider)
+                              .toggleVote(
+                                postId: post.id,
+                                userId: userId,
+                                isUpvote: true,
+                              ),
                   ),
                   Text('${post.upvotes}'),
                   IconButton(
-                    icon: Icon(Icons.arrow_downward, color: isDown ? theme.colorScheme.primary : null),
+                    icon: Icon(
+                      Icons.arrow_downward,
+                      color: isDown ? theme.colorScheme.primary : null,
+                    ),
                     onPressed: userId == null
                         ? null
-                        : () => ref.read(postRepositoryProvider).toggleVote(postId: post.id, userId: userId, isUpvote: false),
+                        : () => ref
+                              .read(postRepositoryProvider)
+                              .toggleVote(
+                                postId: post.id,
+                                userId: userId,
+                                isUpvote: false,
+                              ),
                   ),
                   const Spacer(),
                   FilledButton.icon(
                     onPressed: () {
-                      Navigator.of(context).push(CommentsPage.route(postId: post.id));
+                      Navigator.of(
+                        context,
+                      ).push(CommentsPage.route(postId: post.id));
                     },
                     icon: const Icon(Icons.chat_outlined),
                     label: commentsAsync.maybeWhen(
@@ -88,7 +114,8 @@ class PostDetailPage extends ConsumerWidget {
           );
         },
         loading: () => const Center(child: CircularProgressContainer()),
-        error: (e, st) => Center(child: Text('Error: $e', style: theme.textTheme.bodyMedium)),
+        error: (e, st) =>
+            Center(child: Text('Error: $e', style: theme.textTheme.bodyMedium)),
       ),
     );
   }
@@ -121,14 +148,21 @@ class _CommentsPageState extends ConsumerState<CommentsPage> {
     final userId = ref.watch(currentUserIdProvider);
 
     return Scaffold(
-      appBar: AppBar(title: Text('Comments', style: theme.textTheme.titleLarge)),
+      appBar: AppBar(
+        title: Text('Comments', style: theme.textTheme.titleLarge),
+      ),
       body: Column(
         children: [
           Expanded(
             child: commentsAsync.when(
               data: (items) {
                 if (items.isEmpty) {
-                  return Center(child: Text('Be the first to comment', style: theme.textTheme.bodyMedium));
+                  return Center(
+                    child: Text(
+                      'Be the first to comment',
+                      style: theme.textTheme.bodyMedium,
+                    ),
+                  );
                 }
                 return ListView.separated(
                   padding: const EdgeInsets.all(16),
@@ -146,17 +180,35 @@ class _CommentsPageState extends ConsumerState<CommentsPage> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           IconButton(
-                            icon: Icon(Icons.arrow_upward, color: isUp ? theme.colorScheme.primary : null),
+                            icon: Icon(
+                              Icons.arrow_upward,
+                              color: isUp ? theme.colorScheme.primary : null,
+                            ),
                             onPressed: userId == null
                                 ? null
-                                : () => ref.read(commentRepositoryProvider).toggleVote(commentId: c.id, userId: userId, isUpvote: true),
+                                : () => ref
+                                      .read(commentRepositoryProvider)
+                                      .toggleVote(
+                                        commentId: c.id,
+                                        userId: userId,
+                                        isUpvote: true,
+                                      ),
                           ),
                           Text('$score'),
                           IconButton(
-                            icon: Icon(Icons.arrow_downward, color: isDown ? theme.colorScheme.primary : null),
+                            icon: Icon(
+                              Icons.arrow_downward,
+                              color: isDown ? theme.colorScheme.primary : null,
+                            ),
                             onPressed: userId == null
                                 ? null
-                                : () => ref.read(commentRepositoryProvider).toggleVote(commentId: c.id, userId: userId, isUpvote: false),
+                                : () => ref
+                                      .read(commentRepositoryProvider)
+                                      .toggleVote(
+                                        commentId: c.id,
+                                        userId: userId,
+                                        isUpvote: false,
+                                      ),
                           ),
                         ],
                       ),
@@ -165,7 +217,9 @@ class _CommentsPageState extends ConsumerState<CommentsPage> {
                 );
               },
               loading: () => const Center(child: CircularProgressContainer()),
-              error: (e, st) => Center(child: Text('Error: $e', style: theme.textTheme.bodyMedium)),
+              error: (e, st) => Center(
+                child: Text('Error: $e', style: theme.textTheme.bodyMedium),
+              ),
             ),
           ),
           const Divider(height: 1),
@@ -178,7 +232,9 @@ class _CommentsPageState extends ConsumerState<CommentsPage> {
                   Expanded(
                     child: TextField(
                       controller: _controller,
-                      decoration: const InputDecoration(hintText: 'Add a comment...'),
+                      decoration: const InputDecoration(
+                        hintText: 'Add a comment...',
+                      ),
                       minLines: 1,
                       maxLines: 4,
                     ),
@@ -190,7 +246,9 @@ class _CommentsPageState extends ConsumerState<CommentsPage> {
                         : () async {
                             final text = _controller.text.trim();
                             if (text.isEmpty) return;
-                            await ref.read(commentRepositoryProvider).addComment(
+                            await ref
+                                .read(commentRepositoryProvider)
+                                .addComment(
                                   postId: widget.postId,
                                   body: text,
                                   createdBy: userId,

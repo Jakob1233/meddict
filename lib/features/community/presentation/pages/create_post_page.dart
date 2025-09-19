@@ -42,7 +42,10 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
   }
 
   Future<void> _pickImage() async {
-    final picked = await ImagePicker().pickImage(source: ImageSource.gallery, imageQuality: 85);
+    final picked = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 85,
+    );
     if (picked != null) setState(() => _image = File(picked.path));
   }
 
@@ -51,7 +54,9 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
     final theme = Theme.of(context);
 
     return Scaffold(
-      appBar: AppBar(title: Text('Create Post', style: theme.textTheme.titleLarge)),
+      appBar: AppBar(
+        title: Text('Create Post', style: theme.textTheme.titleLarge),
+      ),
       body: Form(
         key: _formKey,
         child: ListView(
@@ -60,7 +65,8 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
             TextFormField(
               controller: _titleCtrl,
               decoration: const InputDecoration(labelText: 'Title'),
-              validator: (v) => v == null || v.trim().isEmpty ? 'Required' : null,
+              validator: (v) =>
+                  v == null || v.trim().isEmpty ? 'Required' : null,
             ),
             const SizedBox(height: 12),
             TextFormField(
@@ -105,18 +111,20 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                   onPressed: () async {
                     if (!_formKey.currentState!.validate()) return;
                     try {
-                      await ref.read(createPostProvider((
-                        title: _titleCtrl.text.trim(),
-                        body: _bodyCtrl.text.trim(),
-                        tags: _tagsCtrl.text
-                            .split(',')
-                            .map((e) => e.trim())
-                            .where((e) => e.isNotEmpty)
-                            .toList(),
-                        type: _type,
-                        communityId: null,
-                        imageFile: _image,
-                      )).future);
+                      await ref.read(
+                        createPostProvider((
+                          title: _titleCtrl.text.trim(),
+                          body: _bodyCtrl.text.trim(),
+                          tags: _tagsCtrl.text
+                              .split(',')
+                              .map((e) => e.trim())
+                              .where((e) => e.isNotEmpty)
+                              .toList(),
+                          type: _type,
+                          communityId: null,
+                          imageFile: _image,
+                        )).future,
+                      );
                       if (mounted) Navigator.of(context).pop();
                     } catch (e) {
                       if (!mounted) return;

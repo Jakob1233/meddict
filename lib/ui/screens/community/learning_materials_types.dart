@@ -9,28 +9,29 @@ class LearningMaterialTypeData {
   final String label;
   final String assetPath;
 
-  static const List<LearningMaterialTypeData> values = <LearningMaterialTypeData>[
-    LearningMaterialTypeData(
-      value: 'skripte',
-      label: 'Skripte',
-      assetPath: 'assets/images/materials/outline/skripte.svg',
-    ),
-    LearningMaterialTypeData(
-      value: 'folien',
-      label: 'Folien',
-      assetPath: 'assets/images/materials/outline/folien.svg',
-    ),
-    LearningMaterialTypeData(
-      value: 'zusammenfassungen',
-      label: 'Zusammenfassungen',
-      assetPath: 'assets/images/materials/outline/zusammenfassungen.svg',
-    ),
-    LearningMaterialTypeData(
-      value: 'dokumente',
-      label: 'Dokumente',
-      assetPath: 'assets/images/materials/outline/dokumente.svg',
-    ),
-  ];
+  static const List<LearningMaterialTypeData> values =
+      <LearningMaterialTypeData>[
+        LearningMaterialTypeData(
+          value: 'skripte',
+          label: 'Skripte',
+          assetPath: 'assets/images/materials/outline/skripte.svg',
+        ),
+        LearningMaterialTypeData(
+          value: 'folien',
+          label: 'Folien',
+          assetPath: 'assets/images/materials/outline/folien.svg',
+        ),
+        LearningMaterialTypeData(
+          value: 'zusammenfassungen',
+          label: 'Zusammenfassungen',
+          assetPath: 'assets/images/materials/outline/zusammenfassungen.svg',
+        ),
+        LearningMaterialTypeData(
+          value: 'dokumente',
+          label: 'Dokumente',
+          assetPath: 'assets/images/materials/outline/dokumente.svg',
+        ),
+      ];
 
   static LearningMaterialTypeData byValue(String value) {
     final normalized = value.toLowerCase();

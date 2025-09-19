@@ -26,7 +26,20 @@ const _categories = [
   'Divers',
 ];
 
-const _semesterOptions = ['S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'S7', 'S8', 'S9', 'S10', 'S11', 'S12'];
+const _semesterOptions = [
+  'S1',
+  'S2',
+  'S3',
+  'S4',
+  'S5',
+  'S6',
+  'S7',
+  'S8',
+  'S9',
+  'S10',
+  'S11',
+  'S12',
+];
 const _scopeOptions = [
   'Semester-spezifisch',
   'Uni-spezifisch',
@@ -49,30 +62,48 @@ class _UniversityOption {
   int get hashCode => code.hashCode;
 }
 
-Future<void> showQuestionComposer(BuildContext context, WidgetRef ref, {String? initialCategory}) {
+Future<void> showQuestionComposer(
+  BuildContext context,
+  WidgetRef ref, {
+  String? initialCategory,
+}) {
   return showModalBottomSheet<void>(
     context: context,
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
-    builder: (_) => _ComposerSheet(child: QuestionComposer(initialCategory: initialCategory)),
+    builder: (_) => _ComposerSheet(
+      child: QuestionComposer(initialCategory: initialCategory),
+    ),
   );
 }
 
-Future<void> showExamTipComposer(BuildContext context, WidgetRef ref, {String? initialCategory}) {
+Future<void> showExamTipComposer(
+  BuildContext context,
+  WidgetRef ref, {
+  String? initialCategory,
+}) {
   return showModalBottomSheet<void>(
     context: context,
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
-    builder: (_) => _ComposerSheet(child: ExamTipComposer(initialCategory: initialCategory)),
+    builder: (_) => _ComposerSheet(
+      child: ExamTipComposer(initialCategory: initialCategory),
+    ),
   );
 }
 
-Future<void> showExperienceComposer(BuildContext context, WidgetRef ref, {String? initialCategory}) {
+Future<void> showExperienceComposer(
+  BuildContext context,
+  WidgetRef ref, {
+  String? initialCategory,
+}) {
   return showModalBottomSheet<void>(
     context: context,
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
-    builder: (_) => _ComposerSheet(child: ExperienceComposer(initialCategory: initialCategory)),
+    builder: (_) => _ComposerSheet(
+      child: ExperienceComposer(initialCategory: initialCategory),
+    ),
   );
 }
 
@@ -131,8 +162,9 @@ class QuestionComposerState extends ConsumerState<QuestionComposer> {
     super.initState();
     final context = ref.read(communityUserContextProvider);
     _universityOptions = _buildUniversityOptions(context);
-    _hasSelectableUniversity =
-        _universityOptions.any((option) => option.code.isNotEmpty);
+    _hasSelectableUniversity = _universityOptions.any(
+      (option) => option.code.isNotEmpty,
+    );
     _isUniversitySearchable =
         _hasSelectableUniversity && _universityOptions.length > 6;
     if (_universityOptions.isNotEmpty) {
@@ -158,7 +190,9 @@ class QuestionComposerState extends ConsumerState<QuestionComposer> {
     super.dispose();
   }
 
-  List<_UniversityOption> _buildUniversityOptions(CommunityUserContext context) {
+  List<_UniversityOption> _buildUniversityOptions(
+    CommunityUserContext context,
+  ) {
     final options = <_UniversityOption>[];
     final seenCodes = <String>{};
 
@@ -169,7 +203,8 @@ class QuestionComposerState extends ConsumerState<QuestionComposer> {
       seenCodes.add(trimmedCode);
     }
 
-    if (context.universityName.isNotEmpty && context.universityCode.isNotEmpty) {
+    if (context.universityName.isNotEmpty &&
+        context.universityCode.isNotEmpty) {
       addOption(context.universityName, context.universityCode);
     }
 
@@ -179,7 +214,9 @@ class QuestionComposerState extends ConsumerState<QuestionComposer> {
     }
 
     if (options.isEmpty) {
-      options.add(const _UniversityOption(name: 'Keine Universität hinterlegt', code: ''));
+      options.add(
+        const _UniversityOption(name: 'Keine Universität hinterlegt', code: ''),
+      );
     }
 
     return options;
@@ -190,7 +227,9 @@ class QuestionComposerState extends ConsumerState<QuestionComposer> {
     final theme = Theme.of(context);
     return SafeArea(
       child: Padding(
-        padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
         child: SingleChildScrollView(
           padding: const EdgeInsets.fromLTRB(24, 24, 24, 32),
           child: Form(
@@ -201,9 +240,17 @@ class QuestionComposerState extends ConsumerState<QuestionComposer> {
                 Row(
                   children: [
                     Expanded(
-                      child: Text('Frage stellen', style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700)),
+                      child: Text(
+                        'Frage stellen',
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
                     ),
-                    IconButton(onPressed: () => Navigator.of(context).pop(), icon: const Icon(Icons.close)),
+                    IconButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      icon: const Icon(Icons.close),
+                    ),
                   ],
                 ),
                 const SizedBox(height: 16),
@@ -222,7 +269,8 @@ class QuestionComposerState extends ConsumerState<QuestionComposer> {
                       }
                     });
                   },
-                  validator: (value) => value == null ? 'Bitte Auswahl treffen' : null,
+                  validator: (value) =>
+                      value == null ? 'Bitte Auswahl treffen' : null,
                 ),
                 const SizedBox(height: 16),
                 AppDropdown<_UniversityOption>(
@@ -238,7 +286,8 @@ class QuestionComposerState extends ConsumerState<QuestionComposer> {
                       ? (value) => setState(() => _selectedUniversity = value)
                       : null,
                   validator: (value) {
-                    if (_selectedScope == 'Uni-spezifisch' || _selectedScope == 'Semester-spezifisch') {
+                    if (_selectedScope == 'Uni-spezifisch' ||
+                        _selectedScope == 'Semester-spezifisch') {
                       if (value == null || value.code.isEmpty) {
                         return 'Bitte Universität wählen';
                       }
@@ -256,20 +305,24 @@ class QuestionComposerState extends ConsumerState<QuestionComposer> {
                     itemLabel: (value) => value,
                     onChanged: (value) => setState(() => _semester = value),
                     validator: (value) {
-                      if (_selectedScope == 'Semester-spezifisch' && (value == null || value.isEmpty)) {
+                      if (_selectedScope == 'Semester-spezifisch' &&
+                          (value == null || value.isEmpty)) {
                         return 'Bitte Semester wählen';
                       }
                       return null;
                     },
                   ),
                 ],
-                if ((_selectedScope == 'Uni-spezifisch' || _selectedScope == 'Semester-spezifisch') &&
+                if ((_selectedScope == 'Uni-spezifisch' ||
+                        _selectedScope == 'Semester-spezifisch') &&
                     !_hasSelectableUniversity)
                   Padding(
                     padding: const EdgeInsets.only(top: 8),
                     child: Text(
                       'Hinweis: Ergänze dein Profil (Profil → Einstellungen), um diese Auswahl zu nutzen.',
-                      style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.error),
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.error,
+                      ),
                     ),
                   ),
                 const SizedBox(height: 16),
@@ -278,29 +331,37 @@ class QuestionComposerState extends ConsumerState<QuestionComposer> {
                   items: _categories,
                   value: _category,
                   itemLabel: (value) => value,
-                  onChanged: (value) => setState(() => _category = value ?? _categories.last),
+                  onChanged: (value) =>
+                      setState(() => _category = value ?? _categories.last),
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _titleCtrl,
                   maxLength: 120,
                   decoration: const InputDecoration(labelText: 'Titel *'),
-                  validator: (value) => (value == null || value.trim().isEmpty) ? 'Titel erforderlich' : null,
+                  validator: (value) => (value == null || value.trim().isEmpty)
+                      ? 'Titel erforderlich'
+                      : null,
                 ),
                 const SizedBox(height: 12),
                 TextFormField(
                   controller: _bodyCtrl,
                   maxLines: 6,
                   maxLength: 1000,
-                  decoration: const InputDecoration(labelText: 'Beschreibung (Markdown erlaubt) *'),
-                  validator: (value) => (value == null || value.trim().length < 10)
+                  decoration: const InputDecoration(
+                    labelText: 'Beschreibung (Markdown erlaubt) *',
+                  ),
+                  validator: (value) =>
+                      (value == null || value.trim().length < 10)
                       ? 'Bitte gib mindestens 10 Zeichen an.'
                       : null,
                 ),
                 const SizedBox(height: 12),
                 TextFormField(
                   controller: _tagsCtrl,
-                  decoration: const InputDecoration(labelText: 'Tags (durch Komma getrennt)'),
+                  decoration: const InputDecoration(
+                    labelText: 'Tags (durch Komma getrennt)',
+                  ),
                 ),
                 const SizedBox(height: 12),
                 SwitchListTile(
@@ -313,9 +374,11 @@ class QuestionComposerState extends ConsumerState<QuestionComposer> {
                     label: 'Referenztyp',
                     items: const ['quiz', 'flashcard'],
                     value: _refType,
-                    itemLabel: (value) => value == 'quiz' ? 'Quiz' : 'Flashcard',
+                    itemLabel: (value) =>
+                        value == 'quiz' ? 'Quiz' : 'Flashcard',
                     onChanged: (value) => setState(() => _refType = value),
-                    validator: (value) => value == null ? 'Bitte Typ wählen' : null,
+                    validator: (value) =>
+                        value == null ? 'Bitte Typ wählen' : null,
                   ),
                   const SizedBox(height: 12),
                   TextFormField(
@@ -323,7 +386,8 @@ class QuestionComposerState extends ConsumerState<QuestionComposer> {
                     decoration: const InputDecoration(labelText: 'Referenz-ID'),
                     validator: (value) {
                       if (!_linkToResource) return null;
-                      if (value == null || value.trim().isEmpty) return 'Referenz-ID erforderlich';
+                      if (value == null || value.trim().isEmpty)
+                        return 'Referenz-ID erforderlich';
                       return null;
                     },
                   ),
@@ -334,7 +398,11 @@ class QuestionComposerState extends ConsumerState<QuestionComposer> {
                   child: ElevatedButton(
                     onPressed: _submitting ? null : () => _submit(context),
                     child: _submitting
-                        ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2))
+                        ? const SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
                         : const Text('Frage veröffentlichen'),
                   ),
                 ),
@@ -356,13 +424,15 @@ class QuestionComposerState extends ConsumerState<QuestionComposer> {
     switch (_selectedScope) {
       case 'Semester-spezifisch':
         if (selectedUniversityCode.isEmpty) {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(const SnackBar(content: Text('Bitte Universität wählen.')));
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Bitte Universität wählen.')),
+          );
           return;
         }
         if (_semester == null || _semester!.isEmpty) {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(const SnackBar(content: Text('Bitte Semester wählen.')));
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Bitte Semester wählen.')),
+          );
           return;
         }
         scope = 'semester';
@@ -371,8 +441,9 @@ class QuestionComposerState extends ConsumerState<QuestionComposer> {
         break;
       case 'Uni-spezifisch':
         if (selectedUniversityCode.isEmpty) {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(const SnackBar(content: Text('Bitte Universität wählen.')));
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Bitte Universität wählen.')),
+          );
           return;
         }
         scope = 'uni';
@@ -386,8 +457,9 @@ class QuestionComposerState extends ConsumerState<QuestionComposer> {
 
     final userId = ref.read(currentUserIdProvider);
     if (userId == null) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Bitte logge dich ein.')));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Bitte logge dich ein.')));
       return;
     }
 
@@ -402,14 +474,27 @@ class QuestionComposerState extends ConsumerState<QuestionComposer> {
         scope: scope,
         semester: scopedSemester,
         universityCode: scopeUniversityCode,
-        tags: _tagsCtrl.text.split(',').map((e) => e.trim()).where((e) => e.isNotEmpty).toList(),
+        tags: _tagsCtrl.text
+            .split(',')
+            .map((e) => e.trim())
+            .where((e) => e.isNotEmpty)
+            .toList(),
         refType: _linkToResource ? _refType : null,
         refId: _linkToResource ? _refIdCtrl.text.trim() : null,
       );
       final ctx = ref.read(communityUserContextProvider);
       const sorts = [PostSort.newest, PostSort.upvotes];
       for (final sort in sorts) {
-        ref.invalidate(pagedPostsProvider(PagedPostsArgs(limit: 20, sort: sort, type: 'question', scope: 'community')));
+        ref.invalidate(
+          pagedPostsProvider(
+            PagedPostsArgs(
+              limit: 20,
+              sort: sort,
+              type: 'question',
+              scope: 'community',
+            ),
+          ),
+        );
         if (ctx.hasSemester) {
           ref.invalidate(
             pagedPostsProvider(
@@ -456,8 +541,9 @@ class QuestionComposerState extends ConsumerState<QuestionComposer> {
         const SnackBar(content: Text('Frage veröffentlicht.')),
       );
     } catch (err) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Fehler: $err')));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Fehler: $err')));
     } finally {
       if (mounted) setState(() => _submitting = false);
     }
@@ -480,7 +566,10 @@ class ExamTipComposerState extends ConsumerState<ExamTipComposer> {
   String? _examKind;
   final _titleCtrl = TextEditingController();
   final _bodyCtrl = TextEditingController();
-  final List<TextEditingController> _bullets = List.generate(3, (_) => TextEditingController());
+  final List<TextEditingController> _bullets = List.generate(
+    3,
+    (_) => TextEditingController(),
+  );
   bool _submitting = false;
 
   @override
@@ -498,7 +587,9 @@ class ExamTipComposerState extends ConsumerState<ExamTipComposer> {
     final theme = Theme.of(context);
     return SafeArea(
       child: Padding(
-        padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
         child: SingleChildScrollView(
           padding: const EdgeInsets.fromLTRB(24, 24, 24, 32),
           child: Form(
@@ -508,8 +599,18 @@ class ExamTipComposerState extends ConsumerState<ExamTipComposer> {
               children: [
                 Row(
                   children: [
-                    Expanded(child: Text('Examens-Tipp posten', style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700))),
-                    IconButton(onPressed: () => Navigator.of(context).pop(), icon: const Icon(Icons.close)),
+                    Expanded(
+                      child: Text(
+                        'Examens-Tipp posten',
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      icon: const Icon(Icons.close),
+                    ),
                   ],
                 ),
                 const SizedBox(height: 16),
@@ -518,7 +619,8 @@ class ExamTipComposerState extends ConsumerState<ExamTipComposer> {
                   items: _categories,
                   value: _category,
                   itemLabel: (value) => value,
-                  onChanged: (value) => setState(() => _category = value ?? _categories.last),
+                  onChanged: (value) =>
+                      setState(() => _category = value ?? _categories.last),
                 ),
                 const SizedBox(height: 16),
                 AppDropdown<String>(
@@ -536,41 +638,54 @@ class ExamTipComposerState extends ConsumerState<ExamTipComposer> {
                   value: _examKind,
                   itemLabel: (value) => value,
                   onChanged: (value) => setState(() => _examKind = value),
-                  validator: (value) => value == null ? 'Bitte Prüfungstyp wählen' : null,
+                  validator: (value) =>
+                      value == null ? 'Bitte Prüfungstyp wählen' : null,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _titleCtrl,
                   maxLength: 120,
                   decoration: const InputDecoration(labelText: 'Titel *'),
-                  validator: (value) => (value == null || value.trim().isEmpty) ? 'Titel erforderlich' : null,
+                  validator: (value) => (value == null || value.trim().isEmpty)
+                      ? 'Titel erforderlich'
+                      : null,
                 ),
                 const SizedBox(height: 12),
                 TextFormField(
                   controller: _bodyCtrl,
                   maxLines: 4,
                   maxLength: 600,
-                  decoration: const InputDecoration(labelText: 'Kurzbeschreibung *'),
-                  validator: (value) => (value == null || value.trim().length < 10)
+                  decoration: const InputDecoration(
+                    labelText: 'Kurzbeschreibung *',
+                  ),
+                  validator: (value) =>
+                      (value == null || value.trim().length < 10)
                       ? 'Mindestens 10 Zeichen angeben'
                       : null,
                 ),
                 const SizedBox(height: 12),
-                Text('Tipps (mindestens einer)*', style: theme.textTheme.labelLarge),
+                Text(
+                  'Tipps (mindestens einer)*',
+                  style: theme.textTheme.labelLarge,
+                ),
                 const SizedBox(height: 8),
-                ..._bullets.map((ctrl) => Padding(
-                      padding: const EdgeInsets.only(bottom: 8),
-                      child: TextFormField(
-                        controller: ctrl,
-                        decoration: const InputDecoration(labelText: 'Bullet'),
-                      ),
-                    )),
+                ..._bullets.map(
+                  (ctrl) => Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: TextFormField(
+                      controller: ctrl,
+                      decoration: const InputDecoration(labelText: 'Bullet'),
+                    ),
+                  ),
+                ),
                 Align(
                   alignment: Alignment.centerLeft,
                   child: TextButton.icon(
                     onPressed: _bullets.length >= 5
                         ? null
-                        : () => setState(() => _bullets.add(TextEditingController())),
+                        : () => setState(
+                            () => _bullets.add(TextEditingController()),
+                          ),
                     icon: const Icon(Icons.add),
                     label: const Text('Bullet hinzufügen'),
                   ),
@@ -581,7 +696,11 @@ class ExamTipComposerState extends ConsumerState<ExamTipComposer> {
                   child: ElevatedButton(
                     onPressed: _submitting ? null : () => _submit(context),
                     child: _submitting
-                        ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2))
+                        ? const SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
                         : const Text('Tipp veröffentlichen'),
                   ),
                 ),
@@ -595,16 +714,21 @@ class ExamTipComposerState extends ConsumerState<ExamTipComposer> {
 
   Future<void> _submit(BuildContext context) async {
     if (!_formKey.currentState!.validate()) return;
-    final bullets = _bullets.map((c) => c.text.trim()).where((text) => text.isNotEmpty).toList();
+    final bullets = _bullets
+        .map((c) => c.text.trim())
+        .where((text) => text.isNotEmpty)
+        .toList();
     if (bullets.isEmpty) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Mindestens einen Tipp eintragen.')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Mindestens einen Tipp eintragen.')),
+      );
       return;
     }
     final userId = ref.read(currentUserIdProvider);
     if (userId == null) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Bitte logge dich ein.')));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Bitte logge dich ein.')));
       return;
     }
 
@@ -621,15 +745,23 @@ class ExamTipComposerState extends ConsumerState<ExamTipComposer> {
         examKind: _examKind,
       );
       ref.invalidate(pagedPostsProvider(const PagedPostsArgs(limit: 20)));
-      ref.invalidate(pagedPostsProvider(const PagedPostsArgs(limit: 20, type: 'exam_tip')));
-      ref.invalidate(pagedPostsProvider(PagedPostsArgs(category: _category, type: 'exam_tip')));
+      ref.invalidate(
+        pagedPostsProvider(const PagedPostsArgs(limit: 20, type: 'exam_tip')),
+      );
+      ref.invalidate(
+        pagedPostsProvider(
+          PagedPostsArgs(category: _category, type: 'exam_tip'),
+        ),
+      );
       if (!mounted) return;
       Navigator.of(context).pop();
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Examens-Tipp veröffentlicht.')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Examens-Tipp veröffentlicht.')),
+      );
     } catch (err) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Fehler: $err')));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Fehler: $err')));
     } finally {
       if (mounted) setState(() => _submitting = false);
     }
@@ -655,7 +787,10 @@ class ExperienceComposerState extends ConsumerState<ExperienceComposer> {
   final _durationCtrl = TextEditingController();
   final _summaryCtrl = TextEditingController();
   final _lessonCtrl = TextEditingController();
-  final List<TextEditingController> _tips = List.generate(3, (_) => TextEditingController());
+  final List<TextEditingController> _tips = List.generate(
+    3,
+    (_) => TextEditingController(),
+  );
   bool _submitting = false;
 
   @override
@@ -677,7 +812,9 @@ class ExperienceComposerState extends ConsumerState<ExperienceComposer> {
     final theme = Theme.of(context);
     return SafeArea(
       child: Padding(
-        padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
         child: SingleChildScrollView(
           padding: const EdgeInsets.fromLTRB(24, 24, 24, 32),
           child: Form(
@@ -687,8 +824,18 @@ class ExperienceComposerState extends ConsumerState<ExperienceComposer> {
               children: [
                 Row(
                   children: [
-                    Expanded(child: Text('Erfahrung teilen', style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700))),
-                    IconButton(onPressed: () => Navigator.of(context).pop(), icon: const Icon(Icons.close)),
+                    Expanded(
+                      child: Text(
+                        'Erfahrung teilen',
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      icon: const Icon(Icons.close),
+                    ),
                   ],
                 ),
                 const SizedBox(height: 16),
@@ -697,7 +844,8 @@ class ExperienceComposerState extends ConsumerState<ExperienceComposer> {
                   items: _categories,
                   value: _category,
                   itemLabel: (value) => value,
-                  onChanged: (value) => setState(() => _category = value ?? _category),
+                  onChanged: (value) =>
+                      setState(() => _category = value ?? _category),
                 ),
                 const SizedBox(height: 16),
                 AppDropdown<String>(
@@ -713,19 +861,25 @@ class ExperienceComposerState extends ConsumerState<ExperienceComposer> {
                   controller: _titleCtrl,
                   maxLength: 120,
                   decoration: const InputDecoration(labelText: 'Titel *'),
-                  validator: (value) => (value == null || value.trim().isEmpty) ? 'Titel erforderlich' : null,
+                  validator: (value) => (value == null || value.trim().isEmpty)
+                      ? 'Titel erforderlich'
+                      : null,
                 ),
                 const SizedBox(height: 12),
                 TextFormField(
                   controller: _institutionCtrl,
                   decoration: const InputDecoration(labelText: 'Einrichtung *'),
-                  validator: (value) => (value == null || value.trim().isEmpty) ? 'Einrichtung angeben' : null,
+                  validator: (value) => (value == null || value.trim().isEmpty)
+                      ? 'Einrichtung angeben'
+                      : null,
                 ),
                 const SizedBox(height: 12),
                 TextFormField(
                   controller: _locationCtrl,
                   decoration: const InputDecoration(labelText: 'Ort *'),
-                  validator: (value) => (value == null || value.trim().isEmpty) ? 'Ort angeben' : null,
+                  validator: (value) => (value == null || value.trim().isEmpty)
+                      ? 'Ort angeben'
+                      : null,
                 ),
                 const SizedBox(height: 12),
                 TextFormField(
@@ -737,27 +891,34 @@ class ExperienceComposerState extends ConsumerState<ExperienceComposer> {
                   controller: _summaryCtrl,
                   maxLines: 4,
                   maxLength: 800,
-                  decoration: const InputDecoration(labelText: 'Zusammenfassung *'),
-                  validator: (value) => (value == null || value.trim().length < 10)
+                  decoration: const InputDecoration(
+                    labelText: 'Zusammenfassung *',
+                  ),
+                  validator: (value) =>
+                      (value == null || value.trim().length < 10)
                       ? 'Bitte mind. 10 Zeichen angeben'
                       : null,
                 ),
                 const SizedBox(height: 12),
                 Text('Tipps', style: theme.textTheme.labelLarge),
                 const SizedBox(height: 8),
-                ..._tips.map((ctrl) => Padding(
-                      padding: const EdgeInsets.only(bottom: 8),
-                      child: TextFormField(
-                        controller: ctrl,
-                        decoration: const InputDecoration(labelText: 'Tipp'),
-                      ),
-                    )),
+                ..._tips.map(
+                  (ctrl) => Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: TextFormField(
+                      controller: ctrl,
+                      decoration: const InputDecoration(labelText: 'Tipp'),
+                    ),
+                  ),
+                ),
                 Align(
                   alignment: Alignment.centerLeft,
                   child: TextButton.icon(
                     onPressed: _tips.length >= 5
                         ? null
-                        : () => setState(() => _tips.add(TextEditingController())),
+                        : () => setState(
+                            () => _tips.add(TextEditingController()),
+                          ),
                     icon: const Icon(Icons.add),
                     label: const Text('Weiteren Tipp hinzufügen'),
                   ),
@@ -766,7 +927,9 @@ class ExperienceComposerState extends ConsumerState<ExperienceComposer> {
                 TextFormField(
                   controller: _lessonCtrl,
                   maxLines: 3,
-                  decoration: const InputDecoration(labelText: 'Was hätte ich früher wissen sollen?'),
+                  decoration: const InputDecoration(
+                    labelText: 'Was hätte ich früher wissen sollen?',
+                  ),
                 ),
                 const SizedBox(height: 18),
                 SizedBox(
@@ -774,7 +937,11 @@ class ExperienceComposerState extends ConsumerState<ExperienceComposer> {
                   child: ElevatedButton(
                     onPressed: _submitting ? null : () => _submit(context),
                     child: _submitting
-                        ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2))
+                        ? const SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
                         : const Text('Erfahrung veröffentlichen'),
                   ),
                 ),
@@ -790,19 +957,24 @@ class ExperienceComposerState extends ConsumerState<ExperienceComposer> {
     if (!_formKey.currentState!.validate()) return;
     final userId = ref.read(currentUserIdProvider);
     if (userId == null) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Bitte logge dich ein.')));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Bitte logge dich ein.')));
       return;
     }
 
-    final tips = _tips.map((c) => c.text.trim()).where((text) => text.isNotEmpty).toList();
+    final tips = _tips
+        .map((c) => c.text.trim())
+        .where((text) => text.isNotEmpty)
+        .toList();
 
     final template = {
       'institution': _institutionCtrl.text.trim(),
       'location': _locationCtrl.text.trim(),
       'duration': _durationCtrl.text.trim(),
       if (tips.isNotEmpty) 'tips': tips,
-      if (_lessonCtrl.text.trim().isNotEmpty) 'lessonLearned': _lessonCtrl.text.trim(),
+      if (_lessonCtrl.text.trim().isNotEmpty)
+        'lessonLearned': _lessonCtrl.text.trim(),
     };
 
     setState(() => _submitting = true);
@@ -817,14 +989,18 @@ class ExperienceComposerState extends ConsumerState<ExperienceComposer> {
         template: template,
       );
       ref.invalidate(pagedPostsProvider(const PagedPostsArgs(limit: 20)));
-      ref.invalidate(pagedPostsProvider(const PagedPostsArgs(type: 'experience', limit: 20)));
+      ref.invalidate(
+        pagedPostsProvider(const PagedPostsArgs(type: 'experience', limit: 20)),
+      );
       if (!mounted) return;
       Navigator.of(context).pop();
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Erfahrung gespeichert.')));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Erfahrung gespeichert.')));
     } catch (err) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Fehler: $err')));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Fehler: $err')));
     } finally {
       if (mounted) setState(() => _submitting = false);
     }

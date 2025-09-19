@@ -511,7 +511,8 @@ class HomeScreenState extends State<HomeScreen>
                     final textColor = theme.brightness == Brightness.light
                         ? Colors.black
                         : Colors.white;
-                    final headingStyle = theme.textTheme.titleLarge?.copyWith(
+                    final headingStyle =
+                        theme.textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeights.bold,
                           color: textColor,
                         ) ??
@@ -568,7 +569,8 @@ class HomeScreenState extends State<HomeScreen>
                           final textColor = theme.brightness == Brightness.light
                               ? Colors.black
                               : Colors.white;
-                          final titleStyle = theme.textTheme.titleMedium?.copyWith(
+                          final titleStyle =
+                              theme.textTheme.titleMedium?.copyWith(
                                 fontWeight: FontWeight.w700,
                                 color: textColor,
                               ) ??
@@ -581,8 +583,9 @@ class HomeScreenState extends State<HomeScreen>
                           final width = constraints.maxWidth.isFinite
                               ? constraints.maxWidth
                               : constraints.minWidth;
-                          final safeWidth =
-                              width.isFinite && width > 0 ? width : 200.0;
+                          final safeWidth = width.isFinite && width > 0
+                              ? width
+                              : 200.0;
                           final height = constraints.maxHeight.isFinite
                               ? constraints.maxHeight
                               : safeWidth;
@@ -643,7 +646,8 @@ class HomeScreenState extends State<HomeScreen>
                     final textColor = theme.brightness == Brightness.light
                         ? Colors.black
                         : Colors.white;
-                    final headingStyle = theme.textTheme.titleLarge?.copyWith(
+                    final headingStyle =
+                        theme.textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeights.bold,
                           color: textColor,
                         ) ??
@@ -698,7 +702,8 @@ class HomeScreenState extends State<HomeScreen>
                           final textColor = theme.brightness == Brightness.light
                               ? Colors.black
                               : Colors.white;
-                          final titleStyle = theme.textTheme.titleMedium?.copyWith(
+                          final titleStyle =
+                              theme.textTheme.titleMedium?.copyWith(
                                 fontWeight: FontWeight.w700,
                                 color: textColor,
                               ) ??
@@ -711,8 +716,9 @@ class HomeScreenState extends State<HomeScreen>
                           final width = constraints.maxWidth.isFinite
                               ? constraints.maxWidth
                               : constraints.minWidth;
-                          final safeWidth =
-                              width.isFinite && width > 0 ? width : 200.0;
+                          final safeWidth = width.isFinite && width > 0
+                              ? width
+                              : 200.0;
                           final height = constraints.maxHeight.isFinite
                               ? constraints.maxHeight
                               : safeWidth;
@@ -1214,7 +1220,9 @@ class HomeScreenState extends State<HomeScreen>
                           const SizedBox(height: 16),
                           if (!_isGuest)
                             Padding(
-                              padding: EdgeInsets.symmetric(horizontal: hzMargin),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: hzMargin,
+                              ),
                               child: ElevatedButton.icon(
                                 onPressed: () {
                                   Navigator.of(context).push(
@@ -1222,13 +1230,16 @@ class HomeScreenState extends State<HomeScreen>
                                       builder: (_) => MultiBlocProvider(
                                         providers: [
                                           BlocProvider<LeaderBoardMonthlyCubit>(
-                                            create: (_) => LeaderBoardMonthlyCubit(),
+                                            create: (_) =>
+                                                LeaderBoardMonthlyCubit(),
                                           ),
                                           BlocProvider<LeaderBoardDailyCubit>(
-                                            create: (_) => LeaderBoardDailyCubit(),
+                                            create: (_) =>
+                                                LeaderBoardDailyCubit(),
                                           ),
                                           BlocProvider<LeaderBoardAllTimeCubit>(
-                                            create: (_) => LeaderBoardAllTimeCubit(),
+                                            create: (_) =>
+                                                LeaderBoardAllTimeCubit(),
                                           ),
                                         ],
                                         child: const LeaderBoardScreen(),

@@ -26,15 +26,15 @@ class Room {
   final String topic; // COMMUNITY 3.0
 
   Map<String, dynamic> toMap() => {
-        'name': name,
-        'description': description,
-        'membersCount': membersCount,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'createdBy': createdBy,
-        'imageAsset': imageAsset, // COMMUNITY 3.0
-        'semester': semester, // COMMUNITY 3.0
-        'topic': topic, // COMMUNITY 3.0
-      };
+    'name': name,
+    'description': description,
+    'membersCount': membersCount,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'createdBy': createdBy,
+    'imageAsset': imageAsset, // COMMUNITY 3.0
+    'semester': semester, // COMMUNITY 3.0
+    'topic': topic, // COMMUNITY 3.0
+  };
 
   factory Room.fromDoc(DocumentSnapshot<Map<String, dynamic>> doc) {
     final d = doc.data() ?? <String, dynamic>{};
@@ -43,10 +43,11 @@ class Room {
       name: (d['name'] as String?) ?? '',
       description: d['description'] as String?,
       membersCount: (d['membersCount'] as num?)?.toInt() ?? 0,
-      createdAt:
-          (d['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      createdAt: (d['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
       createdBy: (d['createdBy'] as String?) ?? '',
-      imageAsset: (d['imageAsset'] as String?) ?? 'assets/images/rooms/room_01.png', // COMMUNITY 3.0
+      imageAsset:
+          (d['imageAsset'] as String?) ??
+          'assets/images/rooms/room_01.png', // COMMUNITY 3.0
       semester: (d['semester'] as String?) ?? 'unspezifisch', // COMMUNITY 3.0
       topic: (d['topic'] as String?) ?? 'allgemein', // COMMUNITY 3.0
     );

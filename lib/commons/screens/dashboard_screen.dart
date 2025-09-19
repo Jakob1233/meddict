@@ -48,6 +48,7 @@ class DashboardScreenState extends State<DashboardScreen> {
   final _currTabIndex = ValueNotifier<int>(0);
   late final StreamSubscription _tabsSub;
   bool _disposed = false;
+  int _communityTabIndex = 0;
 
   void changeTab(NavTabType type) {
     final index = _navTabs.indexWhere((e) => e.tab == type);
@@ -104,7 +105,10 @@ class DashboardScreenState extends State<DashboardScreen> {
       title: 'Community', // COMMUNITY 2.0
       icon: Assets.communityNavIcon,
       activeIcon: Assets.communityActiveNavIcon,
-      child: CommunityHubScreen(key: navTabsKeys[NavTabType.quizZone]),
+      child: CommunityHubScreen(
+        key: navTabsKeys[NavTabType.quizZone],
+        onTabChanged: onCommunityTabChanged,
+      ),
     ),
     NavTab(
       tab: NavTabType.playZone,
@@ -188,7 +192,10 @@ class DashboardScreenState extends State<DashboardScreen> {
         title: 'Community', // COMMUNITY 2.0
         icon: Assets.communityNavIcon,
         activeIcon: Assets.communityActiveNavIcon,
-        child: CommunityHubScreen(key: navTabsKeys[NavTabType.quizZone]),
+        child: CommunityHubScreen(
+          key: navTabsKeys[NavTabType.quizZone],
+          onTabChanged: onCommunityTabChanged,
+        ),
       ),
       if (config.isPlayZoneEnabled)
         NavTab(
@@ -198,14 +205,17 @@ class DashboardScreenState extends State<DashboardScreen> {
           activeIcon: Assets.playZoneActiveNavIcon,
           child: PlayZoneTabScreen(key: navTabsKeys[NavTabType.playZone]),
         ),
-      NavTab(
-        tab: NavTabType.profile,
-        title: 'navProfile',
-        icon: Assets.profileNavIcon,
-        activeIcon: Assets.profileActiveNavIcon,
-        child: ProfileTabScreen(key: navTabsKeys[NavTabType.profile]),
-      ),
-    ];
+    NavTab(
+      tab: NavTabType.profile,
+      title: 'navProfile',
+      icon: Assets.profileNavIcon,
+      activeIcon: Assets.profileActiveNavIcon,
+      child: ProfileTabScreen(key: navTabsKeys[NavTabType.profile]),
+    ),
+  ];
+    if (!_navTabs.any((tab) => tab.tab == NavTabType.quizZone)) {
+      _communityTabIndex = 0;
+    }
     if (!mounted || _disposed) return;
     setState(() {});
   }
@@ -257,11 +267,84 @@ class DashboardScreenState extends State<DashboardScreen> {
                     .map((navTab) => navTab.child)
                     .toList(growable: false),
               ),
+              floatingActionButton: _buildFloatingActionButton(context, currentIndex),
               bottomNavigationBar: _buildBottomNavigationBar(),
             ),
           );
         },
       ),
+    );
+  }
+
+  Widget? _buildFloatingActionButton(BuildContext context, int currentIndex) {
+    if (_navTabs.isEmpty || currentIndex < 0 || currentIndex >= _navTabs.length) {
+      return null;
+    }
+
+    final navTab = _navTabs[currentIndex];
+    if (navTab.tab != NavTabType.quizZone) {
+      return null;
+    }
+
+    switch (_communityTabIndex) {
+      case 0:
+        return FloatingActionButton.extended(
+          heroTag: 'fab-community-ask-question',
+          onPressed: () => _openAskQuestion(context),
+          icon: const Icon(Icons.edit),
+          label: const Text('Frage stellen'),
+        );
+      case 1:
+        return FloatingActionButton(
+          heroTag: 'fab-community-learning',
+          onPressed: () => _createLearningItem(context),
+          tooltip: 'Add',
+          child: const Icon(Icons.add),
+        );
+      default:
+        return null;
+    }
+  }
+
+  void onCommunityTabChanged(int index) {
+    if (_disposed || !mounted) {
+      return;
+    }
+    if (_communityTabIndex == index) {
+      return;
+    }
+    setState(() {
+      _communityTabIndex = index;
+    });
+  }
+
+  CommunityHubScreenState? get _communityHubState {
+    final key = navTabsKeys[NavTabType.quizZone];
+    if (key is GlobalKey<CommunityHubScreenState>) {
+      return key.currentState;
+    }
+    return null;
+  }
+
+  void _openAskQuestion(BuildContext context) {
+    final hubState = _communityHubState;
+    if (hubState != null) {
+      hubState.openQuestionComposer();
+      return;
+    }
+    ScaffoldMessenger.maybeOf(context)?.showSnackBar(
+      const SnackBar(content: Text('Community nicht verfügbar.')),
+    );
+  }
+
+  void _createLearningItem(BuildContext context) {
+    final hubState = _communityHubState;
+    if (hubState != null) {
+      hubState.openLearningMaterialCreator();
+      return;
+    }
+    ScaffoldMessenger.maybeOf(context)?.showSnackBar(
+      const SnackBar(content: Text('Bereich für Lernmaterialien nicht verfügbar.')),
     );
   }
 
@@ -302,11 +385,6 @@ class DashboardScreenState extends State<DashboardScreen> {
             HapticFeedback.mediumImpact();
             _currTabIndex.value = idx;
             _pageController.jumpToPage(idx);
-          } else {
-            HapticFeedback.mediumImpact();
-            // Call onTapTab() method of the current tab
-            // ignore: avoid_dynamic_calls
-            navTabsKeys[_navTabs[idx].tab]?.currentState?.onTapTab();
           }
         },
       ),

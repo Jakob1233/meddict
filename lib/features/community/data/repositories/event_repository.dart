@@ -46,8 +46,9 @@ class EventRepository {
     final doc = _events.doc();
     String? imageUrl;
     if (image != null) {
-      final ref = _storage
-          .ref('events/${doc.id}/images/${DateTime.now().millisecondsSinceEpoch}_${image.uri.pathSegments.last}');
+      final ref = _storage.ref(
+        'events/${doc.id}/images/${DateTime.now().millisecondsSinceEpoch}_${image.uri.pathSegments.last}',
+      );
       final task = await ref.putFile(image);
       imageUrl = await task.ref.getDownloadURL();
     }

@@ -37,17 +37,17 @@ class Exam {
   int get commentsCount => notesCount;
 
   Map<String, dynamic> toJson() => {
-        'title': title,
-        'universityCode': universityCode,
-        'semester': semester,
-        'track': track,
-        'createdAt': createdAt,
-        'ratingsCount': ratingsCount,
-        'ratingsAvgMass': ratingsAvgMass,
-        'ratingsAvgDifficulty': ratingsAvgDifficulty,
-        'ratingsAvgPastQ': ratingsAvgPastQ,
-        'compositeScore': compositeScore,
-      };
+    'title': title,
+    'universityCode': universityCode,
+    'semester': semester,
+    'track': track,
+    'createdAt': createdAt,
+    'ratingsCount': ratingsCount,
+    'ratingsAvgMass': ratingsAvgMass,
+    'ratingsAvgDifficulty': ratingsAvgDifficulty,
+    'ratingsAvgPastQ': ratingsAvgPastQ,
+    'compositeScore': compositeScore,
+  };
 
   factory Exam.fromDoc(DocumentSnapshot<Map<String, dynamic>> doc) {
     return Exam.fromSnap(doc.id, doc.data() ?? <String, dynamic>{});
@@ -105,9 +105,18 @@ class Exam {
       track: (data['track'] as String? ?? 'human').trim().toLowerCase(),
       createdAt: parseDate(data['createdAt']),
       ratingsCount: parseInt(data['ratingsCount']),
-      ratingsAvgMass: parseNormalized(data['ratingsAvgMass'], data['ratingsAvgEffort']),
-      ratingsAvgDifficulty: parseNormalized(data['ratingsAvgDifficulty'], data['ratingsAvgPrepWeeks']),
-      ratingsAvgPastQ: parseNormalized(data['ratingsAvgPastQ'], data['ratingsAvgPastQuestions']),
+      ratingsAvgMass: parseNormalized(
+        data['ratingsAvgMass'],
+        data['ratingsAvgEffort'],
+      ),
+      ratingsAvgDifficulty: parseNormalized(
+        data['ratingsAvgDifficulty'],
+        data['ratingsAvgPrepWeeks'],
+      ),
+      ratingsAvgPastQ: parseNormalized(
+        data['ratingsAvgPastQ'],
+        data['ratingsAvgPastQuestions'],
+      ),
       compositeScore: _clamp(parseDouble(data['compositeScore'])),
       lastAggregateAt: data['lastAggregateAt'] == null
           ? null

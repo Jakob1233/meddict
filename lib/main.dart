@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutterquiz/app/app.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -13,12 +14,14 @@ Future<void> main() async {
     ),
   );
 }
+
 class _BootstrapApp extends StatefulWidget {
   const _BootstrapApp({required this.appFuture});
   final Future<Widget> appFuture;
   @override
   State<_BootstrapApp> createState() => _BootstrapAppState();
 }
+
 class _BootstrapAppState extends State<_BootstrapApp> {
   @override
   Widget build(BuildContext context) {
@@ -29,6 +32,7 @@ class _BootstrapAppState extends State<_BootstrapApp> {
       },
     );
   }
+
   Widget _buildMainApp(ConnectionState authState) {
     return FutureBuilder<Widget>(
       future: widget.appFuture,
@@ -47,6 +51,7 @@ class _BootstrapAppState extends State<_BootstrapApp> {
     );
   }
 }
+
 class _LoadingScreen extends StatelessWidget {
   const _LoadingScreen();
   @override

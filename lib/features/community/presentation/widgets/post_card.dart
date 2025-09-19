@@ -29,12 +29,16 @@ class _PostCardState extends ConsumerState<PostCard> {
     final parts = name.trim().split(RegExp(r"\s+"));
     final first = parts.isNotEmpty ? parts.first : '';
     final second = parts.length > 1 ? parts[1] : '';
-    final letters = (first.isNotEmpty ? first[0] : '') + (second.isNotEmpty ? second[0] : '');
+    final letters =
+        (first.isNotEmpty ? first[0] : '') +
+        (second.isNotEmpty ? second[0] : '');
     return letters.toUpperCase();
   }
 
   String _handleFromName(String name) {
-    final base = name.isEmpty ? 'user' : name.toLowerCase().split(RegExp(r"\s+"))[0];
+    final base = name.isEmpty
+        ? 'user'
+        : name.toLowerCase().split(RegExp(r"\s+"))[0];
     return '@$base';
   }
 
@@ -75,14 +79,21 @@ class _PostCardState extends ConsumerState<PostCard> {
     Widget avatar() {
       final bg = cs.primary.withOpacity(0.1);
       if (avatarUrl != null && avatarUrl.isNotEmpty) {
-        return CircleAvatar(radius: 16, backgroundImage: NetworkImage(avatarUrl), backgroundColor: bg);
+        return CircleAvatar(
+          radius: 16,
+          backgroundImage: NetworkImage(avatarUrl),
+          backgroundColor: bg,
+        );
       }
       // fallback to monogram of actual displayName (no generic dummy avatar)
       final monogram = _monogram(displayName);
       return CircleAvatar(
         radius: 16,
         backgroundColor: bg,
-        child: Text(monogram.isNotEmpty ? monogram : 'U', style: theme.textTheme.labelSmall),
+        child: Text(
+          monogram.isNotEmpty ? monogram : 'U',
+          style: theme.textTheme.labelSmall,
+        ),
       );
     }
 
@@ -100,7 +111,11 @@ class _PostCardState extends ConsumerState<PostCard> {
         borderRadius: BorderRadius.circular(radius),
         border: Border.all(color: _brandBlue, width: 1),
         boxShadow: [
-          BoxShadow(color: _brandBlue.withOpacity(0.15), blurRadius: 12, offset: const Offset(0, 6)),
+          BoxShadow(
+            color: _brandBlue.withOpacity(0.15),
+            blurRadius: 12,
+            offset: const Offset(0, 6),
+          ),
         ],
       ),
       clipBehavior: Clip.antiAlias,
@@ -128,7 +143,10 @@ class _PostCardState extends ConsumerState<PostCard> {
                               displayName,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600, color: cs.onSurface),
+                              style: theme.textTheme.titleSmall?.copyWith(
+                                fontWeight: FontWeight.w600,
+                                color: cs.onSurface,
+                              ),
                             ),
                           ),
                           const SizedBox(width: 6),
@@ -137,7 +155,9 @@ class _PostCardState extends ConsumerState<PostCard> {
                               handle,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: theme.textTheme.labelSmall?.copyWith(color: cs.onSurfaceVariant),
+                              style: theme.textTheme.labelSmall?.copyWith(
+                                color: cs.onSurfaceVariant,
+                              ),
                             ),
                           ),
                         ],
@@ -145,18 +165,28 @@ class _PostCardState extends ConsumerState<PostCard> {
                     ),
                     IconButton(
                       tooltip: 'Mehr',
-                      onPressed: () => _showMoreMenu(context, cs, currentUserId, post.id, isOwner: currentUserId == post.createdBy),
+                      onPressed: () => _showMoreMenu(
+                        context,
+                        cs,
+                        currentUserId,
+                        post.id,
+                        isOwner: currentUserId == post.createdBy,
+                      ),
                       icon: const Icon(Icons.more_vert),
                     ),
                   ],
                 ),
 
                 // Title (mostly for photo card)
-                if (isPhoto && (post.title).trim().isNotEmpty) const SizedBox(height: 12),
+                if (isPhoto && (post.title).trim().isNotEmpty)
+                  const SizedBox(height: 12),
                 if (isPhoto && (post.title).trim().isNotEmpty)
                   Text(
                     post.title,
-                    style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600, color: cs.onSurface),
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: cs.onSurface,
+                    ),
                   ),
 
                 // Body text (text-only card shows body, photo card shows if present before photo)
@@ -164,8 +194,12 @@ class _PostCardState extends ConsumerState<PostCard> {
                 if ((post.body).trim().isNotEmpty)
                   Text(
                     post.body,
-                    textHeightBehavior: const TextHeightBehavior(applyHeightToFirstAscent: false),
-                    style: theme.textTheme.bodyMedium?.copyWith(color: cs.onSurface),
+                    textHeightBehavior: const TextHeightBehavior(
+                      applyHeightToFirstAscent: false,
+                    ),
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: cs.onSurface,
+                    ),
                   ),
 
                 // Photo (if any)
@@ -225,13 +259,30 @@ class _PostCardState extends ConsumerState<PostCard> {
                       score: score,
                       onUp: currentUserId == null
                           ? null
-                          : () => ref.read(postRepositoryProvider).voteOnPost(postId: post.id, userId: currentUserId!, isUpvote: true),
+                          : () => ref
+                                .read(postRepositoryProvider)
+                                .voteOnPost(
+                                  postId: post.id,
+                                  userId: currentUserId!,
+                                  isUpvote: true,
+                                ),
                       onDown: currentUserId == null
                           ? null
-                          : () => ref.read(postRepositoryProvider).voteOnPost(postId: post.id, userId: currentUserId!, isUpvote: false),
+                          : () => ref
+                                .read(postRepositoryProvider)
+                                .voteOnPost(
+                                  postId: post.id,
+                                  userId: currentUserId!,
+                                  isUpvote: false,
+                                ),
                     ),
                     const SizedBox(width: 20),
-                    _CommentChip(cs: cs, theme: theme, commentCount: commentCount, onTap: widget.onTap),
+                    _CommentChip(
+                      cs: cs,
+                      theme: theme,
+                      commentCount: commentCount,
+                      onTap: widget.onTap,
+                    ),
                     const SizedBox(width: 20),
                     _LikeChip(
                       isLiked: isLiked,
@@ -242,7 +293,12 @@ class _PostCardState extends ConsumerState<PostCard> {
                           ? null
                           : () async {
                               if (isLiked) {
-                                await ref.read(postRepositoryProvider).removeVote(postId: post.id, userId: currentUserId);
+                                await ref
+                                    .read(postRepositoryProvider)
+                                    .removeVote(
+                                      postId: post.id,
+                                      userId: currentUserId,
+                                    );
                               } else {
                                 await onLike();
                               }
@@ -251,9 +307,13 @@ class _PostCardState extends ConsumerState<PostCard> {
                     const Spacer(),
                     IconButton(
                       tooltip: 'Lesezeichen',
-                      onPressed: () => setState(() => _bookmarked = !_bookmarked),
+                      onPressed: () =>
+                          setState(() => _bookmarked = !_bookmarked),
                       iconSize: 20,
-                      icon: Icon(_bookmarked ? Icons.bookmark : Icons.bookmark_border, color: cs.onSurfaceVariant),
+                      icon: Icon(
+                        _bookmarked ? Icons.bookmark : Icons.bookmark_border,
+                        color: cs.onSurfaceVariant,
+                      ),
                     ),
                   ],
                 ),
@@ -265,12 +325,20 @@ class _PostCardState extends ConsumerState<PostCard> {
     );
   }
 
-  void _showMoreMenu(BuildContext context, ColorScheme cs, String? currentUserId, String postId, {required bool isOwner}) {
+  void _showMoreMenu(
+    BuildContext context,
+    ColorScheme cs,
+    String? currentUserId,
+    String postId, {
+    required bool isOwner,
+  }) {
     final theme = Theme.of(context);
     showModalBottomSheet(
       context: context,
       showDragHandle: true,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(16))),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
       builder: (_) {
         return SafeArea(
           child: Column(
@@ -304,30 +372,49 @@ class _PostCardState extends ConsumerState<PostCard> {
                       'createdAt': DateTime.now(),
                     });
                     if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Meldung gesendet. Danke!')));
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Meldung gesendet. Danke!'),
+                        ),
+                      );
                     }
                   } catch (e) {
                     if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Fehler beim Melden: $e')));
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Fehler beim Melden: $e')),
+                      );
                     }
                   }
                 },
               ),
               if (isOwner)
                 ListTile(
-                  leading: Icon(Icons.delete_outline, color: theme.colorScheme.error),
-                  title: Text('Löschen', style: TextStyle(color: theme.colorScheme.error)),
+                  leading: Icon(
+                    Icons.delete_outline,
+                    color: theme.colorScheme.error,
+                  ),
+                  title: Text(
+                    'Löschen',
+                    style: TextStyle(color: theme.colorScheme.error),
+                  ),
                   onTap: () async {
                     Navigator.of(context).pop();
                     final ok = await showDialog<bool>(
                       context: context,
                       builder: (ctx) => AlertDialog(
                         title: const Text('Beitrag löschen?'),
-                        content: const Text('Dieser Vorgang kann nicht rückgängig gemacht werden.'),
+                        content: const Text(
+                          'Dieser Vorgang kann nicht rückgängig gemacht werden.',
+                        ),
                         actions: [
-                          TextButton(onPressed: () => Navigator.of(ctx).pop(false), child: const Text('Abbrechen')),
+                          TextButton(
+                            onPressed: () => Navigator.of(ctx).pop(false),
+                            child: const Text('Abbrechen'),
+                          ),
                           FilledButton(
-                            style: FilledButton.styleFrom(backgroundColor: theme.colorScheme.error),
+                            style: FilledButton.styleFrom(
+                              backgroundColor: theme.colorScheme.error,
+                            ),
                             onPressed: () => Navigator.of(ctx).pop(true),
                             child: const Text('Löschen'),
                           ),
@@ -336,10 +423,16 @@ class _PostCardState extends ConsumerState<PostCard> {
                     );
                     if (ok == true) {
                       try {
-                        await ref.read(postRepositoryProvider).deletePost(postId);
-                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Beitrag gelöscht')));
+                        await ref
+                            .read(postRepositoryProvider)
+                            .deletePost(postId);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Beitrag gelöscht')),
+                        );
                       } catch (e) {
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Fehler: $e')));
+                        ScaffoldMessenger.of(
+                          context,
+                        ).showSnackBar(SnackBar(content: Text('Fehler: $e')));
                       }
                     }
                   },
@@ -358,53 +451,65 @@ class _PostCardState extends ConsumerState<PostCard> {
     final result = await showDialog<_ReportResult>(
       context: context,
       builder: (ctx) {
-        return StatefulBuilder(builder: (ctx, setState) {
-          return AlertDialog(
-            title: const Text('Beitrag melden'),
-            content: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  RadioListTile<String>(
-                    value: 'Spam',
-                    groupValue: selected,
-                    onChanged: (v) => setState(() => selected = v ?? 'Spam'),
-                    title: const Text('Spam'),
-                    contentPadding: EdgeInsets.zero,
-                  ),
-                  RadioListTile<String>(
-                    value: 'Anstößiger Inhalt',
-                    groupValue: selected,
-                    onChanged: (v) => setState(() => selected = v ?? 'Anstößiger Inhalt'),
-                    title: const Text('Anstößiger Inhalt'),
-                    contentPadding: EdgeInsets.zero,
-                  ),
-                  RadioListTile<String>(
-                    value: 'Sonstiges',
-                    groupValue: selected,
-                    onChanged: (v) => setState(() => selected = v ?? 'Sonstiges'),
-                    title: const Text('Sonstiges'),
-                    contentPadding: EdgeInsets.zero,
-                  ),
-                  const SizedBox(height: 8),
-                  TextField(
-                    controller: controller,
-                    minLines: 2,
-                    maxLines: 4,
-                    decoration: const InputDecoration(
-                      labelText: 'Zusätzliche Informationen (optional)',
+        return StatefulBuilder(
+          builder: (ctx, setState) {
+            return AlertDialog(
+              title: const Text('Beitrag melden'),
+              content: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    RadioListTile<String>(
+                      value: 'Spam',
+                      groupValue: selected,
+                      onChanged: (v) => setState(() => selected = v ?? 'Spam'),
+                      title: const Text('Spam'),
+                      contentPadding: EdgeInsets.zero,
                     ),
-                  ),
-                ],
+                    RadioListTile<String>(
+                      value: 'Anstößiger Inhalt',
+                      groupValue: selected,
+                      onChanged: (v) =>
+                          setState(() => selected = v ?? 'Anstößiger Inhalt'),
+                      title: const Text('Anstößiger Inhalt'),
+                      contentPadding: EdgeInsets.zero,
+                    ),
+                    RadioListTile<String>(
+                      value: 'Sonstiges',
+                      groupValue: selected,
+                      onChanged: (v) =>
+                          setState(() => selected = v ?? 'Sonstiges'),
+                      title: const Text('Sonstiges'),
+                      contentPadding: EdgeInsets.zero,
+                    ),
+                    const SizedBox(height: 8),
+                    TextField(
+                      controller: controller,
+                      minLines: 2,
+                      maxLines: 4,
+                      decoration: const InputDecoration(
+                        labelText: 'Zusätzliche Informationen (optional)',
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            actions: [
-              TextButton(onPressed: () => Navigator.of(ctx).pop(null), child: const Text('Abbrechen')),
-              FilledButton(onPressed: () => Navigator.of(ctx).pop(_ReportResult(selected, controller.text.trim())), child: const Text('Senden')),
-            ],
-          );
-        });
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(ctx).pop(null),
+                  child: const Text('Abbrechen'),
+                ),
+                FilledButton(
+                  onPressed: () => Navigator.of(
+                    ctx,
+                  ).pop(_ReportResult(selected, controller.text.trim())),
+                  child: const Text('Senden'),
+                ),
+              ],
+            );
+          },
+        );
       },
     );
     controller.dispose();
@@ -413,7 +518,12 @@ class _PostCardState extends ConsumerState<PostCard> {
 }
 
 class _CommentChip extends StatelessWidget {
-  const _CommentChip({required this.cs, required this.theme, required this.commentCount, this.onTap});
+  const _CommentChip({
+    required this.cs,
+    required this.theme,
+    required this.commentCount,
+    this.onTap,
+  });
   final ColorScheme cs;
   final ThemeData theme;
   final int commentCount;
@@ -428,11 +538,17 @@ class _CommentChip extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
         child: Row(
           children: [
-            const Icon(Icons.mode_comment_outlined, size: 20, color: _brandBlue),
+            const Icon(
+              Icons.mode_comment_outlined,
+              size: 20,
+              color: _brandBlue,
+            ),
             const SizedBox(width: 8),
             Text(
               // simple formatting to match parent helpers not accessible here
-              commentCount < 1000 ? '$commentCount' : '${(commentCount / 1000).toStringAsFixed(1)}k',
+              commentCount < 1000
+                  ? '$commentCount'
+                  : '${(commentCount / 1000).toStringAsFixed(1)}k',
               style: theme.textTheme.labelMedium?.copyWith(color: _brandBlue),
             ),
           ],
@@ -465,10 +581,16 @@ class _LikeChip extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
         child: Row(
           children: [
-            Icon(isLiked ? Icons.favorite : Icons.favorite_border, size: 20, color: isLiked ? _brandBlue : cs.onSurfaceVariant),
+            Icon(
+              isLiked ? Icons.favorite : Icons.favorite_border,
+              size: 20,
+              color: isLiked ? _brandBlue : cs.onSurfaceVariant,
+            ),
             const SizedBox(width: 8),
             Text(
-              likeCount < 1000 ? '$likeCount' : '${(likeCount / 1000).toStringAsFixed(1)}k',
+              likeCount < 1000
+                  ? '$likeCount'
+                  : '${(likeCount / 1000).toStringAsFixed(1)}k',
               style: theme.textTheme.labelMedium?.copyWith(color: _brandBlue),
             ),
           ],
@@ -503,9 +625,16 @@ class _DocChip extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.insert_drive_file_outlined, size: 18, color: _brandBlue),
+            const Icon(
+              Icons.insert_drive_file_outlined,
+              size: 18,
+              color: _brandBlue,
+            ),
             const SizedBox(width: 8),
-            Text(fileName, style: const TextStyle(fontSize: 13, color: _brandBlue)),
+            Text(
+              fileName,
+              style: const TextStyle(fontSize: 13, color: _brandBlue),
+            ),
           ],
         ),
       ),
@@ -555,11 +684,7 @@ class _VoteGroup extends StatelessWidget {
           Text(
             '$score',
             style: TextStyle(
-              color: isUp
-                  ? _brandBlue
-                  : (isDown
-                      ? cs.error
-                      : cs.onSurface),
+              color: isUp ? _brandBlue : (isDown ? cs.error : cs.onSurface),
               fontWeight: FontWeight.w600,
             ),
           ),

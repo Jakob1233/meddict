@@ -104,7 +104,10 @@ class _CategoryTile extends StatelessWidget {
                     option.assetPath,
                     width: 56,
                     height: 56,
-                    colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                    colorFilter: const ColorFilter.mode(
+                      Colors.white,
+                      BlendMode.srcIn,
+                    ),
                   ),
                 ),
               ),

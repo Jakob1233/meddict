@@ -10,7 +10,9 @@ class OnboardingProfile {
     this.onboardingCompleted,
   });
 
-  factory OnboardingProfile.fromDoc(DocumentSnapshot<Map<String, dynamic>> doc) {
+  factory OnboardingProfile.fromDoc(
+    DocumentSnapshot<Map<String, dynamic>> doc,
+  ) {
     final data = doc.data();
     if (data == null) return OnboardingProfile();
     return OnboardingProfile(
@@ -70,8 +72,8 @@ class FirstLoginOnboardingController {
   FirstLoginOnboardingController({
     OnboardingProfileRepository? repository,
     ProfileManagementLocalDataSource? localDataSource,
-  })  : _repository = repository ?? OnboardingProfileRepository(),
-        _localDataSource = localDataSource ?? ProfileManagementLocalDataSource();
+  }) : _repository = repository ?? OnboardingProfileRepository(),
+       _localDataSource = localDataSource ?? ProfileManagementLocalDataSource();
 
   final OnboardingProfileRepository _repository;
   final ProfileManagementLocalDataSource _localDataSource;
@@ -110,7 +112,9 @@ class FirstLoginOnboardingController {
 
   Future<bool> shouldShowOnboarding(String uid) async {
     if (_localDataSource.getFirstLoginComplete()) {
-      final cachedProgram = normalizeProgram(_localDataSource.getStudyProgram());
+      final cachedProgram = normalizeProgram(
+        _localDataSource.getStudyProgram(),
+      );
       final cachedSemester = normalizeSemester(_localDataSource.getSemester());
       final cachedUniversityName = _localDataSource.getUniversityName();
       final cachedUniversityCode = _localDataSource.getUniversityCode();
@@ -230,7 +234,8 @@ class FirstLoginOnboardingController {
 
   String get cachedStudyProgram =>
       normalizeProgram(_localDataSource.getStudyProgram());
-  String get cachedSemester => normalizeSemester(_localDataSource.getSemester());
+  String get cachedSemester =>
+      normalizeSemester(_localDataSource.getSemester());
   String get cachedUniversityName => _localDataSource.getUniversityName();
   String get cachedUniversityCode => _localDataSource.getUniversityCode();
 }

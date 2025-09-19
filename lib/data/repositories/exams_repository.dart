@@ -21,8 +21,8 @@ class ExamsPage {
 
 class ExamsRepository {
   ExamsRepository({FirebaseFirestore? firestore, FirebaseAuth? auth})
-      : _firestore = firestore ?? FirebaseFirestore.instance,
-        _auth = auth ?? FirebaseAuth.instance;
+    : _firestore = firestore ?? FirebaseFirestore.instance,
+      _auth = auth ?? FirebaseAuth.instance;
 
   final FirebaseFirestore _firestore;
   final FirebaseAuth _auth;
@@ -72,7 +72,9 @@ class ExamsRepository {
   }
 
   Stream<Exam?> watchExam(String examId) {
-    return _firestore.collection('exams').doc(examId).snapshots().map((snapshot) {
+    return _firestore.collection('exams').doc(examId).snapshots().map((
+      snapshot,
+    ) {
       if (!snapshot.exists) return null;
       return Exam.fromDoc(snapshot);
     });
@@ -82,7 +84,12 @@ class ExamsRepository {
     final uid = userId ?? _auth.currentUser?.uid;
     if (uid == null || uid.isEmpty) return null;
 
-    final doc = await _firestore.collection('exams').doc(examId).collection('ratings').doc(uid).get();
+    final doc = await _firestore
+        .collection('exams')
+        .doc(examId)
+        .collection('ratings')
+        .doc(uid)
+        .get();
     if (!doc.exists) return null;
     return ExamRating.fromDoc(doc);
   }
@@ -98,7 +105,9 @@ class ExamsRepository {
         .collection('ratings')
         .doc(uid)
         .snapshots()
-        .map((snapshot) => snapshot.exists ? ExamRating.fromDoc(snapshot) : null);
+        .map(
+          (snapshot) => snapshot.exists ? ExamRating.fromDoc(snapshot) : null,
+        );
   }
 
   Stream<List<ExamNote>> watchNotes(String examId, ExamNoteType type) {
@@ -121,7 +130,9 @@ class ExamsRepository {
   }) async {
     final uid = userId ?? _auth.currentUser?.uid;
     if (uid == null || uid.isEmpty) {
-      throw StateError('Eine gültige Anmeldung ist erforderlich, um eine Bewertung zu speichern.');
+      throw StateError(
+        'Eine gültige Anmeldung ist erforderlich, um eine Bewertung zu speichern.',
+      );
     }
 
     final clampedMass = max(1, min(5, mass));
@@ -150,7 +161,9 @@ class ExamsRepository {
       final currentAvgDifficulty = _asDouble(data['ratingsAvgDifficulty']);
       final currentAvgPastQ = _asDouble(data['ratingsAvgPastQ']);
 
-      final newCount = existing == null ? currentCount + 1 : max(currentCount, 1);
+      final newCount = existing == null
+          ? currentCount + 1
+          : max(currentCount, 1);
 
       double totalMass = currentAvgMass * currentCount;
       double totalDifficulty = currentAvgDifficulty * currentCount;
@@ -220,7 +233,9 @@ class ExamsRepository {
     final uid = userId ?? _auth.currentUser?.uid;
     final trimmed = body.trim();
     if (uid == null || uid.isEmpty) {
-      throw StateError('Eine gültige Anmeldung ist erforderlich, um eine Notiz zu schreiben.');
+      throw StateError(
+        'Eine gültige Anmeldung ist erforderlich, um eine Notiz zu schreiben.',
+      );
     }
     if (trimmed.isEmpty) {
       throw ArgumentError('Notiz darf nicht leer sein.');
@@ -244,7 +259,12 @@ class ExamsRepository {
         'upvotes': 0,
       });
 
-      final currentNotes = max(0, _asInt(examSnap.data()?['notesCount'] ?? examSnap.data()?['commentsCount']));
+      final currentNotes = max(
+        0,
+        _asInt(
+          examSnap.data()?['notesCount'] ?? examSnap.data()?['commentsCount'],
+        ),
+      );
       transaction.update(examRef, {
         'notesCount': currentNotes + 1,
         'commentsCount': currentNotes + 1,
@@ -319,7 +339,8 @@ class ExamsRepository {
     return 0;
   }
 
-  double _normalizeRating(int value) => (value.clamp(1, 5) * 25 - 25).toDouble();
+  double _normalizeRating(int value) =>
+      (value.clamp(1, 5) * 25 - 25).toDouble();
 
   double _round(double value) => double.parse(value.toStringAsFixed(2));
 
@@ -333,7 +354,8 @@ class ExamsRepository {
     const double pastExamsWeight = 0.2;
 
     final adjustedPast = 100 - pastQ.clamp(0, 100);
-    final raw = (effortWeight * mass.clamp(0, 100)) +
+    final raw =
+        (effortWeight * mass.clamp(0, 100)) +
         (contentWeight * difficulty.clamp(0, 100)) +
         (pastExamsWeight * adjustedPast);
     final normalized = raw / (effortWeight + contentWeight + pastExamsWeight);

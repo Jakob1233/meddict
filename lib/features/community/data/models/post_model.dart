@@ -118,9 +118,12 @@ class PostModel {
       createdBy: (d['createdBy'] as String?) ?? '',
       createdAt: (d['createdAt'] as Timestamp?) ?? Timestamp.now(),
       updatedAt: (d['updatedAt'] as Timestamp?) ?? Timestamp.now(),
-      upvotes: ((d['upvotesCount'] as num?) ?? (d['upvotes'] as num?) ?? 0).toInt(),
+      upvotes: ((d['upvotesCount'] as num?) ?? (d['upvotes'] as num?) ?? 0)
+          .toInt(),
       downvotes: (d['downvotes'] as num?)?.toInt() ?? 0,
-      answersCount: ((d['commentsCount'] as num?) ?? (d['answersCount'] as num?) ?? 0).toInt(),
+      answersCount:
+          ((d['commentsCount'] as num?) ?? (d['answersCount'] as num?) ?? 0)
+              .toInt(),
       communityId: d['communityId'] as String?,
       roomId: d['roomId'] as String?, // COMMUNITY 2.0
       imageUrl: d['imageUrl'] as String?,
@@ -140,8 +143,8 @@ class PostModel {
       meta: rawMeta is Map<String, dynamic>
           ? rawMeta
           : rawMeta is Map
-              ? rawMeta.map((key, value) => MapEntry(key.toString(), value))
-              : null,
+          ? rawMeta.map((key, value) => MapEntry(key.toString(), value))
+          : null,
       scope: (d['scope'] as String?) ?? 'community',
       universityCode: d['universityCode'] as String?,
     );

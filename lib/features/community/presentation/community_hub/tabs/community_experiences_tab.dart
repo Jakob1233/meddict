@@ -17,13 +17,15 @@ class CommunityExperiencesTab extends ConsumerStatefulWidget {
   CommunityExperiencesTabState createState() => CommunityExperiencesTabState();
 }
 
-class CommunityExperiencesTabState extends ConsumerState<CommunityExperiencesTab> {
+class CommunityExperiencesTabState
+    extends ConsumerState<CommunityExperiencesTab> {
   final _scrollCtrl = ScrollController();
   final _searchCtrl = TextEditingController();
   Timer? _debounce;
   String _query = '';
 
-  PagedPostsArgs get _args => const PagedPostsArgs(type: 'experience', limit: 20);
+  PagedPostsArgs get _args =>
+      const PagedPostsArgs(type: 'experience', limit: 20);
 
   @override
   void initState() {
@@ -64,7 +66,9 @@ class CommunityExperiencesTabState extends ConsumerState<CommunityExperiencesTab
                   decoration: InputDecoration(
                     hintText: 'Ort oder Einrichtung suchen…',
                     prefixIcon: const Icon(Icons.search),
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(18)),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(18),
+                    ),
                   ),
                 ),
               ),
@@ -77,7 +81,11 @@ class CommunityExperiencesTabState extends ConsumerState<CommunityExperiencesTab
             padding: const EdgeInsets.only(right: 16, bottom: 8),
             child: ElevatedButton.icon(
               onPressed: () => ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Composer über den großen Button unten verfügbar.')),
+                const SnackBar(
+                  content: Text(
+                    'Composer über den großen Button unten verfügbar.',
+                  ),
+                ),
               ),
               icon: const Icon(Icons.add),
               label: const Text('Erfahrung teilen'),
@@ -86,34 +94,40 @@ class CommunityExperiencesTabState extends ConsumerState<CommunityExperiencesTab
         ),
         Expanded(
           child: RefreshIndicator(
-            onRefresh: () => ref.read(pagedPostsProvider(_args).notifier).refresh(),
+            onRefresh: () =>
+                ref.read(pagedPostsProvider(_args).notifier).refresh(),
             child: state.isLoadingInitial
                 ? const Center(child: CircularProgressIndicator())
                 : posts.isEmpty
-                    ? const _EmptyExperiences()
-                    : ListView.separated(
-                        controller: _scrollCtrl,
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                        itemCount: posts.length + (state.isLoadingMore ? 1 : 0),
-                        separatorBuilder: (_, __) => const SizedBox(height: 8),
-                        itemBuilder: (context, index) {
-                          if (index >= posts.length) {
-                            if (state.isLoadingMore) {
-                              return const Padding(
-                                padding: EdgeInsets.symmetric(vertical: 16),
-                                child: Center(child: CircularProgressIndicator()),
-                              );
-                            }
-                            return const SizedBox.shrink();
-                          }
-                          final post = posts[index];
-                          return CommunityPostCard(
-                            post: post,
-                            onTap: () => Navigator.of(context)
-                                .pushNamed(Routes.postDetail, arguments: {'postId': post.id}),
+                ? const _EmptyExperiences()
+                : ListView.separated(
+                    controller: _scrollCtrl,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 8,
+                    ),
+                    itemCount: posts.length + (state.isLoadingMore ? 1 : 0),
+                    separatorBuilder: (_, __) => const SizedBox(height: 8),
+                    itemBuilder: (context, index) {
+                      if (index >= posts.length) {
+                        if (state.isLoadingMore) {
+                          return const Padding(
+                            padding: EdgeInsets.symmetric(vertical: 16),
+                            child: Center(child: CircularProgressIndicator()),
                           );
-                        },
-                      ),
+                        }
+                        return const SizedBox.shrink();
+                      }
+                      final post = posts[index];
+                      return CommunityPostCard(
+                        post: post,
+                        onTap: () => Navigator.of(context).pushNamed(
+                          Routes.postDetail,
+                          arguments: {'postId': post.id},
+                        ),
+                      );
+                    },
+                  ),
           ),
         ),
       ],
@@ -127,7 +141,9 @@ class CommunityExperiencesTabState extends ConsumerState<CommunityExperiencesTab
       final meta = post.meta ?? const {};
       final institution = (meta['institution'] ?? '').toString().toLowerCase();
       final location = (meta['location'] ?? '').toString().toLowerCase();
-      return institution.contains(q) || location.contains(q) || post.title.toLowerCase().contains(q);
+      return institution.contains(q) ||
+          location.contains(q) ||
+          post.title.toLowerCase().contains(q);
     }).toList();
   }
 

@@ -157,7 +157,8 @@ class _SelfChallengeScreenState extends State<SelfChallengeScreen> {
       itemLabel: displayLabel,
       value: forCategory ? selectedCategory : selectedSubcategory,
       onChanged: (value) {
-        final selectedValue = value ??
+        final selectedValue =
+            value ??
             (forCategory
                 ? _defaultSelectedCategoryValue
                 : _defaultSelectedSubcategoryValue);
@@ -191,9 +192,9 @@ class _SelfChallengeScreenState extends State<SelfChallengeScreen> {
             });
 
             if (selectedCategoryId != null && selectedCategoryId!.isNotEmpty) {
-              context
-                  .read<SubCategoryCubit>()
-                  .fetchSubCategory(selectedCategoryId!);
+              context.read<SubCategoryCubit>().fetchSubCategory(
+                selectedCategoryId!,
+              );
             }
           }
         } else {

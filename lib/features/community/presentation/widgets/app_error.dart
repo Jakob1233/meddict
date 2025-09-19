@@ -17,14 +17,20 @@ class AppError extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(message, style: theme.textTheme.bodyMedium, textAlign: TextAlign.center),
+            Text(
+              message,
+              style: theme.textTheme.bodyMedium,
+              textAlign: TextAlign.center,
+            ),
             const SizedBox(height: 12),
             if (onRetry != null)
-              OutlinedButton(onPressed: onRetry, child: const Text('Erneut versuchen')),
+              OutlinedButton(
+                onPressed: onRetry,
+                child: const Text('Erneut versuchen'),
+              ),
           ],
         ),
       ),
     );
   }
 }
-

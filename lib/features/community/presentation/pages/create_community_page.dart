@@ -13,7 +13,8 @@ class CreateCommunityPage extends ConsumerStatefulWidget {
       MaterialPageRoute(builder: (_) => const CreateCommunityPage());
 
   @override
-  ConsumerState<CreateCommunityPage> createState() => _CreateCommunityPageState();
+  ConsumerState<CreateCommunityPage> createState() =>
+      _CreateCommunityPageState();
 }
 
 class _CreateCommunityPageState extends ConsumerState<CreateCommunityPage> {
@@ -34,7 +35,9 @@ class _CreateCommunityPageState extends ConsumerState<CreateCommunityPage> {
     final userId = ref.watch(currentUserIdProvider);
 
     return Scaffold(
-      appBar: AppBar(title: Text('Create Community', style: theme.textTheme.titleLarge)),
+      appBar: AppBar(
+        title: Text('Create Community', style: theme.textTheme.titleLarge),
+      ),
       body: Form(
         key: _formKey,
         child: ListView(
@@ -43,7 +46,8 @@ class _CreateCommunityPageState extends ConsumerState<CreateCommunityPage> {
             TextFormField(
               controller: _nameCtrl,
               decoration: const InputDecoration(labelText: 'Name'),
-              validator: (v) => v == null || v.trim().isEmpty ? 'Required' : null,
+              validator: (v) =>
+                  v == null || v.trim().isEmpty ? 'Required' : null,
             ),
             const SizedBox(height: 12),
             TextFormField(
@@ -59,15 +63,17 @@ class _CreateCommunityPageState extends ConsumerState<CreateCommunityPage> {
                   : () async {
                       if (!_formKey.currentState!.validate()) return;
                       final repo = ref.read(communityRepositoryProvider);
-                      await repo.createCommunity(CommunityModel(
-                        id: '',
-                        name: _nameCtrl.text.trim(),
-                        description: _descCtrl.text.trim(),
-                        createdBy: userId,
-                        createdAt: Timestamp.now(),
-                        members: [userId],
-                        moderators: [userId],
-                      ));
+                      await repo.createCommunity(
+                        CommunityModel(
+                          id: '',
+                          name: _nameCtrl.text.trim(),
+                          description: _descCtrl.text.trim(),
+                          createdBy: userId,
+                          createdAt: Timestamp.now(),
+                          members: [userId],
+                          moderators: [userId],
+                        ),
+                      );
                       if (mounted) Navigator.of(context).pop();
                     },
               child: const Text('Create'),
@@ -78,4 +84,3 @@ class _CreateCommunityPageState extends ConsumerState<CreateCommunityPage> {
     );
   }
 }
-

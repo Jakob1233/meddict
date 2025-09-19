@@ -16,7 +16,11 @@ import '../widgets/community_post_card.dart';
 
 enum QaFeedFilter { general, myUniversity, mySemester }
 
-const _filterOptions = [QaFeedFilter.general, QaFeedFilter.myUniversity, QaFeedFilter.mySemester];
+const _filterOptions = [
+  QaFeedFilter.general,
+  QaFeedFilter.myUniversity,
+  QaFeedFilter.mySemester,
+];
 
 class CommunityFeedTab extends ConsumerStatefulWidget {
   const CommunityFeedTab({super.key});
@@ -52,11 +56,11 @@ class CommunityFeedTabState extends ConsumerState<CommunityFeedTab> {
     if (_scrollCtrl.position.maxScrollExtent - _scrollCtrl.offset < 280) {
       final userContext = ref.read(communityUserContextProvider);
       switch (_selectedFilter) {
-      case QaFeedFilter.general:
-        final argsList = <PagedPostsArgs?>[
-          _universityArgs(userContext),
-          _communityArgs(),
-        ];
+        case QaFeedFilter.general:
+          final argsList = <PagedPostsArgs?>[
+            _universityArgs(userContext),
+            _communityArgs(),
+          ];
           for (final args in argsList) {
             if (args != null) {
               ref.read(pagedPostsProvider(args).notifier).loadMore();
@@ -107,7 +111,9 @@ class CommunityFeedTabState extends ConsumerState<CommunityFeedTab> {
         final uniArgs = _universityArgs(userContext);
         final communityArgs = _communityArgs();
 
-        final uniState = uniArgs != null ? ref.watch(pagedPostsProvider(uniArgs)) : null;
+        final uniState = uniArgs != null
+            ? ref.watch(pagedPostsProvider(uniArgs))
+            : null;
         final communityState = ref.watch(pagedPostsProvider(communityArgs));
 
         basePosts = _mergeGeneral(
@@ -119,9 +125,10 @@ class CommunityFeedTabState extends ConsumerState<CommunityFeedTab> {
           uniState?.isLoadingInitial,
           communityState.isLoadingInitial,
         ];
-        isLoadingInitial = loadingStates.any((e) => e ?? false) && basePosts.isEmpty;
-        isLoadingMore = (uniState?.isLoadingMore ?? false) ||
-            communityState.isLoadingMore;
+        isLoadingInitial =
+            loadingStates.any((e) => e ?? false) && basePosts.isEmpty;
+        isLoadingMore =
+            (uniState?.isLoadingMore ?? false) || communityState.isLoadingMore;
         collectError(uniState?.error);
         collectError(communityState.error);
         break;
@@ -192,7 +199,9 @@ class CommunityFeedTabState extends ConsumerState<CommunityFeedTab> {
                               _onSearchChanged('');
                             },
                           ),
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(18)),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(18),
+                    ),
                   ),
                 ),
               ),
@@ -205,8 +214,14 @@ class CommunityFeedTabState extends ConsumerState<CommunityFeedTab> {
                   unawaited(_refreshCurrent());
                 },
                 items: const [
-                  DropdownMenuItem(value: PostSort.newest, child: Text('Neueste')),
-                  DropdownMenuItem(value: PostSort.upvotes, child: Text('Upvotes')),
+                  DropdownMenuItem(
+                    value: PostSort.newest,
+                    child: Text('Neueste'),
+                  ),
+                  DropdownMenuItem(
+                    value: PostSort.upvotes,
+                    child: Text('Upvotes'),
+                  ),
                 ],
               ),
             ],
@@ -229,13 +244,20 @@ class CommunityFeedTabState extends ConsumerState<CommunityFeedTab> {
                   ),
                 ),
                 if (showIndexBanner)
-                  SliverToBoxAdapter(child: _buildIndexErrorBanner(indexBannerUrl)),
+                  SliverToBoxAdapter(
+                    child: _buildIndexErrorBanner(indexBannerUrl),
+                  ),
                 if (genericError != null)
                   SliverToBoxAdapter(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
                       child: Material(
-                        color: theme.colorScheme.surfaceVariant.withOpacity(0.4),
+                        color: theme.colorScheme.surfaceVariant.withOpacity(
+                          0.4,
+                        ),
                         borderRadius: BorderRadius.circular(12),
                         child: Padding(
                           padding: const EdgeInsets.all(12),
@@ -303,7 +325,9 @@ class CommunityFeedTabState extends ConsumerState<CommunityFeedTab> {
     return items.where((p) {
       final title = (p.title).toLowerCase();
       final body = (p.body).toLowerCase();
-      return title.contains(q) || body.contains(q) || (p.category?.toLowerCase().contains(q) ?? false);
+      return title.contains(q) ||
+          body.contains(q) ||
+          (p.category?.toLowerCase().contains(q) ?? false);
     }).toList();
   }
 
@@ -316,7 +340,9 @@ class CommunityFeedTabState extends ConsumerState<CommunityFeedTab> {
   }
 
   void _openPost(BuildContext context, String postId) {
-    Navigator.of(context).pushNamed(Routes.postDetail, arguments: {'postId': postId});
+    Navigator.of(
+      context,
+    ).pushNamed(Routes.postDetail, arguments: {'postId': postId});
   }
 
   Future<void> _refreshCurrent() async {
@@ -352,16 +378,18 @@ class CommunityFeedTabState extends ConsumerState<CommunityFeedTab> {
   List<PostModel> _applySearchAndSort(List<PostModel> base) {
     final filtered = _query.isEmpty
         ? List<PostModel>.from(base)
-        : base
-            .where((p) {
-              final term = _query.toLowerCase();
-              final title = p.title.toLowerCase();
-              final body = p.body.toLowerCase();
-              return title.contains(term) || body.contains(term) || (p.category?.toLowerCase().contains(term) ?? false);
-            })
-            .toList();
+        : base.where((p) {
+            final term = _query.toLowerCase();
+            final title = p.title.toLowerCase();
+            final body = p.body.toLowerCase();
+            return title.contains(term) ||
+                body.contains(term) ||
+                (p.category?.toLowerCase().contains(term) ?? false);
+          }).toList();
 
-    filtered.sort(_sort == PostSort.upvotes ? _compareByUpvotes : _compareByNewest);
+    filtered.sort(
+      _sort == PostSort.upvotes ? _compareByUpvotes : _compareByNewest,
+    );
     return filtered;
   }
 
@@ -452,8 +480,12 @@ class CommunityFeedTabState extends ConsumerState<CommunityFeedTab> {
         borderRadius: BorderRadius.circular(12),
         child: ListTile(
           dense: true,
-          title: const Text('Teil des Q&A konnte nicht geladen werden (Index fehlt).'),
-          subtitle: const Text('In der Firebase-Konsole kann der erforderliche Index erstellt werden.'),
+          title: const Text(
+            'Teil des Q&A konnte nicht geladen werden (Index fehlt).',
+          ),
+          subtitle: const Text(
+            'In der Firebase-Konsole kann der erforderliche Index erstellt werden.',
+          ),
           trailing: (createIndexUrl != null && kDebugMode)
               ? TextButton(
                   onPressed: () async {
@@ -476,7 +508,8 @@ class _TopPostsErrorBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String? indexUrl;
-    if (error is FirebaseException && (error as FirebaseException).code == 'failed-precondition') {
+    if (error is FirebaseException &&
+        (error as FirebaseException).code == 'failed-precondition') {
       indexUrl = _extractIndexUrl((error as FirebaseException).message);
     }
     final theme = Theme.of(context);
@@ -489,7 +522,9 @@ class _TopPostsErrorBanner extends StatelessWidget {
           dense: true,
           title: const Text('Top Q&A des Monats konnte nicht geladen werden.'),
           subtitle: indexUrl != null
-              ? const Text('Lege den erforderlichen Index in der Firebase-Konsole an.')
+              ? const Text(
+                  'Lege den erforderlichen Index in der Firebase-Konsole an.',
+                )
               : null,
           trailing: (indexUrl != null && kDebugMode)
               ? TextButton(
@@ -507,7 +542,9 @@ class _TopPostsErrorBanner extends StatelessWidget {
 
 String? _extractIndexUrl(String? message) {
   if (message == null) return null;
-  final regex = RegExp(r'https://console\.firebase\.google\.com/[^\s]*create_composite=[^\s]*');
+  final regex = RegExp(
+    r'https://console\.firebase\.google\.com/[^\s]*create_composite=[^\s]*',
+  );
   final match = regex.firstMatch(message);
   return match?.group(0);
 }
@@ -527,7 +564,12 @@ class _TopPostsCarousel extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
-          child: Text('Top Q&A des Monats', style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
+          child: Text(
+            'Top Q&A des Monats',
+            style: Theme.of(
+              context,
+            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
+          ),
         ),
         SizedBox(
           height: 250,
@@ -543,8 +585,10 @@ class _TopPostsCarousel extends StatelessWidget {
                 child: CommunityPostCard(
                   post: post,
                   dense: true,
-                  onTap: () => Navigator.of(context)
-                      .pushNamed(Routes.postDetail, arguments: {'postId': post.id}),
+                  onTap: () => Navigator.of(context).pushNamed(
+                    Routes.postDetail,
+                    arguments: {'postId': post.id},
+                  ),
                 ),
               );
             },

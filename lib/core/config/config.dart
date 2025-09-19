@@ -13,8 +13,6 @@ const packageName = 'pleiner.jakob.meddictapp';
 // NOTE: make sure to check if admin panel is http or https
 const panelUrl = 'http://adminpanelmeddict.studiopleiner.at';
 
-
-
 /// === Branding ===
 ///
 

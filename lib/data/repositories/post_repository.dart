@@ -5,7 +5,7 @@ enum QaSort { newest, top }
 
 class PostRepository {
   PostRepository({FirebaseFirestore? firestore})
-      : _firestore = firestore ?? FirebaseFirestore.instance;
+    : _firestore = firestore ?? FirebaseFirestore.instance;
 
   final FirebaseFirestore _firestore;
   static const int _limit = 20;
@@ -40,7 +40,10 @@ class PostRepository {
         .where('scope', isEqualTo: 'community');
   }
 
-  Query<Map<String, dynamic>> _applySort(Query<Map<String, dynamic>> query, QaSort sort) {
+  Query<Map<String, dynamic>> _applySort(
+    Query<Map<String, dynamic>> query,
+    QaSort sort,
+  ) {
     return sort == QaSort.newest ? _qNewest(query) : _qTop(query);
   }
 
@@ -113,7 +116,9 @@ class PostRepository {
 
 String? extractCreateIndexUrl(String? msg) {
   if (msg == null) return null;
-  final regex = RegExp(r'https://console\.firebase\.google\.com/[^\s]+create_composite=[^\s]+');
+  final regex = RegExp(
+    r'https://console\.firebase\.google\.com/[^\s]+create_composite=[^\s]+',
+  );
   final match = regex.firstMatch(msg);
   return match?.group(0);
 }

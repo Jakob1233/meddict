@@ -107,7 +107,10 @@ class QaScreenState extends ConsumerState<QaScreen> {
           if (_universityCode.isEmpty) {
             result = await _repo.fetchCommunity(sort: QaSort.newest);
           } else {
-            result = await _repo.fetchAllgemein(uni: _universityCode, sort: QaSort.newest);
+            result = await _repo.fetchAllgemein(
+              uni: _universityCode,
+              sort: QaSort.newest,
+            );
           }
           _hasMore = false;
           break;
@@ -120,7 +123,10 @@ class QaScreenState extends ConsumerState<QaScreen> {
             });
             return;
           }
-          result = await _repo.fetchUni(uni: _universityCode, sort: QaSort.newest);
+          result = await _repo.fetchUni(
+            uni: _universityCode,
+            sort: QaSort.newest,
+          );
           _hasMore = result.length == _pageSize;
           _lastDoc = result.isNotEmpty ? result.last.snapshot : null;
           break;
@@ -133,7 +139,10 @@ class QaScreenState extends ConsumerState<QaScreen> {
             });
             return;
           }
-          result = await _repo.fetchSemester(sem: _semester, sort: QaSort.newest);
+          result = await _repo.fetchSemester(
+            sem: _semester,
+            sort: QaSort.newest,
+          );
           _hasMore = result.length == _pageSize;
           _lastDoc = result.isNotEmpty ? result.last.snapshot : null;
           break;
@@ -150,7 +159,8 @@ class QaScreenState extends ConsumerState<QaScreen> {
         setState(() {
           _showIndexBanner = true;
           _indexUrl ??= extractCreateIndexUrl(err.message);
-          _errorMessage ??= 'Teil des Q&A konnte nicht geladen werden (Index fehlt).';
+          _errorMessage ??=
+              'Teil des Q&A konnte nicht geladen werden (Index fehlt).';
           _isInitialLoading = false;
         });
         debugPrint('[Q&A] TODO: Missing Firestore index. ${err.message}');
@@ -266,7 +276,9 @@ class QaScreenState extends ConsumerState<QaScreen> {
       final title = post.title.toLowerCase();
       final body = post.body.toLowerCase();
       final category = post.category?.toLowerCase() ?? '';
-      return title.contains(term) || body.contains(term) || category.contains(term);
+      return title.contains(term) ||
+          body.contains(term) ||
+          category.contains(term);
     }).toList();
   }
 
@@ -344,8 +356,12 @@ class QaScreenState extends ConsumerState<QaScreen> {
         color: Colors.amber.withOpacity(0.18),
         borderRadius: BorderRadius.circular(14),
         child: ListTile(
-          title: const Text('Teil des Q&A konnte nicht geladen werden (Index fehlt).'),
-          subtitle: const Text('Lege den erforderlichen Index in der Firebase-Konsole an.'),
+          title: const Text(
+            'Teil des Q&A konnte nicht geladen werden (Index fehlt).',
+          ),
+          subtitle: const Text(
+            'Lege den erforderlichen Index in der Firebase-Konsole an.',
+          ),
           trailing: (_indexUrl != null && kDebugMode)
               ? TextButton(
                   onPressed: () async {
@@ -402,8 +418,10 @@ class QaScreenState extends ConsumerState<QaScreen> {
   @override
   Widget build(BuildContext context) {
     final posts = _visiblePosts;
+    final bottomInset = MediaQuery.of(context).viewInsets.bottom;
 
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: const Text('Community Q&A'),
         elevation: 0,
@@ -447,7 +465,9 @@ class QaScreenState extends ConsumerState<QaScreen> {
                             _onSearchChanged('');
                           },
                         ),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(18)),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(18),
+                  ),
                 ),
               ),
             ),
@@ -458,9 +478,12 @@ class QaScreenState extends ConsumerState<QaScreen> {
                   controller: _scrollCtrl,
                   physics: const AlwaysScrollableScrollPhysics(),
                   slivers: [
-                    if (_showIndexBanner) SliverToBoxAdapter(child: _buildIndexBanner()),
+                    if (_showIndexBanner)
+                      SliverToBoxAdapter(child: _buildIndexBanner()),
                     if (_errorMessage != null)
-                      SliverToBoxAdapter(child: _buildErrorBanner(_errorMessage!)),
+                      SliverToBoxAdapter(
+                        child: _buildErrorBanner(_errorMessage!),
+                      ),
                     if (_missingProfile)
                       SliverFillRemaining(
                         hasScrollBody: false,
@@ -492,17 +515,14 @@ class QaScreenState extends ConsumerState<QaScreen> {
                             if (index >= posts.length) {
                               return const Padding(
                                 padding: EdgeInsets.symmetric(vertical: 24),
-                                child: Center(child: CircularProgressIndicator()),
+                                child: Center(
+                                  child: CircularProgressIndicator(),
+                                ),
                               );
                             }
                             final post = posts[index];
                             return Padding(
-                              padding: EdgeInsets.fromLTRB(
-                                16,
-                                index == 0 ? 8 : 4,
-                                16,
-                                index == posts.length - 1 ? 88 : 4,
-                              ),
+                              padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
                               child: QaPostCard(
                                 post: post,
                                 scopeLabel: _scopeLabel(post),
@@ -514,7 +534,11 @@ class QaScreenState extends ConsumerState<QaScreen> {
                           childCount: posts.length + (_isLoadingMore ? 1 : 0),
                         ),
                       ),
+                    SliverToBoxAdapter(
+                      child: SizedBox(height: bottomInset),
+                    ),
                   ],
+                  ),
                 ),
               ),
             ),
@@ -571,7 +595,9 @@ class QaPostCard extends StatelessWidget {
               const SizedBox(height: 12),
               Text(
                 post.title.isEmpty ? '(Ohne Titel)' : post.title,
-                style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w700,
+                ),
               ),
               if (post.body.isNotEmpty) ...[
                 const SizedBox(height: 8),
@@ -596,7 +622,9 @@ class QaPostCard extends StatelessWidget {
                   if (post.authorName != null && post.authorName!.isNotEmpty)
                     Text(
                       post.authorName!,
-                      style: theme.textTheme.bodySmall?.copyWith(fontStyle: FontStyle.italic),
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        fontStyle: FontStyle.italic,
+                      ),
                     ),
                 ],
               ),

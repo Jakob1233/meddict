@@ -90,7 +90,10 @@ class _MaterialHomeTile extends StatelessWidget {
                     width: 64,
                     height: 64,
                     fit: BoxFit.none,
-                    colorFilter: ColorFilter.mode(primaryColor, BlendMode.srcIn),
+                    colorFilter: ColorFilter.mode(
+                      primaryColor,
+                      BlendMode.srcIn,
+                    ),
                   ),
                 ),
               ),

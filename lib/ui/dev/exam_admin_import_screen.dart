@@ -19,9 +19,11 @@ class _ExamAdminImportScreenState extends State<ExamAdminImportScreen> {
     setState(() => _loading = true);
     try {
       final inserted = await seedExamsSFU(_repository);
-      setState(() => _log = inserted == 0
-          ? 'Keine Datensätze vorbereitet. Bitte Seed-Listen füllen.'
-          : 'Import abgeschlossen ✔ ($inserted Einträge)');
+      setState(
+        () => _log = inserted == 0
+            ? 'Keine Datensätze vorbereitet. Bitte Seed-Listen füllen.'
+            : 'Import abgeschlossen ✔ ($inserted Einträge)',
+      );
     } catch (err) {
       setState(() => _log = 'Fehler: $err');
     } finally {
@@ -43,7 +45,9 @@ class _ExamAdminImportScreenState extends State<ExamAdminImportScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const Text('1) Trage die Prüfungen im Seeder ein (Bachelor/Master, Human/Zahn).'),
+              const Text(
+                '1) Trage die Prüfungen im Seeder ein (Bachelor/Master, Human/Zahn).',
+              ),
               const SizedBox(height: 8),
               const Text('2) Tippe auf "Seed SFU".'),
               const SizedBox(height: 16),

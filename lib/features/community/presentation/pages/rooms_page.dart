@@ -24,13 +24,22 @@ class _RoomsPageState extends ConsumerState<RoomsPage> {
 
   static const demoRooms = <String>[
     // COMMUNITY UI
-    'Famulatur', 'Clerkship', 'Pharma', 'Innere', 'Graz', 'Floridsdorf', 'Radiologie', 'Notfall'
+    'Famulatur',
+    'Clerkship',
+    'Pharma',
+    'Innere',
+    'Graz',
+    'Floridsdorf',
+    'Radiologie',
+    'Notfall',
   ];
 
   @override
   void initState() {
     super.initState();
-    _searchCtrl.addListener(() => setState(() => _query = _searchCtrl.text.trim().toLowerCase()));
+    _searchCtrl.addListener(
+      () => setState(() => _query = _searchCtrl.text.trim().toLowerCase()),
+    );
   }
 
   @override
@@ -54,7 +63,9 @@ class _RoomsPageState extends ConsumerState<RoomsPage> {
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
             child: Row(
               children: [
-                Expanded(child: Text('Rooms', style: theme.textTheme.titleLarge)), // COMMUNITY 3.0
+                Expanded(
+                  child: Text('Rooms', style: theme.textTheme.titleLarge),
+                ), // COMMUNITY 3.0
                 IconButton(
                   tooltip: 'Create Room',
                   onPressed: _openCreateRoom, // COMMUNITY 3.0
@@ -81,7 +92,10 @@ class _RoomsPageState extends ConsumerState<RoomsPage> {
                   borderRadius: BorderRadius.circular(16),
                   borderSide: BorderSide(color: cs.outlineVariant),
                 ),
-                contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+                contentPadding: const EdgeInsets.symmetric(
+                  vertical: 12,
+                  horizontal: 12,
+                ),
               ),
             ),
           ),
@@ -92,16 +106,26 @@ class _RoomsPageState extends ConsumerState<RoomsPage> {
                 // COMMUNITY UI: Fallback demo rooms if collection empty
                 final items = rooms.isEmpty
                     ? demoRooms.map((n) => (_RoomItem(id: n, name: n))).toList()
-                    : rooms.map((r) => _RoomItem(id: r.id, name: r.name, imageAsset: r.imageAsset)).toList();
+                    : rooms
+                          .map(
+                            (r) => _RoomItem(
+                              id: r.id,
+                              name: r.name,
+                              imageAsset: r.imageAsset,
+                            ),
+                          )
+                          .toList();
 
                 final filtered = _query.isEmpty
                     ? items
                     : items
-                        .where((it) => it.name.toLowerCase().contains(_query))
-                        .toList();
+                          .where((it) => it.name.toLowerCase().contains(_query))
+                          .toList();
 
                 if (filtered.isEmpty) {
-                  return _EmptyRooms(onCreate: _openCreateRoom); // COMMUNITY 3.0
+                  return _EmptyRooms(
+                    onCreate: _openCreateRoom,
+                  ); // COMMUNITY 3.0
                 }
 
                 return GridView.builder(
@@ -121,7 +145,9 @@ class _RoomsPageState extends ConsumerState<RoomsPage> {
                       index: i,
                       imageAsset: room.imageAsset,
                       onTap: () {
-                        Navigator.of(context).push(RoomDetailPage.route(roomId: room.id)); // COMMUNITY 3.0
+                        Navigator.of(context).push(
+                          RoomDetailPage.route(roomId: room.id),
+                        ); // COMMUNITY 3.0
                       },
                     );
                   },
@@ -150,7 +176,12 @@ class _RoomItem {
 
 class _RoomCard extends StatelessWidget {
   // COMMUNITY UI
-  const _RoomCard({required this.title, required this.index, required this.onTap, this.imageAsset});
+  const _RoomCard({
+    required this.title,
+    required this.index,
+    required this.onTap,
+    this.imageAsset,
+  });
   final String title;
   final int index;
   final VoidCallback onTap;
@@ -177,14 +208,18 @@ class _RoomCard extends StatelessWidget {
     ];
     final icon = icons[index % icons.length];
 
-    final hasAsset = imageAsset != null && imageAsset!.startsWith('assets/'); // COMMUNITY 3.0
+    final hasAsset =
+        imageAsset != null &&
+        imageAsset!.startsWith('assets/'); // COMMUNITY 3.0
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(16),
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
-          gradient: !hasAsset ? LinearGradient(colors: colors) : null, // COMMUNITY 3.0
+          gradient: !hasAsset
+              ? LinearGradient(colors: colors)
+              : null, // COMMUNITY 3.0
           boxShadow: [
             BoxShadow(
               color: theme.shadowColor,
@@ -193,7 +228,10 @@ class _RoomCard extends StatelessWidget {
             ),
           ],
           image: hasAsset
-              ? DecorationImage(image: AssetImage(imageAsset!), fit: BoxFit.cover)
+              ? DecorationImage(
+                  image: AssetImage(imageAsset!),
+                  fit: BoxFit.cover,
+                )
               : null, // COMMUNITY 3.0
         ),
         clipBehavior: Clip.antiAlias,
@@ -208,7 +246,9 @@ class _RoomCard extends StatelessWidget {
                 height: 140,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: cs.onPrimary.withOpacity(hasAsset ? 0.12 : 0.08), // COMMUNITY 3.0
+                  color: cs.onPrimary.withOpacity(
+                    hasAsset ? 0.12 : 0.08,
+                  ), // COMMUNITY 3.0
                 ),
               ),
             ),
@@ -222,7 +262,9 @@ class _RoomCard extends StatelessWidget {
                       title,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                      style: theme.textTheme.titleMedium?.copyWith(color: cs.onPrimary),
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        color: cs.onPrimary,
+                      ),
                     ),
                   ),
                   Icon(icon, color: cs.onPrimary.withOpacity(0.9)),
@@ -255,9 +297,15 @@ class _EmptyRooms extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('No rooms yet. Create one', style: theme.textTheme.bodyMedium),
+              Text(
+                'No rooms yet. Create one',
+                style: theme.textTheme.bodyMedium,
+              ),
               const SizedBox(height: 12),
-              FilledButton(onPressed: onCreate, child: const Text('Create room')),
+              FilledButton(
+                onPressed: onCreate,
+                child: const Text('Create room'),
+              ),
             ],
           ),
         ),

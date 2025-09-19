@@ -9,14 +9,23 @@ import 'tabs/community_feed_tab.dart';
 // import 'tabs/community_subjects_tab.dart';
 import 'package:flutterquiz/ui/screens/community/learning_materials_home.dart';
 import 'package:flutterquiz/ui/screens/community/exameter_screen.dart';
+import 'package:flutterquiz/ui/screens/community/learning_materials_types.dart';
+import 'package:flutterquiz/ui/screens/community/learning_materials_upload_screen.dart';
 
 class CommunityHubScreen extends ConsumerStatefulWidget {
-  const CommunityHubScreen({super.key, this.initialIndex = 0});
+  const CommunityHubScreen({
+    super.key,
+    this.initialIndex = 0,
+    this.onTabChanged,
+  });
 
   final int initialIndex;
+  final ValueChanged<int>? onTabChanged;
 
   static Route<CommunityHubScreen> route({int initialIndex = 0}) =>
-      MaterialPageRoute(builder: (_) => CommunityHubScreen(initialIndex: initialIndex));
+      MaterialPageRoute(
+        builder: (_) => CommunityHubScreen(initialIndex: initialIndex),
+      );
 
   @override
   CommunityHubScreenState createState() => CommunityHubScreenState();
@@ -24,13 +33,46 @@ class CommunityHubScreen extends ConsumerStatefulWidget {
 
 class CommunityHubScreenState extends ConsumerState<CommunityHubScreen>
     with SingleTickerProviderStateMixin {
-  late final TabController _tabController =
-      TabController(length: 4, vsync: this, initialIndex: widget.initialIndex);
+  late final TabController _tabController = TabController(
+    length: 4,
+    vsync: this,
+    initialIndex: widget.initialIndex,
+  );
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController.addListener(_handleTabChange);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      widget.onTabChanged?.call(_tabController.index);
+    });
+  }
 
   @override
   void dispose() {
+    _tabController.removeListener(_handleTabChange);
+    widget.onTabChanged?.call(0);
     _tabController.dispose();
     super.dispose();
+  }
+
+  void _handleTabChange() {
+    if (_tabController.indexIsChanging) return;
+    widget.onTabChanged?.call(_tabController.index);
+  }
+
+  void openQuestionComposer() {
+    showQuestionComposer(context, ref);
+  }
+
+  Future<void> openLearningMaterialCreator() async {
+    final defaultType = LearningMaterialTypeData.values.first;
+    if (!mounted) return;
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => LearningMaterialUploadScreen(defaultType: defaultType),
+      ),
+    );
   }
 
   @override
@@ -62,7 +104,7 @@ class CommunityHubScreenState extends ConsumerState<CommunityHubScreen>
           CommunityExperiencesTab(),
         ],
       ),
-      floatingActionButton: _ComposerFab(onTap: () => showQuestionComposer(context, ref)),
+      floatingActionButton: null,
     );
   }
 
@@ -84,22 +126,6 @@ class CommunityHubScreenState extends ConsumerState<CommunityHubScreen>
         Tab(text: 'Exameter'),
         Tab(text: 'Erfahrungen'),
       ],
-    );
-  }
-
-}
-
-class _ComposerFab extends StatelessWidget {
-  const _ComposerFab({required this.onTap});
-
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return FloatingActionButton.extended(
-      onPressed: onTap,
-      icon: const Icon(Icons.add_comment_outlined),
-      label: const Text('Frage stellen'),
     );
   }
 }

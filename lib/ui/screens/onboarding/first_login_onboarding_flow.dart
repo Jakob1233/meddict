@@ -64,7 +64,8 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
       _selectedSemester = cachedSemester;
     }
     final cachedUniversity = _onboardingController.cachedUniversityName;
-    if (cachedUniversity.isNotEmpty && _universities.contains(cachedUniversity)) {
+    if (cachedUniversity.isNotEmpty &&
+        _universities.contains(cachedUniversity)) {
       _selectedUniversity = cachedUniversity;
     }
   }
@@ -118,7 +119,9 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
     if (universityCode.isEmpty) {
       setState(() => _isSaving = false);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Universität unbekannt. Bitte erneut wählen.')),
+        const SnackBar(
+          content: Text('Universität unbekannt. Bitte erneut wählen.'),
+        ),
       );
       return;
     }
@@ -355,13 +358,17 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
       child: LayoutBuilder(
         builder: (context, constraints) {
           final buttonWidth = _selectionCardWidth(constraints.maxWidth);
-          final backgroundResolver = MaterialStateProperty.resolveWith<Color?>((states) {
+          final backgroundResolver = MaterialStateProperty.resolveWith<Color?>((
+            states,
+          ) {
             if (states.contains(MaterialState.disabled)) {
               return const Color(0xFFE3E3E8);
             }
             return theme.primaryColor;
           });
-          final foregroundResolver = MaterialStateProperty.resolveWith<Color?>((states) {
+          final foregroundResolver = MaterialStateProperty.resolveWith<Color?>((
+            states,
+          ) {
             if (states.contains(MaterialState.disabled)) {
               return const Color(0xFF7A7A85);
             }

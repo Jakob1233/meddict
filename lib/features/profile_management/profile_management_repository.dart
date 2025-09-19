@@ -52,18 +52,24 @@ class ProfileManagementRepository {
     );
     await profileManagementLocalDataSource.setFCMToken(userProfile.fcmToken!);
     await profileManagementLocalDataSource.setReferCode(userProfile.referCode!);
-    await profileManagementLocalDataSource
-        .setUsername(userProfile.username ?? '');
-    await profileManagementLocalDataSource
-        .setStudyProgram(userProfile.studyProgram ?? '');
-    await profileManagementLocalDataSource
-        .setSpecialization(userProfile.specialization ?? userProfile.studyProgram ?? '');
-    await profileManagementLocalDataSource
-        .setSemester(userProfile.semester ?? '');
-    await profileManagementLocalDataSource
-        .setUniversityName(userProfile.universityName ?? '');
-    await profileManagementLocalDataSource
-        .setUniversityCode(userProfile.universityCode ?? '');
+    await profileManagementLocalDataSource.setUsername(
+      userProfile.username ?? '',
+    );
+    await profileManagementLocalDataSource.setStudyProgram(
+      userProfile.studyProgram ?? '',
+    );
+    await profileManagementLocalDataSource.setSpecialization(
+      userProfile.specialization ?? userProfile.studyProgram ?? '',
+    );
+    await profileManagementLocalDataSource.setSemester(
+      userProfile.semester ?? '',
+    );
+    await profileManagementLocalDataSource.setUniversityName(
+      userProfile.universityName ?? '',
+    );
+    await profileManagementLocalDataSource.setUniversityCode(
+      userProfile.universityCode ?? '',
+    );
     await profileManagementLocalDataSource.setFirstLoginComplete(
       userProfile.firstLoginComplete ?? false,
     );
@@ -91,8 +97,8 @@ class ProfileManagementRepository {
         semester: _profileManagementLocalDataSource.getSemester(),
         universityName: _profileManagementLocalDataSource.getUniversityName(),
         universityCode: _profileManagementLocalDataSource.getUniversityCode(),
-        firstLoginComplete:
-            _profileManagementLocalDataSource.getFirstLoginComplete(),
+        firstLoginComplete: _profileManagementLocalDataSource
+            .getFirstLoginComplete(),
       );
     } on Exception catch (_) {
       throw ProfileManagementException(

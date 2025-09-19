@@ -81,7 +81,9 @@ String _normalizeSpecializationValue(String? value) {
 }
 
 String _normalizeSemesterValue(String? value) {
-  final normalized = FirstLoginOnboardingController.normalizeSemester(value ?? '');
+  final normalized = FirstLoginOnboardingController.normalizeSemester(
+    value ?? '',
+  );
   if (_semesters.contains(normalized)) {
     return normalized;
   }
@@ -200,19 +202,23 @@ class _SelectProfilePictureScreen extends State<CreateOrEditProfileScreen> {
   }
 
   void _ensureInitialSelections(UserProfile profile) {
-    _selectedUniversityName ??=
-        _resolveUniversityName(code: profile.universityCode, name: profile.universityName);
+    _selectedUniversityName ??= _resolveUniversityName(
+      code: profile.universityCode,
+      name: profile.universityName,
+    );
 
     final specializationSource = (profile.specialization?.isNotEmpty ?? false)
         ? profile.specialization
         : profile.studyProgram;
-    _selectedSpecialization ??=
-        _normalizeSpecializationValue(specializationSource);
+    _selectedSpecialization ??= _normalizeSpecializationValue(
+      specializationSource,
+    );
 
     _selectedSemester ??= _normalizeSemesterValue(profile.semester);
   }
 
-  String get _resolvedUniversityName => _selectedUniversityName ??
+  String get _resolvedUniversityName =>
+      _selectedUniversityName ??
       _resolveUniversityName(
         code: _currentUserProfile?.universityCode,
         name: _currentUserProfile?.universityName,
@@ -229,7 +235,8 @@ class _SelectProfilePictureScreen extends State<CreateOrEditProfileScreen> {
       _selectedSemester ??
       _normalizeSemesterValue(_currentUserProfile?.semester);
 
-  String get _resolvedUniversityCode => _mapUniNameToCode(_resolvedUniversityName);
+  String get _resolvedUniversityCode =>
+      _mapUniNameToCode(_resolvedUniversityName);
 
   CustomDropdownDecoration _dropdownDecoration(ColorScheme colorScheme) {
     return CustomDropdownDecoration(

@@ -25,12 +25,14 @@ class LearningMaterial {
     final createdAt = rawCreatedAt is Timestamp
         ? rawCreatedAt.toDate()
         : rawCreatedAt is DateTime
-            ? rawCreatedAt
-            : DateTime.now();
+        ? rawCreatedAt
+        : DateTime.now();
 
     final rawType = (data['type'] as String? ?? '').trim();
     final legacyCategory = (data['category'] as String? ?? '').trim();
-    final resolvedType = _normalizeType(rawType.isNotEmpty ? rawType : legacyCategory);
+    final resolvedType = _normalizeType(
+      rawType.isNotEmpty ? rawType : legacyCategory,
+    );
 
     return LearningMaterial(
       id: doc.id,
@@ -63,14 +65,20 @@ class LearningMaterial {
   final int? downloads;
   final String? thumbnailUrl;
 
-  LearningMaterialTypeData get typeData => LearningMaterialTypeData.byValue(type);
+  LearningMaterialTypeData get typeData =>
+      LearningMaterialTypeData.byValue(type);
   String get typeLabel => typeData.label;
 
-  String get uploaderOrFallback => uploaderName.isNotEmpty ? uploaderName : 'Unbekannter Uploader';
+  String get uploaderOrFallback =>
+      uploaderName.isNotEmpty ? uploaderName : 'Unbekannter Uploader';
 
   String get initials {
     final source = title.isNotEmpty ? title : uploaderOrFallback;
-    final parts = source.trim().split(RegExp(r'\s+')).where((part) => part.isNotEmpty).toList();
+    final parts = source
+        .trim()
+        .split(RegExp(r'\s+'))
+        .where((part) => part.isNotEmpty)
+        .toList();
     if (parts.isEmpty) return '?';
     if (parts.length == 1) return parts.first.substring(0, 1).toUpperCase();
     final first = parts.first.substring(0, 1).toUpperCase();

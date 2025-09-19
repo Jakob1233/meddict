@@ -54,7 +54,8 @@ class DefaultFirebaseOptions {
     appId: '1:1083082948224:android:300652e689c82a09d17065',
     messagingSenderId: '1083082948224',
     projectId: 'meddict-191cc',
-    databaseURL: 'https://meddict-191cc-default-rtdb.europe-west1.firebasedatabase.app',
+    databaseURL:
+        'https://meddict-191cc-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'meddict-191cc.firebasestorage.app',
   );
 
@@ -63,11 +64,13 @@ class DefaultFirebaseOptions {
     appId: '1:1083082948224:ios:5903d11e1bed6775d17065',
     messagingSenderId: '1083082948224',
     projectId: 'meddict-191cc',
-    databaseURL: 'https://meddict-191cc-default-rtdb.europe-west1.firebasedatabase.app',
+    databaseURL:
+        'https://meddict-191cc-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'meddict-191cc.firebasestorage.app',
-    androidClientId: '1083082948224-hv1lf6l3cpqjhueemmmfhnd0lpsp2mtu.apps.googleusercontent.com',
-    iosClientId: '1083082948224-btimpk4gmbi83tjf2jojva5166b7l8vc.apps.googleusercontent.com',
+    androidClientId:
+        '1083082948224-hv1lf6l3cpqjhueemmmfhnd0lpsp2mtu.apps.googleusercontent.com',
+    iosClientId:
+        '1083082948224-btimpk4gmbi83tjf2jojva5166b7l8vc.apps.googleusercontent.com',
     iosBundleId: 'pleiner.jakob.meddict',
   );
-
 }

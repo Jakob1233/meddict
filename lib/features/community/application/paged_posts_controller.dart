@@ -64,8 +64,16 @@ class PagedPostsArgs {
   }
 
   @override
-  int get hashCode =>
-      Object.hash(category, type, sort, limit, _timeWindowMs, scope, semester, universityCode);
+  int get hashCode => Object.hash(
+    category,
+    type,
+    sort,
+    limit,
+    _timeWindowMs,
+    scope,
+    semester,
+    universityCode,
+  );
 
   int? get _timeWindowMs => timeWindow?.inMilliseconds;
 }
@@ -105,7 +113,7 @@ class PagedPostsState {
 
 class PagedPostsNotifier extends StateNotifier<PagedPostsState> {
   PagedPostsNotifier({required this.repo, required this.args})
-      : super(const PagedPostsState());
+    : super(const PagedPostsState());
 
   final PostRepository repo;
   final PagedPostsArgs args;
@@ -115,7 +123,12 @@ class PagedPostsNotifier extends StateNotifier<PagedPostsState> {
   Future<void> loadInitial() async {
     if (_isFetching) return;
     _isFetching = true;
-    state = state.copyWith(isLoadingInitial: true, isLoadingMore: false, error: null, clearError: true);
+    state = state.copyWith(
+      isLoadingInitial: true,
+      isLoadingMore: false,
+      error: null,
+      clearError: true,
+    );
     try {
       final result = await repo.fetchPostsPage(
         category: args.category,

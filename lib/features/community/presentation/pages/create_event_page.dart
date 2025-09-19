@@ -46,7 +46,10 @@ class _CreateEventPageState extends ConsumerState<CreateEventPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Create Event', style: theme.textTheme.titleLarge), // COMMUNITY 3.0
+        title: Text(
+          'Create Event',
+          style: theme.textTheme.titleLarge,
+        ), // COMMUNITY 3.0
       ),
       body: Form(
         key: _formKey,
@@ -56,7 +59,8 @@ class _CreateEventPageState extends ConsumerState<CreateEventPage> {
             TextFormField(
               controller: _titleCtrl,
               decoration: const InputDecoration(labelText: 'Titel*'),
-              validator: (v) => (v == null || v.trim().isEmpty) ? 'Titel erforderlich' : null,
+              validator: (v) =>
+                  (v == null || v.trim().isEmpty) ? 'Titel erforderlich' : null,
             ),
             const SizedBox(height: 12),
             TextFormField(
@@ -83,15 +87,30 @@ class _CreateEventPageState extends ConsumerState<CreateEventPage> {
                         initialDate: now,
                       );
                       if (d != null) {
-                        final t = await showTimePicker(context: context, initialTime: TimeOfDay.now());
+                        final t = await showTimePicker(
+                          context: context,
+                          initialTime: TimeOfDay.now(),
+                        );
                         if (t != null) {
-                          setState(() => _startAt = DateTime(d.year, d.month, d.day, t.hour, t.minute));
+                          setState(
+                            () => _startAt = DateTime(
+                              d.year,
+                              d.month,
+                              d.day,
+                              t.hour,
+                              t.minute,
+                            ),
+                          );
                         }
                       }
                     },
                     child: Text(
-                      _startAt == null ? 'Start wählen*' : DateFormat('EEE, dd.MM. HH:mm').format(_startAt!),
-                      style: theme.textTheme.labelLarge?.copyWith(color: cs.onSurface),
+                      _startAt == null
+                          ? 'Start wählen*'
+                          : DateFormat('EEE, dd.MM. HH:mm').format(_startAt!),
+                      style: theme.textTheme.labelLarge?.copyWith(
+                        color: cs.onSurface,
+                      ),
                     ),
                   ),
                 ),
@@ -107,15 +126,30 @@ class _CreateEventPageState extends ConsumerState<CreateEventPage> {
                         initialDate: _startAt!,
                       );
                       if (d != null) {
-                        final t = await showTimePicker(context: context, initialTime: TimeOfDay.now());
+                        final t = await showTimePicker(
+                          context: context,
+                          initialTime: TimeOfDay.now(),
+                        );
                         if (t != null) {
-                          setState(() => _endAt = DateTime(d.year, d.month, d.day, t.hour, t.minute));
+                          setState(
+                            () => _endAt = DateTime(
+                              d.year,
+                              d.month,
+                              d.day,
+                              t.hour,
+                              t.minute,
+                            ),
+                          );
                         }
                       }
                     },
                     child: Text(
-                      _endAt == null ? 'Ende (optional)' : DateFormat('EEE, dd.MM. HH:mm').format(_endAt!),
-                      style: theme.textTheme.labelLarge?.copyWith(color: cs.onSurface),
+                      _endAt == null
+                          ? 'Ende (optional)'
+                          : DateFormat('EEE, dd.MM. HH:mm').format(_endAt!),
+                      style: theme.textTheme.labelLarge?.copyWith(
+                        color: cs.onSurface,
+                      ),
                     ),
                   ),
                 ),
@@ -128,7 +162,10 @@ class _CreateEventPageState extends ConsumerState<CreateEventPage> {
                   child: OutlinedButton.icon(
                     onPressed: () async {
                       final picker = ImagePicker();
-                      final img = await picker.pickImage(source: ImageSource.gallery, imageQuality: 85);
+                      final img = await picker.pickImage(
+                        source: ImageSource.gallery,
+                        imageQuality: 85,
+                      );
                       if (img != null) setState(() => _image = img);
                     },
                     icon: const Icon(Icons.image_outlined),
@@ -149,7 +186,12 @@ class _CreateEventPageState extends ConsumerState<CreateEventPage> {
               const SizedBox(height: 12),
               ClipRRect(
                 borderRadius: BorderRadius.circular(12),
-                child: Image.file(File(_image!.path), height: 160, width: double.infinity, fit: BoxFit.cover),
+                child: Image.file(
+                  File(_image!.path),
+                  height: 160,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                ),
               ),
             ],
             const SizedBox(height: 24),
@@ -175,18 +217,26 @@ class _CreateEventPageState extends ConsumerState<CreateEventPage> {
     try {
       final uid = ref.read(currentUserIdProvider);
       if (uid == null) return;
-      await ref.read(eventRepositoryProvider).createEvent(
+      await ref
+          .read(eventRepositoryProvider)
+          .createEvent(
             title: _titleCtrl.text.trim(),
-            description: _descCtrl.text.trim().isEmpty ? null : _descCtrl.text.trim(),
+            description: _descCtrl.text.trim().isEmpty
+                ? null
+                : _descCtrl.text.trim(),
             startAt: _startAt!,
             endAt: _endAt,
-            location: _locCtrl.text.trim().isEmpty ? null : _locCtrl.text.trim(),
+            location: _locCtrl.text.trim().isEmpty
+                ? null
+                : _locCtrl.text.trim(),
             createdBy: uid,
             imageFile: _image,
           );
       if (!mounted) return;
       Navigator.pop(context);
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Event erstellt')));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Event erstellt')));
     } finally {
       if (mounted) setState(() => _saving = false);
     }

@@ -9,10 +9,21 @@ import 'package:flutterquiz/ui/widgets/custom_appbar.dart'; // COMMUNITY UI
 import '../../providers.dart'; // COMMUNITY UI
 
 class CommunityLegacyScreen extends ConsumerStatefulWidget {
-  const CommunityLegacyScreen({super.key, this.initialIndex = 0, this.initialRoomId});
+  const CommunityLegacyScreen({
+    super.key,
+    this.initialIndex = 0,
+    this.initialRoomId,
+  });
 
-  static Route<CommunityLegacyScreen> route({int initialIndex = 0, String? roomId}) =>
-      MaterialPageRoute(builder: (_) => CommunityLegacyScreen(initialIndex: initialIndex, initialRoomId: roomId));
+  static Route<CommunityLegacyScreen> route({
+    int initialIndex = 0,
+    String? roomId,
+  }) => MaterialPageRoute(
+    builder: (_) => CommunityLegacyScreen(
+      initialIndex: initialIndex,
+      initialRoomId: roomId,
+    ),
+  );
 
   final int initialIndex;
   final String? initialRoomId;
@@ -24,8 +35,11 @@ class CommunityLegacyScreen extends ConsumerStatefulWidget {
 class CommunityLegacyScreenState extends ConsumerState<CommunityLegacyScreen>
     with SingleTickerProviderStateMixin {
   // COMMUNITY UI
-  late final TabController _tabController =
-      TabController(length: 3, vsync: this, initialIndex: widget.initialIndex);
+  late final TabController _tabController = TabController(
+    length: 3,
+    vsync: this,
+    initialIndex: widget.initialIndex,
+  );
 
   @override
   void initState() {
@@ -33,7 +47,9 @@ class CommunityLegacyScreenState extends ConsumerState<CommunityLegacyScreen>
     // COMMUNITY UI: preselect a room if provided via route args
     final roomId = widget.initialRoomId;
     if (roomId != null && roomId.isNotEmpty) {
-      Future.microtask(() => ref.read(selectedRoomIdProvider.notifier).state = roomId);
+      Future.microtask(
+        () => ref.read(selectedRoomIdProvider.notifier).state = roomId,
+      );
     }
   }
 

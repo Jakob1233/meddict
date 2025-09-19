@@ -8,17 +8,20 @@ class GaugeEffortChart extends StatelessWidget {
     required this.score,
     this.size = 240,
     this.label = 'gemittelter Aufwand',
+    this.updatedAt,
   });
 
   final double score;
   final double size;
   final String label;
+  final DateTime? updatedAt;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
     final palette = _GaugePalette.resolve(theme);
+     final updatedText = _formatUpdatedAt(updatedAt);
 
     return TweenAnimationBuilder<double>(
       tween: Tween(begin: 0, end: _normalize(score)),
@@ -61,10 +64,22 @@ class GaugeEffortChart extends StatelessWidget {
                     label,
                     style: theme.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.w500,
-                      color: theme.textTheme.titleMedium?.color?.withOpacity(0.8),
+                      color: theme.textTheme.titleMedium?.color?.withOpacity(
+                        0.8,
+                      ),
                     ),
                     textAlign: TextAlign.center,
-                  ),
+                  ), 
+                        if (updatedText != null) ...[
+                    const SizedBox(height: 4),
+                    Text(
+                      'Zuletzt aktualisiert: $updatedText',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.textTheme.bodySmall?.color?.withOpacity(0.7),
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
                 ],
               ),
             ],
@@ -80,14 +95,24 @@ class GaugeEffortChart extends StatelessWidget {
     if (value > 100) return 1;
     return value / 100;
   }
-<<<<<<< ours
-
-=======
->>>>>>> theirs
 }
+  String? _formatUpdatedAt(DateTime? date) {
+    if (date == null) return null;
+    final local = date.toLocal();
+    final day = local.day.toString().padLeft(2, '0');
+    final month = local.month.toString().padLeft(2, '0');
+    final year = local.year.toString();
+    final hour = local.hour.toString().padLeft(2, '0');
+    final minute = local.minute.toString().padLeft(2, '0');
+    return '$day.$month.$year · $hour:$minute';
+  }
 
 class _GaugeSegment {
-  const _GaugeSegment({required this.start, required this.end, required this.color});
+  const _GaugeSegment({
+    required this.start,
+    required this.end,
+    required this.color,
+  });
 
   final double start;
   final double end;
@@ -109,7 +134,9 @@ class _GaugePalette {
 
   static _GaugePalette resolve(ThemeData theme) {
     final isDark = theme.brightness == Brightness.dark;
-    final track = theme.colorScheme.surfaceVariant.withOpacity(isDark ? 0.35 : 0.22);
+    final track = theme.colorScheme.surfaceVariant.withOpacity(
+      isDark ? 0.35 : 0.22,
+    );
     final pointer = theme.colorScheme.primary;
     final shadow = theme.shadowColor.withOpacity(isDark ? 0.18 : 0.28);
 
@@ -207,7 +234,11 @@ class _GaugePainter extends CustomPainter {
 
     final knobPaint = Paint()..color = pointerColor.withOpacity(0.12);
     canvas.drawCircle(center, _strokeWidth * 1.1, knobPaint);
-    canvas.drawCircle(center, _pointerWidth * 1.2, Paint()..color = pointerColor);
+    canvas.drawCircle(
+      center,
+      _pointerWidth * 1.2,
+      Paint()..color = pointerColor,
+    );
 
     final tipPaint = Paint()..color = pointerColor;
     canvas.drawCircle(pointerEnd, _pointerWidth * 0.9, tipPaint);
@@ -215,17 +246,21 @@ class _GaugePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant _GaugePainter oldDelegate) {
-    if (oldDelegate.progress != progress || oldDelegate.trackColor != trackColor) {
+    if (oldDelegate.progress != progress ||
+        oldDelegate.trackColor != trackColor) {
       return true;
     }
-    if (oldDelegate.pointerColor != pointerColor || oldDelegate.shadowColor != shadowColor) {
+    if (oldDelegate.pointerColor != pointerColor ||
+        oldDelegate.shadowColor != shadowColor) {
       return true;
     }
     if (oldDelegate.segments.length != segments.length) return true;
     for (var i = 0; i < segments.length; i++) {
       final current = segments[i];
       final previous = oldDelegate.segments[i];
-      if (current.start != previous.start || current.end != previous.end || current.color != previous.color) {
+      if (current.start != previous.start ||
+          current.end != previous.end ||
+          current.color != previous.color) {
         return true;
       }
     }

@@ -45,7 +45,8 @@ class CommunityUserContext {
   final String universityCode;
 
   bool get hasSemester => semester.isNotEmpty;
-  bool get hasUniversity => universityCode.isNotEmpty && universityName.isNotEmpty;
+  bool get hasUniversity =>
+      universityCode.isNotEmpty && universityName.isNotEmpty;
 }
 
 class TopPostsArgs {
@@ -102,7 +103,10 @@ final roomRepositoryProvider = Provider<RoomRepository>((ref) {
 });
 
 final eventRepositoryProvider = Provider<EventRepository>((ref) {
-  return EventRepository(ref.read(firestoreProvider), ref.read(storageProvider));
+  return EventRepository(
+    ref.read(firestoreProvider),
+    ref.read(storageProvider),
+  );
 });
 
 final commentRepositoryProvider = Provider<CommentRepository>((ref) {
@@ -139,7 +143,10 @@ final medThreadProvider = StreamProvider<List<PostModel>>((ref) {
 });
 
 // Posts by community
-final communityPostsProvider = StreamProvider.family<List<PostModel>, String>((ref, communityId) {
+final communityPostsProvider = StreamProvider.family<List<PostModel>, String>((
+  ref,
+  communityId,
+) {
   final repo = ref.read(postRepositoryProvider);
   return repo.postsByCommunityStream(communityId: communityId, limit: 50);
 });
@@ -151,7 +158,10 @@ final postProvider = StreamProvider.family<PostModel?, String>((ref, postId) {
 });
 
 // Comments for a post
-final commentsProvider = StreamProvider.family<List<CommentModel>, String>((ref, postId) {
+final commentsProvider = StreamProvider.family<List<CommentModel>, String>((
+  ref,
+  postId,
+) {
   final repo = ref.read(commentRepositoryProvider);
   return repo.commentsStream(postId: postId);
 });
@@ -164,7 +174,11 @@ final roomsProvider = StreamProvider<List<Room>>((ref) {
 // COMMUNITY 3.0: single room stream
 final roomProvider = StreamProvider.family<Room?, String>((ref, id) {
   final fs = ref.read(firestoreProvider);
-  return fs.collection('rooms').doc(id).snapshots().map((d) => d.exists ? Room.fromDoc(d) : null);
+  return fs
+      .collection('rooms')
+      .doc(id)
+      .snapshots()
+      .map((d) => d.exists ? Room.fromDoc(d) : null);
 });
 
 // COMMUNITY 2.0 Events
@@ -180,69 +194,89 @@ final eventsPastProvider = StreamProvider<List<UniEvent>>((ref) {
 final selectedRoomIdProvider = StateProvider<String?>((ref) => null);
 
 // COMMUNITY UI: posts feed for selected room
-final roomFeedProvider = StreamProvider.family<List<PostModel>, String>((ref, roomId) {
+final roomFeedProvider = StreamProvider.family<List<PostModel>, String>((
+  ref,
+  roomId,
+) {
   return ref.read(postRepositoryProvider).streamRoomPosts(roomId);
 });
 
 // COMMUNITY 3.0: create event provider
-final createEventProvider = FutureProvider.family<String, ({
-  String title,
-  String? description,
-  DateTime startAt,
-  DateTime? endAt,
-  String? location,
-  String createdBy,
-  dynamic imageFile, // XFile (kept dynamic to avoid import here)
-})>((ref, args) async {
-  return ref.read(eventRepositoryProvider).createEvent(
-        title: args.title,
-        description: args.description,
-        startAt: args.startAt,
-        endAt: args.endAt,
-        location: args.location,
-        createdBy: args.createdBy,
-        imageFile: args.imageFile,
-      );
-});
+final createEventProvider =
+    FutureProvider.family<
+      String,
+      ({
+        String title,
+        String? description,
+        DateTime startAt,
+        DateTime? endAt,
+        String? location,
+        String createdBy,
+        dynamic imageFile, // XFile (kept dynamic to avoid import here)
+      })
+    >((ref, args) async {
+      return ref
+          .read(eventRepositoryProvider)
+          .createEvent(
+            title: args.title,
+            description: args.description,
+            startAt: args.startAt,
+            endAt: args.endAt,
+            location: args.location,
+            createdBy: args.createdBy,
+            imageFile: args.imageFile,
+          );
+    });
 
 // COMMUNITY 3.0: create room provider
-final createRoomProvider = FutureProvider.family<String, ({
-  String name,
-  String? description,
-  String createdBy,
-  String imageAsset,
-  String semester,
-  String topic,
-})>((ref, args) async {
-  return ref.read(roomRepositoryProvider).createRoom(
-        name: args.name,
-        description: args.description,
-        createdBy: args.createdBy,
-        imageAsset: args.imageAsset,
-        semester: args.semester,
-        topic: args.topic,
-      );
-});
+final createRoomProvider =
+    FutureProvider.family<
+      String,
+      ({
+        String name,
+        String? description,
+        String createdBy,
+        String imageAsset,
+        String semester,
+        String topic,
+      })
+    >((ref, args) async {
+      return ref
+          .read(roomRepositoryProvider)
+          .createRoom(
+            name: args.name,
+            description: args.description,
+            createdBy: args.createdBy,
+            imageAsset: args.imageAsset,
+            semester: args.semester,
+            topic: args.topic,
+          );
+    });
 
 // COMMUNITY 3.0: create room post provider
-final createRoomPostProvider = FutureProvider.family<void, ({
-  String roomId,
-  String createdBy,
-  String body,
-  String? title,
-  List<String>? tags,
-})>((ref, args) async {
-  await ref.read(postRepositoryProvider).createRoomPost(
-        roomId: args.roomId,
-        createdBy: args.createdBy,
-        body: args.body,
-        title: args.title,
-        tags: args.tags,
-      );
-});
+final createRoomPostProvider =
+    FutureProvider.family<
+      void,
+      ({
+        String roomId,
+        String createdBy,
+        String body,
+        String? title,
+        List<String>? tags,
+      })
+    >((ref, args) async {
+      await ref
+          .read(postRepositoryProvider)
+          .createRoomPost(
+            roomId: args.roomId,
+            createdBy: args.createdBy,
+            body: args.body,
+            title: args.title,
+            tags: args.tags,
+          );
+    });
 
-final _userDetailsWatchProvider =
-    StreamProvider.autoDispose<void>((ref) {
+final _userDetailsWatchProvider = StreamProvider.autoDispose<void>((ref) {
   final box = Hive.box<dynamic>(userDetailsBox);
   return box.watch().map((event) => null);
 });
@@ -250,7 +284,9 @@ final _userDetailsWatchProvider =
 final communityUserContextProvider = Provider<CommunityUserContext>((ref) {
   ref.watch(_userDetailsWatchProvider);
   final local = ProfileManagementLocalDataSource();
-  final semester = FirstLoginOnboardingController.normalizeSemester(local.getSemester());
+  final semester = FirstLoginOnboardingController.normalizeSemester(
+    local.getSemester(),
+  );
   final universityName = local.getUniversityName();
   final universityCode = local.getUniversityCode();
   return CommunityUserContext(
@@ -290,20 +326,26 @@ class ExamsQueryArgs {
   }
 }
 
-final examsListProvider = FutureProvider.autoDispose.family<List<Exam>, ExamsQueryArgs>((ref, args) async {
-  final ordering = args.sort.toLowerCase() == 'relevant'
-      ? ExamsListOrdering.compositeScore
-      : ExamsListOrdering.createdAt;
-  final page = await ref.read(examsRepositoryProvider).fetchExamsPage(
-        universityCode: args.uniCode,
-        semesterFilter: args.semester,
-        ordering: ordering,
-        limit: args.limit ?? 20,
-      );
-  return page.exams;
-});
+final examsListProvider = FutureProvider.autoDispose
+    .family<List<Exam>, ExamsQueryArgs>((ref, args) async {
+      final ordering = args.sort.toLowerCase() == 'relevant'
+          ? ExamsListOrdering.compositeScore
+          : ExamsListOrdering.createdAt;
+      final page = await ref
+          .read(examsRepositoryProvider)
+          .fetchExamsPage(
+            universityCode: args.uniCode,
+            semesterFilter: args.semester,
+            ordering: ordering,
+            limit: args.limit ?? 20,
+          );
+      return page.exams;
+    });
 
-final examProvider = StreamProvider.autoDispose.family<Exam?, String>((ref, examId) {
+final examProvider = StreamProvider.autoDispose.family<Exam?, String>((
+  ref,
+  examId,
+) {
   return ref.read(examsRepositoryProvider).watchExam(examId);
 });
 
@@ -319,38 +361,45 @@ class ExamNotesArgs {
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-    return other is ExamNotesArgs && other.examId == examId && other.type == type;
+    return other is ExamNotesArgs &&
+        other.examId == examId &&
+        other.type == type;
   }
 }
 
-final examNotesProvider =
-    StreamProvider.autoDispose.family<List<ExamNote>, ExamNotesArgs>((ref, args) {
-  return ref.read(examsRepositoryProvider).watchNotes(args.examId, args.type);
-});
+final examNotesProvider = StreamProvider.autoDispose
+    .family<List<ExamNote>, ExamNotesArgs>((ref, args) {
+      return ref
+          .read(examsRepositoryProvider)
+          .watchNotes(args.examId, args.type);
+    });
 
-final examUserRatingProvider =
-    StreamProvider.autoDispose.family<ExamRating?, String>((ref, examId) {
-  return ref.read(examsRepositoryProvider).watchUserRating(examId);
-});
+final examUserRatingProvider = StreamProvider.autoDispose
+    .family<ExamRating?, String>((ref, examId) {
+      return ref.read(examsRepositoryProvider).watchUserRating(examId);
+    });
 
-final pagedPostsProvider = StateNotifierProvider.autoDispose.family<
-    PagedPostsNotifier,
-    PagedPostsState,
-    PagedPostsArgs>((ref, args) {
-  final notifier = PagedPostsNotifier(
-    repo: ref.read(postRepositoryProvider),
-    args: args,
-  );
-  notifier.loadInitial();
-  return notifier;
-});
+final pagedPostsProvider = StateNotifierProvider.autoDispose
+    .family<PagedPostsNotifier, PagedPostsState, PagedPostsArgs>((ref, args) {
+      final notifier = PagedPostsNotifier(
+        repo: ref.read(postRepositoryProvider),
+        args: args,
+      );
+      notifier.loadInitial();
+      return notifier;
+    });
 
-final topPostsProvider =
-    StreamProvider.autoDispose.family<List<PostModel>, TopPostsArgs>((ref, args) {
-  return ref
-      .read(postRepositoryProvider)
-      .topPostsStream(window: args.window, limit: args.limit, category: args.category, type: 'question');
-});
+final topPostsProvider = StreamProvider.autoDispose
+    .family<List<PostModel>, TopPostsArgs>((ref, args) {
+      return ref
+          .read(postRepositoryProvider)
+          .topPostsStream(
+            window: args.window,
+            limit: args.limit,
+            category: args.category,
+            type: 'question',
+          );
+    });
 
 // COMMUNITY 3.0 — Firestore Indexes & Rules (deploy separately)
 // Indexes (firestore.indexes.json)
@@ -415,37 +464,41 @@ class UserCacheNotifier extends StateNotifier<Map<String, AppUser>> {
 
 final userCacheProvider =
     StateNotifierProvider<UserCacheNotifier, Map<String, AppUser>>((ref) {
-  return UserCacheNotifier(ref.read(userRepositoryProvider));
-});
+      return UserCacheNotifier(ref.read(userRepositoryProvider));
+    });
 
 // Create Post
-final createPostProvider = FutureProvider.family<String, ({
-  String title,
-  String body,
-  List<String> tags,
-  String type,
-  String? communityId,
-  File? imageFile,
-})>((ref, args) async {
-  final repo = ref.read(postRepositoryProvider);
-  final userId = ref.read(currentUserIdProvider);
-  if (userId == null) throw StateError('User not logged in');
-  final post = PostModel(
-    id: '',
-    type: args.type,
-    title: args.title,
-    body: args.body,
-    tags: args.tags,
-    createdBy: userId,
-    communityId: args.communityId,
-    createdAt: Timestamp.now(),
-    updatedAt: Timestamp.now(),
-    upvotes: 0,
-    answersCount: 0,
-    imageUrl: null,
-    upvoters: const [],
-    downvoters: const [],
-  );
-  final postId = await repo.createPost(post, imageFile: args.imageFile);
-  return postId;
-});
+final createPostProvider =
+    FutureProvider.family<
+      String,
+      ({
+        String title,
+        String body,
+        List<String> tags,
+        String type,
+        String? communityId,
+        File? imageFile,
+      })
+    >((ref, args) async {
+      final repo = ref.read(postRepositoryProvider);
+      final userId = ref.read(currentUserIdProvider);
+      if (userId == null) throw StateError('User not logged in');
+      final post = PostModel(
+        id: '',
+        type: args.type,
+        title: args.title,
+        body: args.body,
+        tags: args.tags,
+        createdBy: userId,
+        communityId: args.communityId,
+        createdAt: Timestamp.now(),
+        updatedAt: Timestamp.now(),
+        upvotes: 0,
+        answersCount: 0,
+        imageUrl: null,
+        upvoters: const [],
+        downvoters: const [],
+      );
+      final postId = await repo.createPost(post, imageFile: args.imageFile);
+      return postId;
+    });

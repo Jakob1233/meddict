@@ -20,22 +20,33 @@ class UserProfilePage extends ConsumerWidget {
     ref.read(userCacheProvider.notifier).ensure(userId);
     final user = ref.watch(userCacheProvider)[userId];
     return Scaffold(
-      appBar: AppBar(title: Text(user?.displayName ?? 'Profil', style: theme.textTheme.titleLarge)),
+      appBar: AppBar(
+        title: Text(
+          user?.displayName ?? 'Profil',
+          style: theme.textTheme.titleLarge,
+        ),
+      ),
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             CircleAvatar(
               radius: 40,
-              backgroundImage: user?.photoURL != null ? NetworkImage(user!.photoURL!) : null,
-              child: user?.photoURL == null ? Text((user?.displayName ?? 'U')[0].toUpperCase()) : null,
+              backgroundImage: user?.photoURL != null
+                  ? NetworkImage(user!.photoURL!)
+                  : null,
+              child: user?.photoURL == null
+                  ? Text((user?.displayName ?? 'U')[0].toUpperCase())
+                  : null,
             ),
             const SizedBox(height: 12),
-            Text(user?.displayName ?? 'User', style: theme.textTheme.titleMedium),
+            Text(
+              user?.displayName ?? 'User',
+              style: theme.textTheme.titleMedium,
+            ),
           ],
         ),
       ),
     );
   }
 }
-

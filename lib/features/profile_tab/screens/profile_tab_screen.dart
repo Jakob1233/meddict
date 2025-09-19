@@ -254,8 +254,7 @@ class ProfileTabScreenState extends State<ProfileTabScreen>
                 ),
                 const SizedBox(height: 16),
                 if (!_isGuest &&
-                    FirebaseAuth.instance.currentUser?.email
-                            ?.toLowerCase() ==
+                    FirebaseAuth.instance.currentUser?.email?.toLowerCase() ==
                         'j.pleiner.1@gmail.com') ...[
                   OutlinedButton.icon(
                     onPressed: _openExamImport,

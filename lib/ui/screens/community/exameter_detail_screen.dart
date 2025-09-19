@@ -12,15 +12,27 @@ import 'package:flutterquiz/models/exam_rating.dart';
 import 'package:flutterquiz/ui/widgets/charts/gauge_effort_chart.dart';
 import 'package:flutterquiz/ui/widgets/charts/ring_triplet_chart.dart';
 
+const Color _summerBlue = Color(0xFF26547C);
+const Color _summerPink = Color(0xFFEF476F);
+const Color _summerYellow = Color(0xFFFFD166);
+
 class ExameterDetailScreen extends ConsumerStatefulWidget {
-  const ExameterDetailScreen({super.key, required this.examId, this.initialExam});
+  const ExameterDetailScreen({
+    super.key,
+    required this.examId,
+    this.initialExam,
+  });
 
   final String examId;
   final Exam? initialExam;
 
-  static Route<ExameterDetailScreen> route({required String examId, Exam? initialExam}) {
+  static Route<ExameterDetailScreen> route({
+    required String examId,
+    Exam? initialExam,
+  }) {
     return MaterialPageRoute(
-      builder: (_) => ExameterDetailScreen(examId: examId, initialExam: initialExam),
+      builder: (_) =>
+          ExameterDetailScreen(examId: examId, initialExam: initialExam),
     );
   }
 
@@ -43,10 +55,12 @@ class ExameterDetailScreenState extends ConsumerState<ExameterDetailScreen> {
   void initState() {
     super.initState();
     final initialRating = ref.read(examUserRatingProvider(widget.examId));
-    initialRating.whenOrNull(data: (rating) {
-      if (rating == null) return;
-      _syncRatingValues(rating);
-    });
+    initialRating.whenOrNull(
+      data: (rating) {
+        if (rating == null) return;
+        _syncRatingValues(rating);
+      },
+    );
   }
 
   @override
@@ -60,19 +74,24 @@ class ExameterDetailScreenState extends ConsumerState<ExameterDetailScreen> {
     ref.listen<AsyncValue<ExamRating?>>(
       examUserRatingProvider(widget.examId),
       (previous, next) {
-        next.whenOrNull(data: (rating) {
-          if (rating == null) return;
-          _syncRatingValues(rating, notifyListeners: true);
-        });
+        next.whenOrNull(
+          data: (rating) {
+            if (rating == null) return;
+            _syncRatingValues(rating, notifyListeners: true);
+          },
+        );
       },
     );
 
     final examAsync = ref.watch(examProvider(widget.examId));
     final notesAsync = ref.watch(
-      examNotesProvider(ExamNotesArgs(examId: widget.examId, type: _currentTab)),
+      examNotesProvider(
+        ExamNotesArgs(examId: widget.examId, type: _currentTab),
+      ),
     );
     final userContext = ref.watch(communityUserContextProvider);
-    final bool showComposer = examAsync.maybeWhen(
+    final bool showComposer =
+        examAsync.maybeWhen(
           data: (exam) => (exam ?? widget.initialExam) != null,
           orElse: () => widget.initialExam != null,
         ) ??
@@ -115,7 +134,9 @@ class ExameterDetailScreenState extends ConsumerState<ExameterDetailScreen> {
     final pastQ = rating.pastQ.clamp(1, 5);
 
     final hasChanged =
-        _massValue != mass || _difficultyValue != difficulty || _pastQValue != pastQ;
+        _massValue != mass ||
+        _difficultyValue != difficulty ||
+        _pastQValue != pastQ;
     if (!hasChanged) {
       return;
     }
@@ -160,7 +181,8 @@ class ExameterDetailScreenState extends ConsumerState<ExameterDetailScreen> {
           difficultyValue: _difficultyValue,
           pastQValue: _pastQValue,
           onMassChanged: (value) => setState(() => _massValue = value),
-          onDifficultyChanged: (value) => setState(() => _difficultyValue = value),
+          onDifficultyChanged: (value) =>
+              setState(() => _difficultyValue = value),
           onPastQChanged: (value) => setState(() => _pastQValue = value),
           onSave: _submitRating,
           isSaving: _isSavingRating,
@@ -187,7 +209,9 @@ class ExameterDetailScreenState extends ConsumerState<ExameterDetailScreen> {
 
     setState(() => _isSavingRating = true);
     try {
-      await ref.read(examsRepositoryProvider).upsertRating(
+      await ref
+          .read(examsRepositoryProvider)
+          .upsertRating(
             widget.examId,
             mass: _massValue,
             difficulty: _difficultyValue,
@@ -200,7 +224,9 @@ class ExameterDetailScreenState extends ConsumerState<ExameterDetailScreen> {
     } catch (err) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Bewertung konnte nicht gespeichert werden: $err')),
+        SnackBar(
+          content: Text('Bewertung konnte nicht gespeichert werden: $err'),
+        ),
       );
     } finally {
       if (mounted) {
@@ -221,7 +247,9 @@ class ExameterDetailScreenState extends ConsumerState<ExameterDetailScreen> {
 
     setState(() => _isSendingNote = true);
     try {
-      await ref.read(examsRepositoryProvider).addNote(
+      await ref
+          .read(examsRepositoryProvider)
+          .addNote(
             widget.examId,
             text,
             _currentTab,
@@ -265,17 +293,26 @@ class _Header extends StatelessWidget {
       children: [
         Text(
           exam.title.isEmpty ? 'Unbenannte Prüfung' : exam.title,
-          style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w700),
+          style: theme.textTheme.headlineSmall?.copyWith(
+            fontWeight: FontWeight.w700,
+          ),
         ),
         const SizedBox(height: 10),
         Wrap(
           spacing: 10,
           runSpacing: 10,
           children: [
-            _HeaderPill(icon: CupertinoIcons.book_fill, label: exam.semester.isEmpty ? 'Semester unbekannt' : exam.semester),
+            _HeaderPill(
+              icon: CupertinoIcons.book_fill,
+              label: exam.semester.isEmpty
+                  ? 'Semester unbekannt'
+                  : exam.semester,
+            ),
             _HeaderPill(
               icon: CupertinoIcons.building_2_fill,
-              label: universityName.isEmpty ? exam.universityCode.toUpperCase() : universityName,
+              label: universityName.isEmpty
+                  ? exam.universityCode.toUpperCase()
+                  : universityName,
             ),
             _HeaderPill(
               icon: CupertinoIcons.calendar,
@@ -337,7 +374,9 @@ class _AggregateSummary extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: theme.shadowColor.withOpacity(theme.brightness == Brightness.dark ? 0.18 : 0.12),
+            color: theme.shadowColor.withOpacity(
+              theme.brightness == Brightness.dark ? 0.18 : 0.12,
+            ),
             blurRadius: 22,
             offset: const Offset(0, 10),
           ),
@@ -359,13 +398,21 @@ class _AggregateSummary extends StatelessWidget {
               children: [
                 _MetricRow(label: 'Stoffmenge', value: exam.ratingsAvgMass),
                 const SizedBox(height: 10),
-                _MetricRow(label: 'Stoffschwierigkeit', value: exam.ratingsAvgDifficulty),
+                _MetricRow(
+                  label: 'Stoffschwierigkeit',
+                  value: exam.ratingsAvgDifficulty,
+                ),
                 const SizedBox(height: 10),
-                _MetricRow(label: 'Altfragenlastigkeit', value: exam.ratingsAvgPastQ),
+                _MetricRow(
+                  label: 'Altfragenlastigkeit',
+                  value: exam.ratingsAvgPastQ,
+                ),
                 const SizedBox(height: 14),
                 Text(
                   '${exam.ratingsCount} ${exam.ratingsCount == 1 ? 'Bewertung' : 'Bewertungen'} · ${exam.notesCount} Beiträge',
-                  style: theme.textTheme.bodySmall?.copyWith(color: theme.textTheme.bodySmall?.color?.withOpacity(0.7)),
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.textTheme.bodySmall?.color?.withOpacity(0.7),
+                  ),
                 ),
               ],
             ),
@@ -388,7 +435,12 @@ class _MetricRow extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(label, style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600)),
+        Text(
+          label,
+          style: theme.textTheme.bodyMedium?.copyWith(
+            fontWeight: FontWeight.w600,
+          ),
+        ),
         Text('${value.round()}%', style: theme.textTheme.bodyMedium),
       ],
     );
@@ -422,7 +474,12 @@ class _RatingSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Deine Bewertung', style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
+        Text(
+          'Deine Bewertung',
+          style: theme.textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.w700,
+          ),
+        ),
         const SizedBox(height: 16),
         _RatingSelector(
           label: 'Stoffmenge',
@@ -478,7 +535,12 @@ class _RatingSelector extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600)),
+        Text(
+          label,
+          style: theme.textTheme.bodyMedium?.copyWith(
+            fontWeight: FontWeight.w600,
+          ),
+        ),
         const SizedBox(height: 12),
         Wrap(
           spacing: 12,
@@ -514,9 +576,12 @@ class _RatingChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final baseTextColor = theme.textTheme.bodyMedium?.color?.withOpacity(0.75) ??
+    final baseTextColor =
+        theme.textTheme.bodyMedium?.color?.withOpacity(0.75) ??
         (theme.brightness == Brightness.dark ? Colors.white70 : Colors.black87);
-    final borderFallback = theme.dividerColor.withOpacity(theme.brightness == Brightness.dark ? 0.35 : 0.28);
+    final borderFallback = theme.dividerColor.withOpacity(
+      theme.brightness == Brightness.dark ? 0.35 : 0.28,
+    );
 
     return Semantics(
       button: true,
@@ -537,7 +602,10 @@ class _RatingChip extends StatelessWidget {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: isSelected ? color.withOpacity(0.14) : Colors.transparent,
-              border: Border.all(color: isSelected ? color : borderFallback, width: 1.5),
+              border: Border.all(
+                color: isSelected ? color : borderFallback,
+                width: 1.5,
+              ),
             ),
             child: Text(
               label,
@@ -595,10 +663,12 @@ class _NotesSection extends StatelessWidget {
             }
             return Column(
               children: notes
-                  .map((note) => Padding(
-                        padding: const EdgeInsets.only(bottom: 14),
-                        child: _NoteCard(note: note),
-                      ))
+                  .map(
+                    (note) => Padding(
+                      padding: const EdgeInsets.only(bottom: 14),
+                      child: _NoteCard(note: note),
+                    ),
+                  )
                   .toList(),
             );
           },
@@ -692,7 +762,9 @@ class _EmptyNotesState extends StatelessWidget {
           const SizedBox(height: 16),
           Text(
             isComment ? 'Noch keine Kommentare.' : 'Noch keine Tipps.',
-            style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+            style: theme.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.w600,
+            ),
           ),
           const SizedBox(height: 6),
           Text(
@@ -726,12 +798,17 @@ class _NotesError extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(CupertinoIcons.exclamationmark_triangle, color: theme.colorScheme.error),
+          Icon(
+            CupertinoIcons.exclamationmark_triangle,
+            color: theme.colorScheme.error,
+          ),
           const SizedBox(width: 12),
           Expanded(
             child: Text(
               message,
-              style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.error),
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.error,
+              ),
             ),
           ),
         ],
@@ -768,7 +845,9 @@ class _NoteComposer extends StatelessWidget {
           color: theme.colorScheme.surface,
           boxShadow: [
             BoxShadow(
-              color: theme.shadowColor.withOpacity(theme.brightness == Brightness.dark ? 0.24 : 0.16),
+              color: theme.shadowColor.withOpacity(
+                theme.brightness == Brightness.dark ? 0.24 : 0.16,
+              ),
               blurRadius: 18,
               offset: const Offset(0, -8),
             ),
@@ -782,7 +861,10 @@ class _NoteComposer extends StatelessWidget {
                 minLines: 1,
                 maxLines: 4,
                 placeholder: placeholder,
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
                 decoration: BoxDecoration(
                   color: theme.colorScheme.surfaceVariant.withOpacity(0.4),
                   borderRadius: BorderRadius.circular(16),
@@ -816,7 +898,11 @@ class _ExamMissing extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(CupertinoIcons.search, size: 64, color: theme.iconTheme.color?.withOpacity(0.35)),
+            Icon(
+              CupertinoIcons.search,
+              size: 64,
+              color: theme.iconTheme.color?.withOpacity(0.35),
+            ),
             const SizedBox(height: 18),
             Text(
               'Diese Prüfung ist nicht mehr verfügbar.',
@@ -846,18 +932,26 @@ class _ExamError extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(CupertinoIcons.exclamationmark_triangle, size: 68, color: theme.colorScheme.error),
+            Icon(
+              CupertinoIcons.exclamationmark_triangle,
+              size: 68,
+              color: theme.colorScheme.error,
+            ),
             const SizedBox(height: 16),
             Text(
               'Exameter konnte nicht geladen werden.',
-              style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 8),
             Text(
               message,
               textAlign: TextAlign.center,
-              style: theme.textTheme.bodySmall?.copyWith(color: theme.textTheme.bodySmall?.color?.withOpacity(0.7)),
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.textTheme.bodySmall?.color?.withOpacity(0.7),
+              ),
             ),
             const SizedBox(height: 24),
             CupertinoButton.filled(

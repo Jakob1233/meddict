@@ -27,7 +27,8 @@ class ExamListTile extends StatelessWidget {
       subtitle: Text(
         exam.semester.isEmpty ? 'Semester unbekannt' : exam.semester,
       ),
-      onTap: onTap ??
+      onTap:
+          onTap ??
           () {
             Navigator.of(context).pushNamed(
               Routes.exameterDetail,

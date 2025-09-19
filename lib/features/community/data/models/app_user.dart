@@ -16,7 +16,8 @@ class AppUser {
   factory AppUser.fromDoc(DocumentSnapshot<Map<String, dynamic>> doc) {
     final d = doc.data() ?? <String, dynamic>{};
     final email = (d['email'] as String?) ?? '';
-    final dn = (d['displayName'] as String?) ??
+    final dn =
+        (d['displayName'] as String?) ??
         (email.isNotEmpty ? email.split('@').first : 'User');
     return AppUser(
       id: doc.id,
@@ -25,4 +26,3 @@ class AppUser {
     );
   }
 }
-

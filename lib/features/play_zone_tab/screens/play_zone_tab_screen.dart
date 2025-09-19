@@ -198,7 +198,8 @@ class _PlayZoneCard extends StatelessWidget {
         ? Colors.black
         : Colors.white;
 
-    final titleStyle = theme.textTheme.titleMedium?.copyWith(
+    final titleStyle =
+        theme.textTheme.titleMedium?.copyWith(
           fontWeight: FontWeight.w700,
           color: textColor,
         ) ??

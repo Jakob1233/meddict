@@ -91,7 +91,9 @@ class PostRepository {
       }
     } else {
       if (sort == PostSort.upvotes) {
-        query = query.orderBy('upvotesCount', descending: true).orderBy('createdAt', descending: true);
+        query = query
+            .orderBy('upvotesCount', descending: true)
+            .orderBy('createdAt', descending: true);
       } else {
         query = query.orderBy('createdAt', descending: true);
       }
@@ -115,7 +117,9 @@ class PostRepository {
     String? semester,
     String? universityCode,
   }) async {
-    final effectiveLimit = (sort == PostSort.upvotes && timeWindow != null) ? limit * 3 : limit;
+    final effectiveLimit = (sort == PostSort.upvotes && timeWindow != null)
+        ? limit * 3
+        : limit;
     var query = _queryWithFilters(
       category: category,
       type: type,
@@ -125,7 +129,9 @@ class PostRepository {
       limit: effectiveLimit,
       scope: scope,
       semester: scope == 'semester' ? semester : null,
-      universityCode: (scope == 'semester' || scope == 'uni') ? universityCode : null,
+      universityCode: (scope == 'semester' || scope == 'uni')
+          ? universityCode
+          : null,
     );
 
     if (startAfter != null) {
@@ -137,9 +143,7 @@ class PostRepository {
 
     if (sort == PostSort.upvotes && timeWindow != null) {
       final cutoff = DateTime.now().subtract(timeWindow);
-      posts = posts
-          .where((p) => p.createdAt.toDate().isAfter(cutoff))
-          .toList()
+      posts = posts.where((p) => p.createdAt.toDate().isAfter(cutoff)).toList()
         ..sort((a, b) {
           final cmp = b.upvotesCount.compareTo(a.upvotesCount);
           if (cmp != 0) return cmp;
@@ -159,9 +163,10 @@ class PostRepository {
   }
 
   Stream<List<PostModel>> feedStream({int limit = 20}) {
-    return _queryWithFilters(limit: limit, forPaging: true)
-        .snapshots()
-        .map((s) => s.docs.map(PostModel.fromDoc).toList());
+    return _queryWithFilters(
+      limit: limit,
+      forPaging: true,
+    ).snapshots().map((s) => s.docs.map(PostModel.fromDoc).toList());
   }
 
   Stream<List<PostModel>> topPostsStream({
@@ -181,15 +186,16 @@ class PostRepository {
 
     return query.snapshots().map((snapshot) {
       final cutoff = DateTime.now().subtract(window);
-      final items = snapshot.docs
-          .map(PostModel.fromDoc)
-          .where((p) => p.createdAt.toDate().isAfter(cutoff))
-          .toList()
-        ..sort((a, b) {
-          final cmp = b.upvotesCount.compareTo(a.upvotesCount);
-          if (cmp != 0) return cmp;
-          return b.createdAt.toDate().compareTo(a.createdAt.toDate());
-        });
+      final items =
+          snapshot.docs
+              .map(PostModel.fromDoc)
+              .where((p) => p.createdAt.toDate().isAfter(cutoff))
+              .toList()
+            ..sort((a, b) {
+              final cmp = b.upvotesCount.compareTo(a.upvotesCount);
+              if (cmp != 0) return cmp;
+              return b.createdAt.toDate().compareTo(a.createdAt.toDate());
+            });
       return items.take(limit).toList();
     });
   }
@@ -205,7 +211,10 @@ class PostRepository {
     });
   }
 
-  Stream<List<PostModel>> postsByCommunityStream({required String communityId, int limit = 50}) {
+  Stream<List<PostModel>> postsByCommunityStream({
+    required String communityId,
+    int limit = 50,
+  }) {
     return _postsCol
         .where('communityId', isEqualTo: communityId)
         .orderBy('createdAt', descending: true)
@@ -230,8 +239,12 @@ class PostRepository {
       final data = userDoc.data();
       if (data == null) return const _AuthorProfile();
       final email = data['email'] as String?;
-      final rawDisplayName = (data['displayName'] as String?) ?? (email != null ? email.split('@').first : null);
-      final displayName = (rawDisplayName != null && rawDisplayName.isNotEmpty) ? rawDisplayName : null;
+      final rawDisplayName =
+          (data['displayName'] as String?) ??
+          (email != null ? email.split('@').first : null);
+      final displayName = (rawDisplayName != null && rawDisplayName.isNotEmpty)
+          ? rawDisplayName
+          : null;
       String? handle;
       if (displayName != null) {
         final slug = displayName.split(RegExp(r'\s+')).first.toLowerCase();
@@ -274,9 +287,7 @@ class PostRepository {
       final ext = localImagePath.split('.').last.toLowerCase();
       final isPng = ext == 'png';
       final isGif = ext == 'gif';
-      final mime = isGif
-          ? 'image/gif'
-          : (isPng ? 'image/png' : 'image/jpeg');
+      final mime = isGif ? 'image/gif' : (isPng ? 'image/png' : 'image/jpeg');
       final ref = _storage.ref().child('posts/${doc.id}/image.$ext');
       await ref.putFile(file, SettableMetadata(contentType: mime));
       imageUrl = await ref.getDownloadURL();
@@ -353,7 +364,9 @@ class PostRepository {
     final doc = _postsCol.doc();
     String? imageUrl;
     if (imageFile != null) {
-      final ref = _storage.ref().child('posts/${doc.id}/images/${DateTime.now().millisecondsSinceEpoch}_${imageFile.uri.pathSegments.last}');
+      final ref = _storage.ref().child(
+        'posts/${doc.id}/images/${DateTime.now().millisecondsSinceEpoch}_${imageFile.uri.pathSegments.last}',
+      );
       final task = await ref.putFile(imageFile);
       imageUrl = await task.ref.getDownloadURL();
     }
@@ -383,10 +396,15 @@ class PostRepository {
     final author = await _resolveAuthorProfile(createdBy);
     final now = Timestamp.now();
 
-    final sanitizedTags = tags?.where((t) => t.trim().isNotEmpty).map((t) => t.trim()).toList() ?? const [];
+    final sanitizedTags =
+        tags?.where((t) => t.trim().isNotEmpty).map((t) => t.trim()).toList() ??
+        const [];
     final sanitizedMeta = meta == null
         ? null
-        : meta.map((key, value) => MapEntry(key, value is String ? value.trim() : value));
+        : meta.map(
+            (key, value) =>
+                MapEntry(key, value is String ? value.trim() : value),
+          );
 
     final model = PostModel(
       id: doc.id,
@@ -456,7 +474,10 @@ class PostRepository {
     String? semester,
     String? examKind,
   }) {
-    final sanitizedBullets = bullets.where((b) => b.trim().isNotEmpty).map((b) => b.trim()).toList();
+    final sanitizedBullets = bullets
+        .where((b) => b.trim().isNotEmpty)
+        .map((b) => b.trim())
+        .toList();
     final meta = <String, dynamic>{
       'bullets': sanitizedBullets,
     };
@@ -485,13 +506,17 @@ class PostRepository {
     String? semester,
   }) {
     final filteredTemplate = template.entries
-        .where((entry) => entry.value != null &&
-            ((entry.value is String && (entry.value as String).trim().isNotEmpty) ||
-                (entry.value is List && (entry.value as List).isNotEmpty)))
+        .where(
+          (entry) =>
+              entry.value != null &&
+              ((entry.value is String &&
+                      (entry.value as String).trim().isNotEmpty) ||
+                  (entry.value is List && (entry.value as List).isNotEmpty)),
+        )
         .fold<Map<String, dynamic>>({}, (acc, entry) {
-      acc[entry.key] = entry.value;
-      return acc;
-    });
+          acc[entry.key] = entry.value;
+          return acc;
+        });
 
     return _createCommunityPost(
       type: 'experience',
@@ -505,7 +530,11 @@ class PostRepository {
     );
   }
 
-  Future<void> toggleVote({required String postId, required String userId, required bool isUpvote}) async {
+  Future<void> toggleVote({
+    required String postId,
+    required String userId,
+    required bool isUpvote,
+  }) async {
     // Backwards-compatible: delegate to voteOnPost
     return voteOnPost(postId: postId, userId: userId, isUpvote: isUpvote);
   }
@@ -527,8 +556,12 @@ class PostRepository {
       final createdBy = (data['createdBy'] as String?) ?? '';
 
       // Prepare sets & counters from post
-      final upSet = <String>{...((data['upvoters'] as List?)?.cast<String>() ?? const <String>[])};
-      final downSet = <String>{...((data['downvoters'] as List?)?.cast<String>() ?? const <String>[])};
+      final upSet = <String>{
+        ...((data['upvoters'] as List?)?.cast<String>() ?? const <String>[]),
+      };
+      final downSet = <String>{
+        ...((data['downvoters'] as List?)?.cast<String>() ?? const <String>[]),
+      };
       var up = _asInt(data['upvotes']);
       var down = _asInt(data['downvotes']);
 
@@ -588,13 +621,18 @@ class PostRepository {
       });
 
       if (userRef != null && oldKarma != null && karmaDelta != 0) {
-        tx.set(userRef, {'karma': oldKarma + karmaDelta}, SetOptions(merge: true));
+        tx.set(userRef, {
+          'karma': oldKarma + karmaDelta,
+        }, SetOptions(merge: true));
       }
     });
   }
 
   // Neutralize user's vote (remove any up/down by the user) and adjust karma accordingly
-  Future<void> removeVote({required String postId, required String userId}) async {
+  Future<void> removeVote({
+    required String postId,
+    required String userId,
+  }) async {
     final fs = _firestore;
 
     await fs.runTransaction((tx) async {
@@ -606,8 +644,12 @@ class PostRepository {
       final data = postSnap.data() as Map<String, dynamic>;
       final createdBy = (data['createdBy'] as String?) ?? '';
 
-      final upSet = <String>{...((data['upvoters'] as List?)?.cast<String>() ?? const <String>[])};
-      final downSet = <String>{...((data['downvoters'] as List?)?.cast<String>() ?? const <String>[])};
+      final upSet = <String>{
+        ...((data['upvoters'] as List?)?.cast<String>() ?? const <String>[]),
+      };
+      final downSet = <String>{
+        ...((data['downvoters'] as List?)?.cast<String>() ?? const <String>[]),
+      };
       var up = _asInt(data['upvotes']);
       var down = _asInt(data['downvotes']);
 
@@ -641,13 +683,18 @@ class PostRepository {
       });
 
       if (userRef != null && oldKarma != null && karmaDelta != 0) {
-        tx.set(userRef, {'karma': oldKarma + karmaDelta}, SetOptions(merge: true));
+        tx.set(userRef, {
+          'karma': oldKarma + karmaDelta,
+        }, SetOptions(merge: true));
       }
     });
   }
 
   Future<void> updateAnswersCount(String postId, int count) async {
-    await _postsCol.doc(postId).update({'answersCount': count, 'commentsCount': count});
+    await _postsCol.doc(postId).update({
+      'answersCount': count,
+      'commentsCount': count,
+    });
   }
 
   Future<void> deletePost(String postId) async {
@@ -667,7 +714,10 @@ class PostRepository {
       const pageSize = 300;
       final commentsCol = _firestore.collection('comments');
       while (true) {
-        final snap = await commentsCol.where('postId', isEqualTo: postId).limit(pageSize).get();
+        final snap = await commentsCol
+            .where('postId', isEqualTo: postId)
+            .limit(pageSize)
+            .get();
         if (snap.docs.isEmpty) break;
         final batch = _firestore.batch();
         for (final d in snap.docs) {

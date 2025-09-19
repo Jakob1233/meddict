@@ -7,16 +7,22 @@ import 'package:url_launcher/url_launcher.dart';
 import 'learning_materials_model.dart';
 
 class LearningMaterialDetailScreen extends StatefulWidget {
-  const LearningMaterialDetailScreen({super.key, required this.materialId, this.initialMaterial});
+  const LearningMaterialDetailScreen({
+    super.key,
+    required this.materialId,
+    this.initialMaterial,
+  });
 
   final String materialId;
   final LearningMaterial? initialMaterial;
 
   @override
-  State<LearningMaterialDetailScreen> createState() => _LearningMaterialDetailScreenState();
+  State<LearningMaterialDetailScreen> createState() =>
+      _LearningMaterialDetailScreenState();
 }
 
-class _LearningMaterialDetailScreenState extends State<LearningMaterialDetailScreen> {
+class _LearningMaterialDetailScreenState
+    extends State<LearningMaterialDetailScreen> {
   LearningMaterial? _material;
   bool _isLoading = false;
   bool _bookmark = false;
@@ -32,7 +38,9 @@ class _LearningMaterialDetailScreenState extends State<LearningMaterialDetailScr
 
   Future<void> _loadMaterial({bool incrementView = false}) async {
     setState(() => _isLoading = _material == null);
-    final docRef = FirebaseFirestore.instance.collection('materials').doc(widget.materialId);
+    final docRef = FirebaseFirestore.instance
+        .collection('materials')
+        .doc(widget.materialId);
 
     try {
       LearningMaterial? material;
@@ -86,13 +94,23 @@ class _LearningMaterialDetailScreenState extends State<LearningMaterialDetailScr
       if (!kIsWeb && isPdf && _supportsInAppWebView()) {
         if (!mounted) return;
         await Navigator.of(context).push(
-          MaterialPageRoute(builder: (_) => _MaterialPdfViewerScreen(title: material.title, url: uri.toString())),
+          MaterialPageRoute(
+            builder: (_) => _MaterialPdfViewerScreen(
+              title: material.title,
+              url: uri.toString(),
+            ),
+          ),
         );
       } else {
-        final launched = await launchUrl(uri, mode: LaunchMode.externalApplication);
+        final launched = await launchUrl(
+          uri,
+          mode: LaunchMode.externalApplication,
+        );
         if (!launched && mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Die Datei konnte nicht geöffnet werden.')),
+            const SnackBar(
+              content: Text('Die Datei konnte nicht geöffnet werden.'),
+            ),
           );
         }
       }
@@ -146,60 +164,89 @@ class _LearningMaterialDetailScreenState extends State<LearningMaterialDetailScr
           child: _isLoading && material == null
               ? const Center(child: CircularProgressIndicator())
               : material == null
-                  ? const Center(child: Text('Material wurde nicht gefunden.'))
-                  : SingleChildScrollView(
-                    padding: const EdgeInsets.fromLTRB(20, 24, 20, 32),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          material.title,
-                          style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w700),
+              ? const Center(child: Text('Material wurde nicht gefunden.'))
+              : SingleChildScrollView(
+                  padding: const EdgeInsets.fromLTRB(20, 24, 20, 32),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        material.title,
+                        style: theme.textTheme.headlineSmall?.copyWith(
+                          fontWeight: FontWeight.w700,
                         ),
-                        const SizedBox(height: 12),
-                        Text(
-                          _metaLine(material),
-                          style: theme.textTheme.bodyMedium?.copyWith(color: theme.textTheme.bodyMedium?.color?.withOpacity(0.7)),
-                        ),
-                        const SizedBox(height: 24),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: ElevatedButton.icon(
-                                onPressed: _isOpening ? null : _openMaterial,
-                                icon: _isOpening
-                                    ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2))
-                                    : const Icon(Icons.open_in_new_rounded),
-                                label: Text(_isOpening ? 'Öffnet…' : 'Ansehen / Download'),
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: OutlinedButton.icon(
-                                onPressed: _toggleBookmark,
-                                icon: Icon(_bookmark ? Icons.bookmark_added_rounded : Icons.bookmark_border_rounded),
-                                label: Text(_bookmark ? 'Gespeichert' : 'Speichern'),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 24),
-                        Text(
-                          material.description.isEmpty
-                              ? 'Keine Beschreibung vorhanden.'
-                              : material.description,
-                          maxLines: _descriptionExpanded ? null : 4,
-                          overflow: _descriptionExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
-                          style: theme.textTheme.bodyLarge,
-                        ),
-                        if (material.description.isNotEmpty && material.description.length > 180)
-                          TextButton(
-                            onPressed: () => setState(() => _descriptionExpanded = !_descriptionExpanded),
-                            child: Text(_descriptionExpanded ? 'Weniger anzeigen' : 'Mehr anzeigen'),
+                      ),
+                      const SizedBox(height: 12),
+                      Text(
+                        _metaLine(material),
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: theme.textTheme.bodyMedium?.color?.withOpacity(
+                            0.7,
                           ),
-                      ],
-                    ),
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: ElevatedButton.icon(
+                              onPressed: _isOpening ? null : _openMaterial,
+                              icon: _isOpening
+                                  ? const SizedBox(
+                                      height: 20,
+                                      width: 20,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                      ),
+                                    )
+                                  : const Icon(Icons.open_in_new_rounded),
+                              label: Text(
+                                _isOpening ? 'Öffnet…' : 'Ansehen / Download',
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: OutlinedButton.icon(
+                              onPressed: _toggleBookmark,
+                              icon: Icon(
+                                _bookmark
+                                    ? Icons.bookmark_added_rounded
+                                    : Icons.bookmark_border_rounded,
+                              ),
+                              label: Text(
+                                _bookmark ? 'Gespeichert' : 'Speichern',
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 24),
+                      Text(
+                        material.description.isEmpty
+                            ? 'Keine Beschreibung vorhanden.'
+                            : material.description,
+                        maxLines: _descriptionExpanded ? null : 4,
+                        overflow: _descriptionExpanded
+                            ? TextOverflow.visible
+                            : TextOverflow.ellipsis,
+                        style: theme.textTheme.bodyLarge,
+                      ),
+                      if (material.description.isNotEmpty &&
+                          material.description.length > 180)
+                        TextButton(
+                          onPressed: () => setState(
+                            () => _descriptionExpanded = !_descriptionExpanded,
+                          ),
+                          child: Text(
+                            _descriptionExpanded
+                                ? 'Weniger anzeigen'
+                                : 'Mehr anzeigen',
+                          ),
+                        ),
+                    ],
                   ),
+                ),
         ),
       ),
     );
@@ -208,7 +255,8 @@ class _LearningMaterialDetailScreenState extends State<LearningMaterialDetailScr
   String _metaLine(LearningMaterial material) {
     final parts = <String>[
       material.uploaderOrFallback,
-      if (material.semester != null && material.semester!.isNotEmpty) material.semester!,
+      if (material.semester != null && material.semester!.isNotEmpty)
+        material.semester!,
       material.typeLabel,
       '${material.views} Aufrufe',
     ];
@@ -225,11 +273,15 @@ class _MaterialPdfViewerScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(title, maxLines: 1, overflow: TextOverflow.ellipsis)),
+      appBar: AppBar(
+        title: Text(title, maxLines: 1, overflow: TextOverflow.ellipsis),
+      ),
       body: SafeArea(
         child: InAppWebView(
           initialUrlRequest: URLRequest(url: WebUri(url)),
-          initialSettings: InAppWebViewSettings(allowsInlineMediaPlayback: true),
+          initialSettings: InAppWebViewSettings(
+            allowsInlineMediaPlayback: true,
+          ),
         ),
       ),
     );

@@ -24,14 +24,16 @@ class CommentRepository {
     String? parentId,
   }) async {
     final doc = _commentsCol.doc();
-    await doc.set(CommentModel(
-      id: doc.id,
-      postId: postId,
-      body: body,
-      createdBy: createdBy,
-      createdAt: Timestamp.now(),
-      parentId: parentId,
-    ).toMap());
+    await doc.set(
+      CommentModel(
+        id: doc.id,
+        postId: postId,
+        body: body,
+        createdBy: createdBy,
+        createdAt: Timestamp.now(),
+        parentId: parentId,
+      ).toMap(),
+    );
     await _firestore.collection('posts').doc(postId).update({
       'commentsCount': FieldValue.increment(1),
       'answersCount': FieldValue.increment(1),
@@ -39,7 +41,11 @@ class CommentRepository {
     return doc.id;
   }
 
-  Future<void> toggleVote({required String commentId, required String userId, required bool isUpvote}) async {
+  Future<void> toggleVote({
+    required String commentId,
+    required String userId,
+    required bool isUpvote,
+  }) async {
     final doc = _commentsCol.doc(commentId);
     await _firestore.runTransaction((txn) async {
       final snap = await txn.get(doc);

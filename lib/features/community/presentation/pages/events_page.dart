@@ -28,7 +28,9 @@ class _EventsPageState extends ConsumerState<EventsPage> {
   @override
   void initState() {
     super.initState();
-    _searchCtrl.addListener(() => setState(() => _query = _searchCtrl.text.trim().toLowerCase()));
+    _searchCtrl.addListener(
+      () => setState(() => _query = _searchCtrl.text.trim().toLowerCase()),
+    );
   }
 
   @override
@@ -41,7 +43,9 @@ class _EventsPageState extends ConsumerState<EventsPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
-    final eventsAsync = ref.watch(upcoming ? eventsUpcomingProvider : eventsPastProvider); // COMMUNITY UI
+    final eventsAsync = ref.watch(
+      upcoming ? eventsUpcomingProvider : eventsPastProvider,
+    ); // COMMUNITY UI
     final userId = ref.watch(currentUserIdProvider);
 
     return SafeArea(
@@ -53,7 +57,10 @@ class _EventsPageState extends ConsumerState<EventsPage> {
             children: [
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
-                child: Text('Events', style: theme.textTheme.titleLarge), // COMMUNITY UI
+                child: Text(
+                  'Events',
+                  style: theme.textTheme.titleLarge,
+                ), // COMMUNITY UI
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -73,7 +80,10 @@ class _EventsPageState extends ConsumerState<EventsPage> {
                       borderRadius: BorderRadius.circular(16),
                       borderSide: BorderSide(color: cs.outlineVariant),
                     ),
-                    contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+                    contentPadding: const EdgeInsets.symmetric(
+                      vertical: 12,
+                      horizontal: 12,
+                    ),
                   ),
                 ),
               ),
@@ -108,21 +118,32 @@ class _EventsPageState extends ConsumerState<EventsPage> {
                     final filtered = _query.isEmpty
                         ? items
                         : items
-                            .where((e) =>
-                                e.title.toLowerCase().contains(_query) ||
-                                (e.location ?? '').toLowerCase().contains(_query))
-                            .toList();
+                              .where(
+                                (e) =>
+                                    e.title.toLowerCase().contains(_query) ||
+                                    (e.location ?? '').toLowerCase().contains(
+                                      _query,
+                                    ),
+                              )
+                              .toList();
                     if (filtered.isEmpty) {
-                      return Center(child: Text('Keine Events', style: theme.textTheme.bodyMedium));
+                      return Center(
+                        child: Text(
+                          'Keine Events',
+                          style: theme.textTheme.bodyMedium,
+                        ),
+                      );
                     }
                     return ListView.builder(
                       padding: const EdgeInsets.only(top: 4, bottom: 80),
                       itemCount: filtered.length,
-                      itemBuilder: (_, i) => EventCard(e: filtered[i]), // COMMUNITY UI
+                      itemBuilder: (_, i) =>
+                          EventCard(e: filtered[i]), // COMMUNITY UI
                     );
                   },
                   loading: () => const AppLoader(),
-                  error: (e, st) => AppError(message: 'Fehler beim Laden der Events.\n$e'),
+                  error: (e, st) =>
+                      AppError(message: 'Fehler beim Laden der Events.\n$e'),
                 ),
               ),
             ],
@@ -132,7 +153,9 @@ class _EventsPageState extends ConsumerState<EventsPage> {
               right: 16,
               bottom: 16,
               child: FloatingActionButton.extended(
-                onPressed: () => Navigator.of(context).push(CreateEventPage.route()), // COMMUNITY 3.0
+                onPressed: () => Navigator.of(
+                  context,
+                ).push(CreateEventPage.route()), // COMMUNITY 3.0
                 icon: const Icon(Icons.add),
                 label: const Text('Add event'),
               ),
@@ -167,109 +190,144 @@ class _EventsPageState extends ConsumerState<EventsPage> {
             top: 16,
             bottom: MediaQuery.of(context).viewInsets.bottom + 16,
           ),
-          child: StatefulBuilder(builder: (context, setState) {
-            return SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Text('Neues Event', style: theme.textTheme.titleLarge),
-                  const SizedBox(height: 12),
-                  TextField(
-                    controller: titleCtrl,
-                    decoration: const InputDecoration(labelText: 'Titel'),
-                  ),
-                  TextField(
-                    controller: descCtrl,
-                    decoration: const InputDecoration(labelText: 'Beschreibung'),
-                    maxLines: 3,
-                  ),
-                  TextField(
-                    controller: locCtrl,
-                    decoration: const InputDecoration(labelText: 'Ort'),
-                  ),
-                  const SizedBox(height: 12),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: OutlinedButton(
-                          onPressed: () async {
-                            final now = DateTime.now();
-                            final picked = await showDatePicker(
-                              context: context,
-                              firstDate: DateTime(now.year - 1),
-                              lastDate: DateTime(now.year + 5),
-                              initialDate: now,
-                            );
-                            if (picked != null) {
-                              final time = await showTimePicker(
+          child: StatefulBuilder(
+            builder: (context, setState) {
+              return SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text('Neues Event', style: theme.textTheme.titleLarge),
+                    const SizedBox(height: 12),
+                    TextField(
+                      controller: titleCtrl,
+                      decoration: const InputDecoration(labelText: 'Titel'),
+                    ),
+                    TextField(
+                      controller: descCtrl,
+                      decoration: const InputDecoration(
+                        labelText: 'Beschreibung',
+                      ),
+                      maxLines: 3,
+                    ),
+                    TextField(
+                      controller: locCtrl,
+                      decoration: const InputDecoration(labelText: 'Ort'),
+                    ),
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: OutlinedButton(
+                            onPressed: () async {
+                              final now = DateTime.now();
+                              final picked = await showDatePicker(
                                 context: context,
-                                initialTime: TimeOfDay.now(),
+                                firstDate: DateTime(now.year - 1),
+                                lastDate: DateTime(now.year + 5),
+                                initialDate: now,
                               );
-                              if (time != null) {
-                                startAt = DateTime(picked.year, picked.month, picked.day, time.hour, time.minute);
-                                setState(() {});
+                              if (picked != null) {
+                                final time = await showTimePicker(
+                                  context: context,
+                                  initialTime: TimeOfDay.now(),
+                                );
+                                if (time != null) {
+                                  startAt = DateTime(
+                                    picked.year,
+                                    picked.month,
+                                    picked.day,
+                                    time.hour,
+                                    time.minute,
+                                  );
+                                  setState(() {});
+                                }
                               }
-                            }
-                          },
-                          child: Text(
-                            startAt == null ? 'Start wählen' : DateFormat('EEE, dd.MM. HH:mm').format(startAt!),
-                            style: theme.textTheme.labelLarge?.copyWith(color: cs.onSurface),
+                            },
+                            child: Text(
+                              startAt == null
+                                  ? 'Start wählen'
+                                  : DateFormat(
+                                      'EEE, dd.MM. HH:mm',
+                                    ).format(startAt!),
+                              style: theme.textTheme.labelLarge?.copyWith(
+                                color: cs.onSurface,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: OutlinedButton(
-                          onPressed: () async {
-                            if (startAt == null) return;
-                            final picked = await showDatePicker(
-                              context: context,
-                              firstDate: startAt!,
-                              lastDate: DateTime(startAt!.year + 5),
-                              initialDate: startAt!,
-                            );
-                            if (picked != null) {
-                              final time = await showTimePicker(
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: OutlinedButton(
+                            onPressed: () async {
+                              if (startAt == null) return;
+                              final picked = await showDatePicker(
                                 context: context,
-                                initialTime: TimeOfDay.now(),
+                                firstDate: startAt!,
+                                lastDate: DateTime(startAt!.year + 5),
+                                initialDate: startAt!,
                               );
-                              if (time != null) {
-                                endAt = DateTime(picked.year, picked.month, picked.day, time.hour, time.minute);
-                                setState(() {});
+                              if (picked != null) {
+                                final time = await showTimePicker(
+                                  context: context,
+                                  initialTime: TimeOfDay.now(),
+                                );
+                                if (time != null) {
+                                  endAt = DateTime(
+                                    picked.year,
+                                    picked.month,
+                                    picked.day,
+                                    time.hour,
+                                    time.minute,
+                                  );
+                                  setState(() {});
+                                }
                               }
-                            }
-                          },
-                          child: Text(
-                            endAt == null ? 'Ende (optional)' : DateFormat('EEE, dd.MM. HH:mm').format(endAt!),
-                            style: theme.textTheme.labelLarge?.copyWith(color: cs.onSurface),
+                            },
+                            child: Text(
+                              endAt == null
+                                  ? 'Ende (optional)'
+                                  : DateFormat(
+                                      'EEE, dd.MM. HH:mm',
+                                    ).format(endAt!),
+                              style: theme.textTheme.labelLarge?.copyWith(
+                                color: cs.onSurface,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-                  FilledButton(
-                    onPressed: () async {
-                      final uid = ref.read(currentUserIdProvider);
-                      if (uid == null) return;
-                      if (titleCtrl.text.trim().isEmpty || startAt == null) return;
-                      await ref.read(eventRepositoryProvider).create(
-                            title: titleCtrl.text.trim(),
-                            description: descCtrl.text.trim().isEmpty ? null : descCtrl.text.trim(),
-                            startAt: startAt!,
-                            endAt: endAt,
-                            location: locCtrl.text.trim().isEmpty ? null : locCtrl.text.trim(),
-                            createdBy: uid,
-                            image: image,
-                          );
-                      if (mounted) Navigator.pop(context);
-                    },
-                    child: const Text('Event hinzufügen'),
-                  ),
-                ],
-              ),
-            );
-          }),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    FilledButton(
+                      onPressed: () async {
+                        final uid = ref.read(currentUserIdProvider);
+                        if (uid == null) return;
+                        if (titleCtrl.text.trim().isEmpty || startAt == null)
+                          return;
+                        await ref
+                            .read(eventRepositoryProvider)
+                            .create(
+                              title: titleCtrl.text.trim(),
+                              description: descCtrl.text.trim().isEmpty
+                                  ? null
+                                  : descCtrl.text.trim(),
+                              startAt: startAt!,
+                              endAt: endAt,
+                              location: locCtrl.text.trim().isEmpty
+                                  ? null
+                                  : locCtrl.text.trim(),
+                              createdBy: uid,
+                              image: image,
+                            );
+                        if (mounted) Navigator.pop(context);
+                      },
+                      child: const Text('Event hinzufügen'),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
         );
       },
     );
@@ -278,7 +336,11 @@ class _EventsPageState extends ConsumerState<EventsPage> {
 
 class _SegButton extends StatelessWidget {
   // COMMUNITY UI
-  const _SegButton({required this.active, required this.text, required this.onTap});
+  const _SegButton({
+    required this.active,
+    required this.text,
+    required this.onTap,
+  });
   final bool active;
   final String text;
   final VoidCallback onTap;
@@ -293,9 +355,16 @@ class _SegButton extends StatelessWidget {
         onPressed: onTap,
         style: TextButton.styleFrom(
           backgroundColor: active ? cs.primary : cs.surface,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24),
+          ),
         ),
-        child: Text(text, style: theme.textTheme.labelLarge?.copyWith(color: active ? cs.onPrimary : cs.onSurfaceVariant)),
+        child: Text(
+          text,
+          style: theme.textTheme.labelLarge?.copyWith(
+            color: active ? cs.onPrimary : cs.onSurfaceVariant,
+          ),
+        ),
       ),
     );
   }
@@ -310,8 +379,12 @@ class EventCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
     final theme = Theme.of(context);
-    final titleStyle = theme.textTheme.titleMedium?.copyWith(color: cs.onPrimary);
-    final dateStyle = theme.textTheme.labelMedium?.copyWith(color: cs.onPrimary);
+    final titleStyle = theme.textTheme.titleMedium?.copyWith(
+      color: cs.onPrimary,
+    );
+    final dateStyle = theme.textTheme.labelMedium?.copyWith(
+      color: cs.onPrimary,
+    );
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -319,13 +392,22 @@ class EventCard extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
-          BoxShadow(color: theme.shadowColor, blurRadius: 10, offset: const Offset(0, 6)),
+          BoxShadow(
+            color: theme.shadowColor,
+            blurRadius: 10,
+            offset: const Offset(0, 6),
+          ),
         ],
         image: e.imageUrl != null
-            ? DecorationImage(image: NetworkImage(e.imageUrl!), fit: BoxFit.cover)
+            ? DecorationImage(
+                image: NetworkImage(e.imageUrl!),
+                fit: BoxFit.cover,
+              )
             : null,
         gradient: e.imageUrl == null
-            ? LinearGradient(colors: [cs.primaryContainer, cs.secondaryContainer])
+            ? LinearGradient(
+                colors: [cs.primaryContainer, cs.secondaryContainer],
+              )
             : null,
       ),
       clipBehavior: Clip.antiAlias,
@@ -335,7 +417,9 @@ class EventCard extends StatelessWidget {
           if (e.imageUrl != null)
             Positioned.fill(
               child: DecoratedBox(
-                decoration: BoxDecoration(color: cs.scrim.withOpacity(0.25)), // COMMUNITY UI
+                decoration: BoxDecoration(
+                  color: cs.scrim.withOpacity(0.25),
+                ), // COMMUNITY UI
               ),
             ),
           Padding(
@@ -350,7 +434,10 @@ class EventCard extends StatelessWidget {
                   style: titleStyle,
                 ),
                 const SizedBox(height: 6),
-                Text(DateFormat('EEE, dd.MM. HH:mm').format(e.startAt), style: dateStyle),
+                Text(
+                  DateFormat('EEE, dd.MM. HH:mm').format(e.startAt),
+                  style: dateStyle,
+                ),
                 if ((e.location ?? '').isNotEmpty) ...[
                   const SizedBox(height: 4),
                   Row(
