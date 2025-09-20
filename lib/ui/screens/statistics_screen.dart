@@ -427,9 +427,14 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
   }
 
   Widget _noStatistics() {
+    final hasCommunityTab =
+        dashboardScreenKey.currentState?.hasTab(NavTabType.quizZone) ?? false;
+
     void onTapPlay() {
       globalCtx.shouldPop();
-      dashboardScreenKey.currentState?.changeTab(NavTabType.quizZone);
+      if (hasCommunityTab) {
+        dashboardScreenKey.currentState?.changeTab(NavTabType.quizZone);
+      }
     }
 
     void onTapHome() {
@@ -467,7 +472,8 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
             textAlign: TextAlign.center,
           ),
           SizedBox(height: context.height * 0.035),
-          if (context.read<SystemConfigCubit>().isQuizZoneEnabled) ...[
+          if (context.read<SystemConfigCubit>().isQuizZoneEnabled &&
+              hasCommunityTab) ...[
             CustomRoundedButton(
               widthPercentage: context.width,
               backgroundColor: context.primaryColor,

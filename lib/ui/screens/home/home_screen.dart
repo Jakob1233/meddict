@@ -75,10 +75,10 @@ class HomeScreenState extends State<HomeScreen>
   ];
 
   static const _homeCardBackgrounds = <String, String>{
-    'battleQuiz': 'assets/images/mainbilder/1v1.svg',
-    'groupPlay': 'assets/images/mainbilder/multi.svg',
-    'exam': 'assets/images/mainbilder/prüfung.svg',
-    'selfChallenge': 'assets/images/mainbilder/self.svg',
+    'battleQuiz': 'assets/images/mainbilder/1v1.png',
+    'groupPlay': 'assets/images/mainbilder/multi.png',
+    'exam': 'assets/images/mainbilder/pruefung.png',
+    'selfChallenge': 'assets/images/mainbilder/self.png',
   };
 
   // Screen dimensions

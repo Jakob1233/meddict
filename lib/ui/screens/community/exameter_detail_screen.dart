@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'package:flutterquiz/ui/community/exameter/exam_score_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -171,7 +171,6 @@ class ExameterDetailScreenState extends ConsumerState<ExameterDetailScreen> {
         const SizedBox(height: 20),
         GaugeEffortChart(
           score: exam.compositeScore,
-          updatedAt: exam.lastAggregateAt,
         ),
         const SizedBox(height: 16),
         _AggregateSummary(exam: exam),
@@ -288,6 +287,11 @@ class _Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final double rawScore = exam.compositeScore.isNaN ? 0 : exam.compositeScore;
+    final int displayScore = rawScore.clamp(0, 100).round();
+    final Color scoreColor = colorForScore(displayScore);
+    final String scoreEmoji = emojiForScore(displayScore);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -297,7 +301,26 @@ class _Header extends StatelessWidget {
             fontWeight: FontWeight.w700,
           ),
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 12),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(scoreEmoji, style: const TextStyle(fontSize: 22)),
+            const SizedBox(width: 8),
+            Chip(
+              backgroundColor: scoreColor.withOpacity(0.18),
+              label: Text(
+                'Score $displayScore',
+                style: theme.textTheme.titleSmall?.copyWith(
+                      color: scoreColor,
+                      fontWeight: FontWeight.w700,
+                    ) ??
+                    TextStyle(color: scoreColor, fontWeight: FontWeight.w700),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
         Wrap(
           spacing: 10,
           runSpacing: 10,

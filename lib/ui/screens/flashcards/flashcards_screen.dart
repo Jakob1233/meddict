@@ -1,7 +1,9 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
-
+// imports ergänzen:
+import 'package:flutterquiz/features/flashcards/presentation/ai_pdf_import.dart';
+import 'ai_deck_wizard.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -720,12 +722,21 @@ class _DeckDetailScreen extends StatelessWidget {
           runAlignment: WrapAlignment.end,
           children: [
             if (isLocal)
-              FloatingActionButton.extended(
-                heroTag: 'import_excel',
-                onPressed: () => _onImportFromExcel(context, base),
-                label: const Text('Aus Excel importieren'),
-                icon: const Icon(Icons.file_upload_outlined),
-              ),
+             FloatingActionButton.extended(
+  heroTag: 'import_ai_doc',
+  onPressed: () {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => AiDeckWizard(
+          deckRef: base,        // <- existiert bereits in deinem Screen
+          deckTitle: title,     // <- Titel des Decks
+        ),
+      ),
+    );
+  },
+  label: const Text('Aus Dokument (KI)'),
+  icon: const Icon(Icons.auto_awesome),
+),
             FloatingActionButton.extended(
               heroTag: 'add_card',
               onPressed: () => _openAddCardSheet(context, base),

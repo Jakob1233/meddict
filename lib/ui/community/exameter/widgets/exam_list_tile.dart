@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutterquiz/core/routes/routes.dart';
 import 'package:flutterquiz/models/exam.dart';
+import 'package:flutterquiz/ui/community/exameter/exam_score_utils.dart';
 
 import 'exam_icon.dart';
 
@@ -15,6 +16,11 @@ class ExamListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final track = exam.track.toLowerCase();
     final isDent = track.contains('zahn') || track.contains('dent');
+    final double rawScore = exam.compositeScore.isNaN ? 0 : exam.compositeScore;
+    final int displayScore = rawScore.clamp(0, 100).round();
+    final Color badgeColor = colorForScore(displayScore);
+    final Color badgeTextColor = readableOn(badgeColor);
+    final String badgeEmoji = emojiForScore(displayScore);
 
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),

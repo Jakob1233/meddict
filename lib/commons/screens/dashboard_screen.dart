@@ -15,9 +15,7 @@ import 'package:flutterquiz/features/profile_management/cubits/update_score_and_
 import 'package:flutterquiz/features/profile_management/cubits/update_user_details_cubit.dart';
 import 'package:flutterquiz/features/profile_management/profile_management_repository.dart';
 import 'package:flutterquiz/features/profile_tab/screens/profile_tab_screen.dart';
-// COMMUNITY INTEGRATION: replace Quiz Zone with Community Feed
-// Removed Quiz Zone imports
-import 'package:flutterquiz/features/community/presentation/community_hub/community_hub_screen.dart';
+// COMMUNITY FEATURE TEMPORARILY DISABLED: keep modules but remove navigation entry
 import 'package:flutterquiz/features/system_config/cubits/system_config_cubit.dart';
 import 'package:flutterquiz/ui/screens/home/home_screen.dart';
 import 'package:flutterquiz/ui/screens/flashcards/flashcards_screen.dart';
@@ -48,10 +46,12 @@ class DashboardScreenState extends State<DashboardScreen> {
   final _currTabIndex = ValueNotifier<int>(0);
   late final StreamSubscription _tabsSub;
   bool _disposed = false;
-  int _communityTabIndex = 0;
-
   void changeTab(NavTabType type) {
     final index = _navTabs.indexWhere((e) => e.tab == type);
+
+    if (index == -1) {
+      return;
+    }
 
     _currTabIndex.value = index;
     _pageController.jumpToPage(index);
@@ -61,10 +61,6 @@ class DashboardScreenState extends State<DashboardScreen> {
     NavTabType.home: GlobalKey<HomeScreenState>(debugLabel: 'Home'),
     // Reuse the leaderboard slot for Flashcards
     NavTabType.leaderboard: GlobalKey(debugLabel: 'Flashcards'),
-    // COMMUNITY 2.0: use CommunityHubScreenState key in place of quiz zone
-    NavTabType.quizZone: GlobalKey<CommunityHubScreenState>(
-      debugLabel: 'Community',
-    ),
     NavTabType.playZone: GlobalKey<PlayZoneTabScreenState>(
       debugLabel: 'Play Zone',
     ),
@@ -98,17 +94,6 @@ class DashboardScreenState extends State<DashboardScreen> {
       icon: Assets.leaderboardNavIcon,
       activeIcon: Assets.leaderboardActiveNavIcon,
       child: FlashcardsScreen(key: navTabsKeys[NavTabType.leaderboard]),
-    ),
-    // COMMUNITY INTEGRATION: Middle tab now Community
-    NavTab(
-      tab: NavTabType.quizZone,
-      title: 'Community', // COMMUNITY 2.0
-      icon: Assets.communityNavIcon,
-      activeIcon: Assets.communityActiveNavIcon,
-      child: CommunityHubScreen(
-        key: navTabsKeys[NavTabType.quizZone],
-        onTabChanged: onCommunityTabChanged,
-      ),
     ),
     NavTab(
       tab: NavTabType.playZone,
@@ -186,17 +171,6 @@ class DashboardScreenState extends State<DashboardScreen> {
           activeIcon: Assets.leaderboardActiveNavIcon,
           child: FlashcardsScreen(key: navTabsKeys[NavTabType.leaderboard]),
         ),
-      // COMMUNITY INTEGRATION: always show Community tab in middle position
-      NavTab(
-        tab: NavTabType.quizZone,
-        title: 'Community', // COMMUNITY 2.0
-        icon: Assets.communityNavIcon,
-        activeIcon: Assets.communityActiveNavIcon,
-        child: CommunityHubScreen(
-          key: navTabsKeys[NavTabType.quizZone],
-          onTabChanged: onCommunityTabChanged,
-        ),
-      ),
       if (config.isPlayZoneEnabled)
         NavTab(
           tab: NavTabType.playZone,
@@ -205,17 +179,14 @@ class DashboardScreenState extends State<DashboardScreen> {
           activeIcon: Assets.playZoneActiveNavIcon,
           child: PlayZoneTabScreen(key: navTabsKeys[NavTabType.playZone]),
         ),
-    NavTab(
-      tab: NavTabType.profile,
-      title: 'navProfile',
-      icon: Assets.profileNavIcon,
-      activeIcon: Assets.profileActiveNavIcon,
-      child: ProfileTabScreen(key: navTabsKeys[NavTabType.profile]),
-    ),
-  ];
-    if (!_navTabs.any((tab) => tab.tab == NavTabType.quizZone)) {
-      _communityTabIndex = 0;
-    }
+      NavTab(
+        tab: NavTabType.profile,
+        title: 'navProfile',
+        icon: Assets.profileNavIcon,
+        activeIcon: Assets.profileActiveNavIcon,
+        child: ProfileTabScreen(key: navTabsKeys[NavTabType.profile]),
+      ),
+    ];
     if (!mounted || _disposed) return;
     setState(() {});
   }
@@ -267,84 +238,11 @@ class DashboardScreenState extends State<DashboardScreen> {
                     .map((navTab) => navTab.child)
                     .toList(growable: false),
               ),
-              floatingActionButton: _buildFloatingActionButton(context, currentIndex),
               bottomNavigationBar: _buildBottomNavigationBar(),
             ),
           );
         },
       ),
-    );
-  }
-
-  Widget? _buildFloatingActionButton(BuildContext context, int currentIndex) {
-    if (_navTabs.isEmpty || currentIndex < 0 || currentIndex >= _navTabs.length) {
-      return null;
-    }
-
-    final navTab = _navTabs[currentIndex];
-    if (navTab.tab != NavTabType.quizZone) {
-      return null;
-    }
-
-    switch (_communityTabIndex) {
-      case 0:
-        return FloatingActionButton.extended(
-          heroTag: 'fab-community-ask-question',
-          onPressed: () => _openAskQuestion(context),
-          icon: const Icon(Icons.edit),
-          label: const Text('Frage stellen'),
-        );
-      case 1:
-        return FloatingActionButton(
-          heroTag: 'fab-community-learning',
-          onPressed: () => _createLearningItem(context),
-          tooltip: 'Add',
-          child: const Icon(Icons.add),
-        );
-      default:
-        return null;
-    }
-  }
-
-  void onCommunityTabChanged(int index) {
-    if (_disposed || !mounted) {
-      return;
-    }
-    if (_communityTabIndex == index) {
-      return;
-    }
-    setState(() {
-      _communityTabIndex = index;
-    });
-  }
-
-  CommunityHubScreenState? get _communityHubState {
-    final key = navTabsKeys[NavTabType.quizZone];
-    if (key is GlobalKey<CommunityHubScreenState>) {
-      return key.currentState;
-    }
-    return null;
-  }
-
-  void _openAskQuestion(BuildContext context) {
-    final hubState = _communityHubState;
-    if (hubState != null) {
-      hubState.openQuestionComposer();
-      return;
-    }
-    ScaffoldMessenger.maybeOf(context)?.showSnackBar(
-      const SnackBar(content: Text('Community nicht verfügbar.')),
-    );
-  }
-
-  void _createLearningItem(BuildContext context) {
-    final hubState = _communityHubState;
-    if (hubState != null) {
-      hubState.openLearningMaterialCreator();
-      return;
-    }
-    ScaffoldMessenger.maybeOf(context)?.showSnackBar(
-      const SnackBar(content: Text('Bereich für Lernmaterialien nicht verfügbar.')),
     );
   }
 
@@ -390,4 +288,6 @@ class DashboardScreenState extends State<DashboardScreen> {
       ),
     );
   }
+
+  bool hasTab(NavTabType type) => _navTabs.any((tab) => tab.tab == type);
 }

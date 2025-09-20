@@ -47,23 +47,6 @@ import 'package:flutterquiz/ui/screens/refer_and_earn_screen.dart';
 import 'package:flutterquiz/ui/screens/rewards/rewards_screen.dart';
 import 'package:flutterquiz/ui/screens/splash_screen.dart';
 import 'package:flutterquiz/ui/screens/statistics_screen.dart';
-// COMMUNITY INTEGRATION: community pages imports
-// COMMUNITY 2.0
-import 'package:flutterquiz/features/community/presentation/community_hub/community_hub_screen.dart';
-import 'package:flutterquiz/features/community/presentation/pages/community_legacy_screen.dart';
-import 'package:flutterquiz/features/community/presentation/pages/med_thread_page.dart';
-import 'package:flutterquiz/features/community/presentation/pages/rooms_page.dart';
-import 'package:flutterquiz/features/community/presentation/pages/events_page.dart';
-import 'package:flutterquiz/features/community/presentation/pages/create_community_page.dart';
-import 'package:flutterquiz/features/community/presentation/pages/community_profile_page.dart';
-import 'package:flutterquiz/features/community/presentation/pages/create_post_page.dart';
-import 'package:flutterquiz/features/community/presentation/pages/post_detail_page.dart';
-import 'package:flutterquiz/features/community/presentation/pages/comments_page.dart';
-// COMMUNITY 2.0
-import 'package:flutterquiz/features/community/presentation/pages/user_profile_page.dart';
-import 'package:flutterquiz/models/exam.dart';
-import 'package:flutterquiz/ui/screens/community/exameter_screen.dart';
-import 'package:flutterquiz/ui/screens/community/exameter_detail_screen.dart';
 import 'package:flutterquiz/ui/screens/wallet/wallet_screen.dart';
 
 final globalNavigator = GlobalKey<NavigatorState>();
@@ -140,6 +123,18 @@ class Routes {
   static const exameterDetail = '/community/exameter/detail';
 
   static String currentRoute = splash;
+
+  static Route<dynamic> _communityDisabledRoute() {
+    return CupertinoPageRoute(
+      builder: (_) => const Scaffold(
+        body: SafeArea(
+          child: Center(
+            child: Text('Community ist vorübergehend deaktiviert.'),
+          ),
+        ),
+      ),
+    );
+  }
 
   static Route<dynamic>? onGenerateRouted(RouteSettings rs) {
     //to track current route
@@ -245,54 +240,21 @@ class Routes {
         return InitialLanguageSelectionScreen.route();
       case firstLoginOnboarding:
         return OnboardingFlow.route();
-      // COMMUNITY 2.0
+      // COMMUNITY FEATURE TEMPORARILY DISABLED
       case community:
-        return CommunityHubScreen.route();
       case communityLegacy:
       case communityHub:
-        return CommunityLegacyScreen.route();
       case exameter:
-        return ExameterScreen.route();
       case exameterDetail:
-        {
-          final args = rs.arguments as Map<String, dynamic>?;
-          final examId = args?['examId'] as String? ?? '';
-          final exam = args?['exam'] as Exam?;
-          return ExameterDetailScreen.route(examId: examId, initialExam: exam);
-        }
-      case communityRooms: // COMMUNITY UI
-        {
-          final args = rs.arguments as Map<String, dynamic>?;
-          final id = args?['roomId'] as String?;
-          return CommunityLegacyScreen.route(initialIndex: 1, roomId: id);
-        }
-      case communityEvents: // COMMUNITY UI
-        return CommunityLegacyScreen.route(initialIndex: 2);
+      case communityRooms:
+      case communityEvents:
       case createCommunity:
-        return CreateCommunityPage.route();
       case communityProfile:
-        return CommunityProfilePage.route(rs);
       case createPost:
-        return CreatePostPage.route();
       case postDetail:
-        {
-          final args = rs.arguments as Map<String, dynamic>?;
-          final id = args?['postId'] as String? ?? '';
-          return PostDetailPage.route(postId: id);
-        }
       case postComments:
-        {
-          final args = rs.arguments as Map<String, dynamic>?;
-          final id = args?['postId'] as String? ?? '';
-          return CommentsPage.route(postId: id);
-        }
-      // COMMUNITY 2.0
       case userProfile:
-        {
-          final args = rs.arguments as Map<String, dynamic>?;
-          final uid = args?['userId'] as String? ?? '';
-          return UserProfilePage.route(uid);
-        }
+        return _communityDisabledRoute();
       default:
         return CupertinoPageRoute(builder: (_) => const Scaffold());
     }
